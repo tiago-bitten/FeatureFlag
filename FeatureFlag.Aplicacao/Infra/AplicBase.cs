@@ -2,14 +2,15 @@
 
 namespace FeatureFlag.Aplicacao.Infra;
 
-public abstract class AplicBase<TEntidade, TRepo>
-    where TEntidade : EntidadeBase
-    where TRepo : IRepBase<TEntidade>
+public abstract class AplicBase
 {
-    protected TRepo Repositorio;
-    
-    public AplicBase(TRepo repositorio)
+    public Task IniciarTransacaoAsync()
     {
-        Repositorio = repositorio;
+        return Task.CompletedTask;
+    }
+    
+    public Task PersistirTransacaoAsync()
+    {
+        return Task.CompletedTask;
     }
 }
