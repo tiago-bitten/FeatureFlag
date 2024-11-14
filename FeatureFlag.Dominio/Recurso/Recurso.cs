@@ -5,7 +5,7 @@ namespace FeatureFlag.Domain;
 public sealed class Recurso : EntidadeBase
 {
     public string Identificador { get; private set; }
-    public string Descricao { get; private set; }
+    public string? Descricao { get; private set; }
     
     #region Relacionamentos    
     public List<Consumidor> Consumidores { get; set; } = [];
