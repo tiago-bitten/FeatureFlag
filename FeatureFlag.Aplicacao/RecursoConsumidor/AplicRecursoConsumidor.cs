@@ -10,12 +10,15 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
     #region Ctor
     private readonly IServRecursoConsumidor _servRecursoConsumidor;
     private readonly IServConsumidor _servConsumidor;
+    private readonly IServRecurso _servRecurso;
 
     public AplicRecursoConsumidor(IServRecursoConsumidor servRecursoConsumidor,
-                                  IServConsumidor servConsumidor)
+                                  IServConsumidor servConsumidor,
+                                  IServRecurso servRecurso)
     {
         _servRecursoConsumidor = servRecursoConsumidor;
         _servConsumidor = servConsumidor;
+        _servRecurso = servRecurso;
     }
     #endregion
 
@@ -32,6 +35,12 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
 
         await IniciarTransacaoAsync();
         await _servConsumidor.AdicionarAsync(novoConsumidor);
+        await PersistirTransacaoAsync();
+        
+        var novoRecurso = Recurso.Criar(param.IdentificadorRecurso, param.DescricaoRecurso);
+        
+        await IniciarTransacaoAsync();
+        await _servRecurso.AdicionarAsync(novoRecurso);
         await PersistirTransacaoAsync();
             
         throw new NotImplementedException("Lógica de criar consumidor ainda não foi implementada.");

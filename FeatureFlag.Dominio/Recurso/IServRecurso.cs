@@ -1,6 +1,8 @@
-﻿namespace FeatureFlag.Domain;
+﻿using FeatureFlag.Domain.Infra;
 
-public interface IServRecurso
+namespace FeatureFlag.Domain;
+
+public interface IServRecurso : IServBase<Recurso, IRepRecurso>
 {
     
 }
