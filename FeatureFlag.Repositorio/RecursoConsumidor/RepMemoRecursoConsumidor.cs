@@ -12,7 +12,7 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
             .Where(x => x.Recurso.Descricao == descricaoRecurso && x.Consumidor.Identificador == identificadorConsumidor)
             .Select(x => new RecursoConsumidorResponse(
                 Recurso: x.Recurso.Descricao,
-                Identificador: x.Consumidor.Identificador,
+                Consumidor: x.Consumidor.Identificador,
                 Habilitado: x.Status == EnumStatusRecursoConsumidor.Habilitado
             ))
             .FirstOrDefault();
@@ -27,7 +27,7 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
             .Where(x => x.Consumidor.Identificador == identificadorConsumidor)
             .Select(x => new RecursoConsumidorResponse(
                 Recurso: x.Recurso.Descricao,
-                Identificador: x.Consumidor.Identificador,
+                Consumidor: x.Consumidor.Identificador,
                 Habilitado: x.Status == EnumStatusRecursoConsumidor.Habilitado
             ));
         

@@ -1,6 +1,6 @@
 ﻿using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
 
-namespace FeatureFlag.Aplicacao;
+namespace FeatureFlag.Dominio;
 
 public interface IAplicRecursoConsumidor
 {

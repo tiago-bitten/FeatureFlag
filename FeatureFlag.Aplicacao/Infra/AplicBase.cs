@@ -1,4 +1,6 @@
-﻿namespace FeatureFlag.Aplicacao.Infra;
+﻿using FeatureFlag.Dominio.Infra;
+
+namespace FeatureFlag.Aplicacao.Infra;
 
 public abstract class AplicBase : IAplicBase
 {

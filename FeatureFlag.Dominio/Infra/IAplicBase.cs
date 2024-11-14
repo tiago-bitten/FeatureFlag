@@ -1,4 +1,4 @@
-﻿namespace FeatureFlag.Aplicacao.Infra;
+﻿namespace FeatureFlag.Dominio.Infra;
 
 public interface IAplicBase
 {

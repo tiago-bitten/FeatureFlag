@@ -1,5 +1,7 @@
 ﻿using FeatureFlag.Aplicacao.Infra;
 using FeatureFlag.Domain;
+using FeatureFlag.Dominio;
+using FeatureFlag.Dominio.RecursoConsumidor;
 using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,14 +39,7 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
         await _servConsumidor.AdicionarAsync(novoConsumidor);
         await PersistirTransacaoAsync();
         
-        var novoRecurso = Recurso.Criar(param.IdentificadorRecurso, param.DescricaoRecurso);
-        
-        await IniciarTransacaoAsync();
-        await _servRecurso.AdicionarAsync(novoRecurso);
-        await PersistirTransacaoAsync();
-            
-        throw new NotImplementedException("Lógica de criar consumidor ainda não foi implementada.");
-
+        return RecursoConsumidorResponse.ConsumidorSemRecurso(novoConsumidor, param.DescricaoRecurso);
     }
     #endregion
     
