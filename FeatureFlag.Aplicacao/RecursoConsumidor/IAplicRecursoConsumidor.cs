@@ -1,8 +1,9 @@
-﻿using FeatureFlag.Aplicacao.Dtos;
+﻿using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
 
 namespace FeatureFlag.Aplicacao;
 
 public interface IAplicRecursoConsumidor
 {
-    Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(string descricaoRecurso, string identificadorRecurso);
+    Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param);
+    Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param);
 }
