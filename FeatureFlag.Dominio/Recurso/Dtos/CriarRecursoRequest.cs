@@ -2,4 +2,5 @@
 
 public record CriarRecursoRequest(
     string Identificador,
-    string Descricao);
+    string Descricao,
+    decimal Porcentagem);

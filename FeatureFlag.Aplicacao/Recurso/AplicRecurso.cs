@@ -18,12 +18,18 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     }
     #endregion
     
+    #region AdicionarAsync
     public async Task<RecursoResponse> AdicionarAsync(CriarRecursoRequest request)
     {
-        var recurso = Mapper.Map<Recurso>(request);
+        var recurso = Mapear<CriarRecursoRequest, Recurso>(request);
 
         await IniciarTransacaoAsync();
         await _servRecurso.AdicionarAsync(recurso);
         await PersistirTransacaoAsync();
+
+        var response = Mapear<Recurso, RecursoResponse>(recurso);
+
+        return response;
     }
+    #endregion
 }

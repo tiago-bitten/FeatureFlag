@@ -1,4 +1,5 @@
-﻿using FeatureFlag.Aplicacao.Infra;
+﻿using AutoMapper;
+using FeatureFlag.Aplicacao.Infra;
 using FeatureFlag.Domain;
 using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.RecursoConsumidor;
@@ -16,7 +17,9 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
 
     public AplicRecursoConsumidor(IServRecursoConsumidor servRecursoConsumidor,
                                   IServConsumidor servConsumidor,
-                                  IServRecurso servRecurso)
+                                  IServRecurso servRecurso,
+                                  IMapper mapper) 
+        : base(mapper)
     {
         _servRecursoConsumidor = servRecursoConsumidor;
         _servConsumidor = servConsumidor;
@@ -28,29 +31,29 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
     public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
     {
         var recursoConsumidor = await _servRecursoConsumidor.Repositorio
-            .RecuperarPorRecursoConsumidorAsync(param.DescricaoRecurso, param.IdentificadorRecurso);
+            .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorRecurso);
 
         if (recursoConsumidor is not null)
             return recursoConsumidor;
         
-        var novoConsumidor = Consumidor.Criar(param.IdentificadorRecurso);
+        var novoConsumidor = Consumidor.Criar(param.IdentificadorConsumidor);
 
         await IniciarTransacaoAsync();
         await _servConsumidor.AdicionarAsync(novoConsumidor);
         await PersistirTransacaoAsync();
         
-        return RecursoConsumidorResponse.ConsumidorSemRecurso(novoConsumidor, param.DescricaoRecurso);
+        return RecursoConsumidorResponse.ConsumidorSemRecurso(novoConsumidor, param.IdentificadorRecurso);
     }
     #endregion
     
     #region RecuperarPorConsumidorAsync
-    public async Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
+    public Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
     {
-        var recursosConsumidor = await _servRecursoConsumidor.Repositorio
+        var recursosConsumidor = _servRecursoConsumidor.Repositorio
             .RecuperarPorConsumidor(param.IdentificadorConsumidor)
-            .ToListAsync();
+            .ToList();
 
-        return recursosConsumidor;
+        return Task.FromResult(recursosConsumidor);
     }
 
     #endregion

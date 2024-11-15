@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.Repositorio", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.Aplicacao", "FeatureFlag.Aplicacao\FeatureFlag.Aplicacao.csproj", "{12D33072-577C-4B6A-AB25-F4A4411C4B0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.Tests", "FeatureFlag.Tests\FeatureFlag.Tests.csproj", "{41B05517-61D3-4EFC-A1B5-D5EC45A5A419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.Shared", "FeatureFlag.Shared\FeatureFlag.Shared.csproj", "{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{12D33072-577C-4B6A-AB25-F4A4411C4B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12D33072-577C-4B6A-AB25-F4A4411C4B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12D33072-577C-4B6A-AB25-F4A4411C4B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41B05517-61D3-4EFC-A1B5-D5EC45A5A419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41B05517-61D3-4EFC-A1B5-D5EC45A5A419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41B05517-61D3-4EFC-A1B5-D5EC45A5A419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41B05517-61D3-4EFC-A1B5-D5EC45A5A419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

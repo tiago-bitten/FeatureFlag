@@ -8,8 +8,11 @@ public sealed class Consumidor : EntidadeBase
     public string? Descricao { get; private set; }
     
     #region Relacionamentos
-    public List<Recurso> Recursos { get; set; } = [];
-    public List<RecursoConsumidor> RecursoConsumidores { get; set; } = [];
+    private List<Recurso> _recursos = [];
+    private List<RecursoConsumidor> _recursoConsumidores = [];
+
+    public IReadOnlyList<Recurso> Recursos => _recursos.AsReadOnly();
+    public IReadOnlyList<RecursoConsumidor> RecursoConsumidores => _recursoConsumidores.AsReadOnly();
     #endregion
     
     #region Regras
