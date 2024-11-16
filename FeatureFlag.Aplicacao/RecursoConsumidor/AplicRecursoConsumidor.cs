@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FeatureFlag.Aplicacao.Infra;
 using FeatureFlag.Domain;
+using FeatureFlag.Domain.Dtos;
 using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.RecursoConsumidor;
 using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
@@ -55,6 +56,29 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
 
         return Task.FromResult(recursosConsumidor);
     }
-
     #endregion
+
+    public Task AtualizarHabilitadosAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task AtualizarHabilitadosPorRecursoAsync(IdentificadorRecursoRequest request)
+    {
+        var porcentagemRecurso = await _servRecurso.Repositorio.RecuperarPorcentagemPorIdentificadorAsync(request.IdentificadorRecurso);
+        var totalConsumidores = await _servConsumidor.Repositorio.CountAsync();
+
+        var quantidadeParaHabilitar =
+            _servRecursoConsumidor.CalcularQuantidadeParaHabilitar(porcentagemRecurso, totalConsumidores);
+
+        var recursoConsumidores = _servRecursoConsumidor.Repositorio
+            .RecuperarPorRecurso(request.IdentificadorRecurso);
+
+        var recursoConsumidoresHabilitados = recursoConsumidores
+            .Where(x => x.Status == EnumStatusRecursoConsumidor.Habilitado);
+
+        await IniciarTransacaoAsync();
+        await _servRecursoConsumidor.
+        await PersistirTransacaoAsync();
+    }
 }

@@ -52,4 +52,9 @@ public class RepMemoBase<T> : IRepBase<T> where T : EntidadeBase
             throw new ArgumentException("Entidade não encontrada para remoção.", nameof(id));
         }
     }
+
+    public Task<int> CountAsync()
+    {
+        return Task.FromResult(Items.Count);
+    }
 }

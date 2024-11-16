@@ -33,4 +33,11 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
         
         return recursoConsumidores.AsQueryable();
     }
+
+    public IQueryable<RecursoConsumidor> RecuperarPorRecurso(string identificadorRecurso)
+    {
+        return Items
+            .Where(x => x.Recurso.Identificador == identificadorRecurso)
+            .AsQueryable();
+    }
 }

@@ -10,4 +10,8 @@
       <ProjectReference Include="..\FeatureFlag.Dominio\FeatureFlag.Dominio.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Recurso\" />
+    </ItemGroup>
+
 </Project>

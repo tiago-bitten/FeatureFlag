@@ -7,4 +7,5 @@ public interface IRepBase<T> where T : EntidadeBase
     IQueryable<T> RecuperarTodos(params string[]? includes);
     void Atualizar(T entidade);
     void Remover(Guid id);
+    Task<int> CountAsync();
 }
