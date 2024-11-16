@@ -8,4 +8,5 @@ public interface IRepRecursoConsumidor : IRepBase<RecursoConsumidor>
     Task<RecursoConsumidorResponse?> RecuperarPorRecursoConsumidorAsync(string descricaoRecurso, string identificadorConsumidor);
     IQueryable<RecursoConsumidorResponse> RecuperarPorConsumidor(string identificadorConsumidor);
     IQueryable<RecursoConsumidor> RecuperarPorRecurso(string identificadorRecurso);
+    IQueryable<RecursoConsumidor> RecuperarHabilitadosPorRecurso(string identificadorRecurso);
 }

@@ -65,20 +65,12 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
 
     public async Task AtualizarHabilitadosPorRecursoAsync(IdentificadorRecursoRequest request)
     {
-        var porcentagemRecurso = await _servRecurso.Repositorio.RecuperarPorcentagemPorIdentificadorAsync(request.IdentificadorRecurso);
-        var totalConsumidores = await _servConsumidor.Repositorio.CountAsync();
-
         var quantidadeParaHabilitar =
-            _servRecursoConsumidor.CalcularQuantidadeParaHabilitar(porcentagemRecurso, totalConsumidores);
-
-        var recursoConsumidores = _servRecursoConsumidor.Repositorio
-            .RecuperarPorRecurso(request.IdentificadorRecurso);
-
-        var recursoConsumidoresHabilitados = recursoConsumidores
-            .Where(x => x.Status == EnumStatusRecursoConsumidor.Habilitado);
+            await _servRecursoConsumidor.CalcularQuantidadeParaHabilitarAsync(request.IdentificadorRecurso);
 
         await IniciarTransacaoAsync();
-        await _servRecursoConsumidor.
+        await _servRecursoConsumidor.AtualizarDisponibilidadesAsync(request.IdentificadorRecurso,
+            quantidadeParaHabilitar);
         await PersistirTransacaoAsync();
     }
 }

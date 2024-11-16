@@ -40,4 +40,10 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
             .Where(x => x.Recurso.Identificador == identificadorRecurso)
             .AsQueryable();
     }
+
+    public IQueryable<RecursoConsumidor> RecuperarHabilitadosPorRecurso(string identificadorRecurso)
+    {
+        return RecuperarPorRecurso(identificadorRecurso)
+            .Where(x => x.Status == EnumStatusRecursoConsumidor.Habilitado);
+    }
 }
