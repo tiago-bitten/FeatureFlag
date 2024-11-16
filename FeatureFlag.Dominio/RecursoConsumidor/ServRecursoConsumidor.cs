@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain.Infra;
+using FeatureFlag.Shared.Extensions;
 using FeatureFlag.Shared.Helpers;
 
 namespace FeatureFlag.Domain;
@@ -32,31 +33,28 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region AtualizarDisponibilidadesAsync
     public async Task AtualizarDisponibilidadesAsync(string identificadorRecurso, int quantidadeAlvo)
     {
-        var total = Repositorio.RecuperarPorRecurso(identificadorRecurso).ToList();
+        // TODO: SERA ToListAsync
         var habilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).ToList();
+        var desabilitados = Repositorio.RecuperarDesabilitadosPorRecurso(identificadorRecurso).ToList();
 
         var quantidadeRestante = quantidadeAlvo - habilitados.Count;
 
         switch (quantidadeRestante)
         {
             case > 0:
-                HabilitarConsumidores(total, quantidadeRestante);
+                HabilitarConsumidores(desabilitados, quantidadeRestante);
                 break;
             
             case < 0:
-                DesabilitarConsumidores(habilitados, Math.Abs(quantidadeRestante));
+                DesabilitarConsumidores(habilitados, quantidadeRestante);
                 break;
         }
     }
 
-    
     #region HabilitarConsumidores
     private void HabilitarConsumidores(List<RecursoConsumidor> desabilitados, int quantidadeRestante)
     {
-        var random = new Random();
-        var consumidoresParaHabilitar = desabilitados
-            .Where(rc => rc.Status == EnumStatusRecursoConsumidor.Desabilitado)
-            .OrderBy(_ => random.Next())
+        var consumidoresParaHabilitar = desabilitados.EmbaralharFisherYates()
             .Take(quantidadeRestante)
             .ToList();
 
@@ -68,11 +66,11 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
 
     #region DesabilitarConsumidores
-    private void DesabilitarConsumidores(List<RecursoConsumidor> habilitados, int quantidadeParaDesabilitar)
+    private void DesabilitarConsumidores(List<RecursoConsumidor> habilitados, int quantidadeParaDesabilitarNegativo)
     {
-        var random = new Random();
-        var consumidoresParaDesabilitar = habilitados
-            .OrderBy(_ => random.Next())
+        var quantidadeParaDesabilitar = NumeroHelper.ValorAbsoluto(quantidadeParaDesabilitarNegativo);
+
+        var consumidoresParaDesabilitar = habilitados.EmbaralharFisherYates()
             .Take(quantidadeParaDesabilitar)
             .ToList();
 
@@ -82,5 +80,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         }
     }
     #endregion
+
     #endregion
 }

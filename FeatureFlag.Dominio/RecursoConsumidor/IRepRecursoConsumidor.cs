@@ -9,4 +9,5 @@ public interface IRepRecursoConsumidor : IRepBase<RecursoConsumidor>
     IQueryable<RecursoConsumidorResponse> RecuperarPorConsumidor(string identificadorConsumidor);
     IQueryable<RecursoConsumidor> RecuperarPorRecurso(string identificadorRecurso);
     IQueryable<RecursoConsumidor> RecuperarHabilitadosPorRecurso(string identificadorRecurso);
+    IQueryable<RecursoConsumidor> RecuperarDesabilitadosPorRecurso(string identificadorRecurso);
 }
