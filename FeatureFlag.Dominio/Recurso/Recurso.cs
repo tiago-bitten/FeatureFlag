@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain.Infra;
+using FeatureFlag.Dominio;
 using FeatureFlag.Shared.Helpers;
 
 namespace FeatureFlag.Domain;
@@ -12,9 +13,11 @@ public sealed class Recurso : EntidadeBase
     #region Relacionamentos
     private readonly List<Consumidor> _consumidores = [];
     private readonly List<RecursoConsumidor> _recursoConsumidores = [];
+    private readonly List<ControleAcessoConsumidor> _controleAcessoConsumidores = [];
 
     public IReadOnlyList<Consumidor> Consumidores => _consumidores.AsReadOnly();
     public IReadOnlyList<RecursoConsumidor> RecursoConsumidores => _recursoConsumidores.AsReadOnly();
+    public IReadOnlyList<ControleAcessoConsumidor> ControleAcessoConsumidores => _controleAcessoConsumidores.AsReadOnly();
     #endregion
     
     #region Regras

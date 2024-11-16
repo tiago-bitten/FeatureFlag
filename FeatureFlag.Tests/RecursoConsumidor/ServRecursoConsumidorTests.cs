@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio;
 using Moq;
 
 namespace FeatureFlag.Tests;
@@ -9,6 +10,7 @@ public class ServRecursoConsumidorTests
     private readonly Mock<IRepRecursoConsumidor> _mockRepRecursoConsumidor;
     private readonly Mock<IRepRecurso> _mockRepRecurso;
     private readonly Mock<IRepConsumidor> _mockRepConsumidor;
+    private readonly Mock<IRepControleAcessoConsumidor> _mockControlAcessoConsumidor;
     private readonly ServRecursoConsumidor _servRecursoConsumidor;
 
     public ServRecursoConsumidorTests()
@@ -16,11 +18,13 @@ public class ServRecursoConsumidorTests
         _mockRepRecursoConsumidor = new Mock<IRepRecursoConsumidor>();
         _mockRepRecurso = new Mock<IRepRecurso>();
         _mockRepConsumidor = new Mock<IRepConsumidor>();
+        _mockControlAcessoConsumidor = new Mock<IRepControleAcessoConsumidor>();
 
         _servRecursoConsumidor = new ServRecursoConsumidor(
             _mockRepRecursoConsumidor.Object,
             _mockRepRecurso.Object,
-            _mockRepConsumidor.Object);
+            _mockRepConsumidor.Object,
+            _mockControlAcessoConsumidor.Object);
     }
     #endregion
 
