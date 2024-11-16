@@ -57,7 +57,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     
     #region HabilitarConsumidores
-    private void HabilitarConsumidores(List<Domain.RecursoConsumidor> desabilitados, int quantidadeRestante)
+    private void HabilitarConsumidores(List<RecursoConsumidor> desabilitados, int quantidadeRestante)
     {
         var consumidoresParaHabilitar = desabilitados.EmbaralharFisherYates()
             .Take(quantidadeRestante)
@@ -97,7 +97,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
 
         foreach (var consumidor in consumidores)
         {
-            var percentualAtual = (habilitados / (decimal)totalConsumidores) * 100;
+            var percentualAtual = habilitados / (decimal)totalConsumidores * 100;
             
             if (percentualAtual < porcentagemRecurso)
             {
