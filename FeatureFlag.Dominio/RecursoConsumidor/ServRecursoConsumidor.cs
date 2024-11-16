@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain.Infra;
+using FeatureFlag.Dominio.RecursoConsumidor.Fabricas;
 using FeatureFlag.Shared.Extensions;
 using FeatureFlag.Shared.Helpers;
 
@@ -9,14 +10,17 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region Ctor
     private readonly IRepRecurso _repRecurso;
     private readonly IRepConsumidor _repConsumidor;
+    private readonly IFabricaAlgoritmosAtualizacao _fabricaAlgoritmosAtualizacao;
     
     public ServRecursoConsumidor(IRepRecursoConsumidor repositorio,
                                  IRepRecurso repRecurso,
-                                 IRepConsumidor repConsumidor) 
+                                 IRepConsumidor repConsumidor, 
+                                 IFabricaAlgoritmosAtualizacao fabricaAlgoritmosAtualizacao) 
         : base(repositorio)
     {
         _repRecurso = repRecurso;
         _repConsumidor = repConsumidor;
+        _fabricaAlgoritmosAtualizacao = fabricaAlgoritmosAtualizacao;
     }
     #endregion
 
@@ -25,6 +29,9 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     {
         var porcentagemRecurso = await _repRecurso.RecuperarPorcentagemPorIdentificadorAsync(identificadorRecurso);
         var totalConsumidores = await _repConsumidor.CountAsync();
+
+        if (porcentagemRecurso is 0 || totalConsumidores is 0)
+            return 0;
         
         return (int)NumeroHelper.Arredondar(totalConsumidores * porcentagemRecurso / 100);
     }
@@ -33,53 +40,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region AtualizarDisponibilidadesAsync
     public async Task AtualizarDisponibilidadesAsync(string identificadorRecurso, int quantidadeAlvo)
     {
-        // TODO: SERA ToListAsync
-        var habilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).ToList();
-        var desabilitados = Repositorio.RecuperarDesabilitadosPorRecurso(identificadorRecurso).ToList();
-
-        var quantidadeRestante = quantidadeAlvo - habilitados.Count;
-
-        switch (quantidadeRestante)
-        {
-            case > 0:
-                HabilitarConsumidores(desabilitados, quantidadeRestante);
-                break;
-            
-            case < 0:
-                DesabilitarConsumidores(habilitados, quantidadeRestante);
-                break;
-        }
+        await _fabricaAlgoritmosAtualizacao.AlgoritmoFisherYates(identificadorRecurso, quantidadeAlvo);
     }
-
-    #region HabilitarConsumidores
-    private void HabilitarConsumidores(List<RecursoConsumidor> desabilitados, int quantidadeRestante)
-    {
-        var consumidoresParaHabilitar = desabilitados.EmbaralharFisherYates()
-            .Take(quantidadeRestante)
-            .ToList();
-
-        foreach (var consumidor in consumidoresParaHabilitar)
-        {
-            consumidor.Habilitar();
-        }
-    }
-    #endregion
-
-    #region DesabilitarConsumidores
-    private void DesabilitarConsumidores(List<RecursoConsumidor> habilitados, int quantidadeParaDesabilitarNegativo)
-    {
-        var quantidadeParaDesabilitar = NumeroHelper.ValorAbsoluto(quantidadeParaDesabilitarNegativo);
-
-        var consumidoresParaDesabilitar = habilitados.EmbaralharFisherYates()
-            .Take(quantidadeParaDesabilitar)
-            .ToList();
-
-        foreach (var consumidor in consumidoresParaDesabilitar)
-        {
-            consumidor.Desabilitar();
-        }
-    }
-    #endregion
-
     #endregion
 }
