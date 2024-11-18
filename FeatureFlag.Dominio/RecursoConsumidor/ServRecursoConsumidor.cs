@@ -40,18 +40,18 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region AtualizarDisponibilidadesAsync
     public Task AtualizarDisponibilidadesAsync(string identificadorRecurso, int quantidadeAlvo)
     {
-        var habilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).ToList();
-        var desabilitados = Repositorio.RecuperarDesabilitadosPorRecurso(identificadorRecurso).ToList();
-        var quantidadeRestante = quantidadeAlvo - habilitados.Count;
+        var consumidoresHabilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).ToList();
+        var consumidoresDesabilitados = Repositorio.RecuperarDesabilitadosPorRecurso(identificadorRecurso).ToList();
+        var consumidoresRestantes = quantidadeAlvo - consumidoresHabilitados.Count;
 
-        switch (quantidadeRestante)
+        switch (consumidoresRestantes)
         {
             case > 0:
-                HabilitarConsumidores(desabilitados, quantidadeRestante);
+                HabilitarConsumidores(consumidoresDesabilitados, consumidoresRestantes);
                 break;
 
             case < 0:
-                DesabilitarConsumidores(habilitados, quantidadeRestante);
+                DesabilitarConsumidores(consumidoresHabilitados, consumidoresRestantes);
                 break;
         }
 
@@ -78,6 +78,17 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         
         HabilitarTodosConsumidores(consumidoresParaHabilitar);
     }
+    
+    #region HabilitarTodosConsumidores
+    private void HabilitarTodosConsumidores(List<RecursoConsumidor> consumidores)
+    {
+        foreach (var consumidor in consumidores)
+        {
+            consumidor.Habilitar();
+        }
+    }
+    #endregion
+
     #endregion
 
     #region DesabilitarConsumidores
@@ -90,18 +101,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
 
         DesabilitarTodosConsumidores(consumidoresParaDesabilitar);
     }
-    #endregion
-
-    #region HabilitarTodosConsumidores
-    private void HabilitarTodosConsumidores(List<RecursoConsumidor> consumidores)
-    {
-        foreach (var consumidor in consumidores)
-        {
-            consumidor.Habilitar();
-        }
-    }
-    #endregion
-
+    
     #region DesabilitarTodosConsumidores
     private void DesabilitarTodosConsumidores(List<RecursoConsumidor> consumidores)
     {
@@ -111,6 +111,9 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         }
     }
     #endregion
+
+    #endregion
+
     #endregion
 
     #region AlgoritmoVitao
