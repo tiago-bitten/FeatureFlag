@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
 using FeatureFlag.Repositorio.Infra;
 
@@ -6,6 +7,13 @@ namespace FeatureFlag.Repositorio;
 
 public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecursoConsumidor
 {
+    private readonly IRepControleAcessoConsumidor _repControleAcessoConsumidor;
+    
+    public RepMemoRecursoConsumidor(IRepControleAcessoConsumidor repControleAcessoConsumidor)
+    {
+        _repControleAcessoConsumidor = repControleAcessoConsumidor;
+    }
+    
     public Task<RecursoConsumidorResponse?> RecuperarPorRecursoConsumidorAsync(string descricaoRecurso, string identificadorConsumidor)
     {
         var recursosConsumidor = Items
@@ -51,5 +59,10 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
     {
         return RecuperarPorRecurso(identificadorRecurso)
             .Where(x => x.Status == EnumStatusRecursoConsumidor.Desabilitado);
+    }
+
+    public IQueryable<RecursoConsumidor> RecuperarPorTipo(string identificadorRecurso, EnumTipoControle tipo)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain.Infra;
+using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
 
 namespace FeatureFlag.Domain;
@@ -10,4 +11,5 @@ public interface IRepRecursoConsumidor : IRepBase<RecursoConsumidor>
     IQueryable<RecursoConsumidor> RecuperarPorRecurso(string identificadorRecurso);
     IQueryable<RecursoConsumidor> RecuperarHabilitadosPorRecurso(string identificadorRecurso);
     IQueryable<RecursoConsumidor> RecuperarDesabilitadosPorRecurso(string identificadorRecurso);
+    IQueryable<RecursoConsumidor> RecuperarPorTipo(string identificadorRecurso, EnumTipoControle tipo);
 }
