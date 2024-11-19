@@ -1,4 +1,4 @@
-﻿namespace FeatureFlag.Domain.Infra;
+﻿namespace FeatureFlag.Dominio.Infra;
 
 public abstract class ServBase<TEntidade, TRepositorio> : IServBase<TEntidade, TRepositorio>
     where TEntidade : EntidadeBase

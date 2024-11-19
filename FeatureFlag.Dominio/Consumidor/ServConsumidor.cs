@@ -1,5 +1,4 @@
-﻿using FeatureFlag.Domain;
-using FeatureFlag.Domain.Infra;
+﻿using FeatureFlag.Dominio.Infra;
 
 namespace FeatureFlag.Dominio;
 

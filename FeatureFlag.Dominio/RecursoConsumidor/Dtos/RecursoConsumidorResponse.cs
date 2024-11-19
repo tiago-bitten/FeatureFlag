@@ -1,6 +1,4 @@
-﻿using FeatureFlag.Domain;
-
-namespace FeatureFlag.Dominio.RecursoConsumidor.Dtos;
+﻿namespace FeatureFlag.Dominio.Dtos;
 
 public record RecursoConsumidorResponse(
     string Recurso,

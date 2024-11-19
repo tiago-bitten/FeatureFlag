@@ -1,8 +1,7 @@
-﻿using FeatureFlag.Domain.Infra;
-using FeatureFlag.Dominio;
-using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
+﻿using FeatureFlag.Dominio.Infra;
+using FeatureFlag.Dominio.Dtos;
 
-namespace FeatureFlag.Domain;
+namespace FeatureFlag.Dominio;
 
 public interface IRepRecursoConsumidor : IRepBase<RecursoConsumidor> 
 {

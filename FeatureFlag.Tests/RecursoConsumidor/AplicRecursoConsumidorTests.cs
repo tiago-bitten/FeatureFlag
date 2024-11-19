@@ -1,8 +1,9 @@
 ﻿using Moq;
 using FeatureFlag.Aplicacao;
-using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
+using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Domain;
 using AutoMapper;
+using FeatureFlag.Dominio;
 
 namespace FeatureFlag.Tests;
 

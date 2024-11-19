@@ -6,7 +6,7 @@ namespace FeatureFlag.Tests;
 
 public class ServRecursoConsumidorTests
 {
-    #region Ctor
+    #region Fields & Setup
     private readonly Mock<IRepRecursoConsumidor> _mockRepRecursoConsumidor;
     private readonly Mock<IRepRecurso> _mockRepRecurso;
     private readonly Mock<IRepConsumidor> _mockRepConsumidor;
@@ -28,7 +28,7 @@ public class ServRecursoConsumidorTests
     }
     #endregion
 
-    #region Utils
+    #region Utilities
     private List<RecursoConsumidor> CriarRecursoConsumidores(int quantidade, EnumStatusRecursoConsumidor status)
     {
         return Enumerable.Range(1, quantidade)
@@ -46,7 +46,7 @@ public class ServRecursoConsumidorTests
     }
     #endregion
 
-    #region CalcularQuantidadeParaHabilitarAsync
+    #region CalcularQuantidadeParaHabilitarAsync Tests
 
     #region TotalConsumidoresZero_DeveRetornarZero
     [Fact]
@@ -130,7 +130,7 @@ public class ServRecursoConsumidorTests
 
     #endregion
 
-    #region AtualizarDisponibilidadesAsync
+    #region AtualizarDisponibilidadesAsync Tests
 
     #region QuantidadeJaAtingida_NaoDeveAlterarHabilitados
     [Fact]

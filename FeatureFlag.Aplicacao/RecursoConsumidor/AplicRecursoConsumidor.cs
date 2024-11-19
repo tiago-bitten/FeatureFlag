@@ -3,9 +3,7 @@
     using FeatureFlag.Domain;
     using FeatureFlag.Domain.Dtos;
     using FeatureFlag.Dominio;
-    using FeatureFlag.Dominio.RecursoConsumidor;
-    using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
-    using Microsoft.EntityFrameworkCore;
+    using FeatureFlag.Dominio.Dtos;
 
     namespace FeatureFlag.Aplicacao;
 

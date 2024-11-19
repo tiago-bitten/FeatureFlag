@@ -1,6 +1,5 @@
-﻿using FeatureFlag.Domain;
-using FeatureFlag.Dominio;
-using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
+﻿using FeatureFlag.Dominio;
+using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Repositorio.Infra;
 
 namespace FeatureFlag.Repositorio;

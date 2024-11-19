@@ -1,7 +1,7 @@
-﻿using FeatureFlag.Domain.Infra;
-using FeatureFlag.Dominio;
+﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio.Infra;
 
-namespace FeatureFlag.Domain;
+namespace FeatureFlag.Dominio;
 
 public sealed class Consumidor : EntidadeBase
 {

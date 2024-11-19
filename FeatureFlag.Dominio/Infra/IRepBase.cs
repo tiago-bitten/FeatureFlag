@@ -1,4 +1,4 @@
-﻿namespace FeatureFlag.Domain.Infra;
+﻿namespace FeatureFlag.Dominio.Infra;
 
 public interface IRepBase<T> where T : EntidadeBase
 {

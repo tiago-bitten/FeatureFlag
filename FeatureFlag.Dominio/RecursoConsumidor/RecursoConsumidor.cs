@@ -1,6 +1,7 @@
-﻿using FeatureFlag.Domain.Infra;
+﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio.Infra;
 
-namespace FeatureFlag.Domain;
+namespace FeatureFlag.Dominio;
 
 public sealed class RecursoConsumidor : EntidadeBase
 {

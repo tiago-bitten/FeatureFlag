@@ -1,9 +1,9 @@
-﻿using FeatureFlag.Domain.Infra;
-using FeatureFlag.Dominio;
+﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio.Infra;
 using FeatureFlag.Shared.Extensions;
 using FeatureFlag.Shared.Helpers;
 
-namespace FeatureFlag.Domain;
+namespace FeatureFlag.Dominio;
 
 public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoConsumidor>, IServRecursoConsumidor
 {
@@ -55,16 +55,16 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 break;
         }
 
-        var whitelist = _repControleAcessoConsumidor.RecuperarPorTipo(identificadorRecurso, EnumTipoControle.Whitelist)
+        var consumidoresWhitelist = _repControleAcessoConsumidor.RecuperarPorTipo(identificadorRecurso, EnumTipoControle.Whitelist)
             .SelectMany(x => x.Consumidor.RecursoConsumidores.Where(rc => rc.Consumidor.Identificador == identificadorRecurso))
             .ToList();
 
-        var blacklist = _repControleAcessoConsumidor.RecuperarPorTipo(identificadorRecurso, EnumTipoControle.Blacklist)
+        var consumidoresBlacklist = _repControleAcessoConsumidor.RecuperarPorTipo(identificadorRecurso, EnumTipoControle.Blacklist)
             .SelectMany(x => x.Consumidor.RecursoConsumidores.Where(rc => rc.Recurso.Identificador == identificadorRecurso))
             .ToList();
 
-        HabilitarTodosConsumidores(whitelist);
-        DesabilitarTodosConsumidores(blacklist);
+        HabilitarTodosConsumidores(consumidoresWhitelist);
+        DesabilitarTodosConsumidores(consumidoresBlacklist);
 
         return Task.CompletedTask;
     }

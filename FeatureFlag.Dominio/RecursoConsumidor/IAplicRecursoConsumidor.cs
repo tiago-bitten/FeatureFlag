@@ -1,5 +1,5 @@
 ﻿using FeatureFlag.Domain.Dtos;
-using FeatureFlag.Dominio.RecursoConsumidor.Dtos;
+using FeatureFlag.Dominio.Dtos;
 
 namespace FeatureFlag.Dominio;
 
