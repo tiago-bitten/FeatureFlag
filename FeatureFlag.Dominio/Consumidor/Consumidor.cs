@@ -31,12 +31,12 @@ public sealed class Consumidor : EntidadeBase
     {
         Identificador = identificador;
         Descricao = descricao;
+        ValidarIdentificador();
     }
     
     public static Consumidor Criar(string identificador, string? descricao = null)
     {
         var consumidor = new Consumidor(identificador, descricao);
-        consumidor.ValidarIdentificador();
         return consumidor;
     }
     #endregion

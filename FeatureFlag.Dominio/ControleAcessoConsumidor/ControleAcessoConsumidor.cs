@@ -42,12 +42,14 @@ public sealed class ControleAcessoConsumidor : EntidadeBase
 
     public static ControleAcessoConsumidor CriarWhitelist(Guid codigoConsumidor, Guid codigoRecurso)
     {
-        return new ControleAcessoConsumidor(codigoConsumidor, codigoRecurso, EnumTipoControle.Whitelist);
+        var controleAcessoConsumidor = new ControleAcessoConsumidor(codigoConsumidor, codigoRecurso, EnumTipoControle.Whitelist);
+        return controleAcessoConsumidor;
     }
 
     public static ControleAcessoConsumidor CriarBlacklist(Guid codigoConsumidor, Guid codigoRecurso)
     {
-        return new ControleAcessoConsumidor(codigoConsumidor, codigoRecurso, EnumTipoControle.Blacklist);
+        var controleAcessoConsumidor = new ControleAcessoConsumidor(codigoConsumidor, codigoRecurso, EnumTipoControle.Blacklist);
+        return controleAcessoConsumidor;
     }
     #endregion
 }
