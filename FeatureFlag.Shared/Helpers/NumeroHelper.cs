@@ -1,33 +1,25 @@
-﻿namespace FeatureFlag.Shared.Helpers;
+﻿using System.Numerics;
+
+namespace FeatureFlag.Shared.Helpers;
 
 public static class NumeroHelper
 {
     #region Arredondar
-    public static decimal Arredondar(decimal valor, int casasDecimais = 0)
+    public static T Arredondar<T>(T valor, int casasDecimais = 0) where T : INumber<T>
     {
-        return Math.Round(valor, casasDecimais, MidpointRounding.ToEven);
-    }
-        
-    public static double Arredondar(double valor, int casasDecimais = 0)
-    {
-        return Math.Round(valor, casasDecimais, MidpointRounding.ToEven);
+        return valor switch
+        {
+            double d => (T)(dynamic)Math.Round(d, casasDecimais, MidpointRounding.ToEven),
+            decimal d => (T)(dynamic)Math.Round(d, casasDecimais, MidpointRounding.ToEven),
+            _ => throw new NotSupportedException($"O tipo {typeof(T)} não suporta arredondamento.")
+        };
     }
     #endregion
-        
+
     #region ValorAbsoluto
-    public static int ValorAbsoluto(int valor)
+    public static T ValorAbsoluto<T>(T valor) where T : INumber<T>
     {
-        return Math.Abs(valor);
-    }
-
-    public static decimal ValorAbsoluto(decimal valor)
-    {
-        return Math.Abs(valor);
-    }
-
-    public static double ValorAbsoluto(double valor)
-    {
-        return Math.Abs(valor);
+        return T.Abs(valor);
     }
     #endregion
 }

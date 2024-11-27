@@ -21,9 +21,4 @@ public abstract class AplicBase : IAplicBase
     {
         return Task.CompletedTask;
     }
-
-    public TSaida Mapear<TEntrada, TSaida>(TEntrada entrada)
-    {
-        return Mapper.Map<TSaida>(entrada);
-    }
 }

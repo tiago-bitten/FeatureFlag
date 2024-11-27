@@ -1,10 +1,18 @@
-﻿using FeatureFlag.Dominio.Infra;
+﻿using AutoMapper;
+using FeatureFlag.Dominio.Infra;
 
 namespace FeatureFlag.Repositorio.Infra;
 
 public class RepMemoBase<T> : IRepBase<T> where T : EntidadeBase
 {
     protected readonly List<T> Items = [];
+    
+    protected readonly IMapper Mapper;
+    
+    public RepMemoBase(IMapper mapper)
+    {
+        Mapper = mapper;
+    }
         
     public Task AdicionarAsync(T entidade)
     {

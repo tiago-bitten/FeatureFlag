@@ -1,10 +1,15 @@
-﻿using FeatureFlag.Domain;
+﻿using AutoMapper;
+using FeatureFlag.Domain;
 using FeatureFlag.Repositorio.Infra;
 
 namespace FeatureFlag.Repositorio;
 
-public class RepMemoRecurso : RepMemoBase<Domain.Recurso>, IRepRecurso
+public class RepMemoRecurso : RepMemoBase<Recurso>, IRepRecurso
 {
+    public RepMemoRecurso(IMapper mapper) : base(mapper)
+    {
+    }
+
     public Task<decimal> RecuperarPorcentagemPorIdentificadorAsync(string identificador)
     {
         return Task.FromResult(Items
