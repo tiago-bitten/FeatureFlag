@@ -1,4 +1,6 @@
-﻿using FeatureFlag.Dominio;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Repositorio.Infra;
 
@@ -8,20 +10,20 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
 {
     private readonly IRepControleAcessoConsumidor _repControleAcessoConsumidor;
     
-    public RepMemoRecursoConsumidor(IRepControleAcessoConsumidor repControleAcessoConsumidor)
+    public RepMemoRecursoConsumidor(IRepControleAcessoConsumidor repControleAcessoConsumidor,
+                                    IMapper mapper)
+        : base(mapper)
     {
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
     }
     
     public Task<RecursoConsumidorResponse?> RecuperarPorRecursoConsumidorAsync(string descricaoRecurso, string identificadorConsumidor)
     {
-        var recursosConsumidor = Items
+        var query = Items.AsQueryable();
+        
+        var recursosConsumidor = query
             .Where(x => x.Recurso.Descricao == descricaoRecurso && x.Consumidor.Identificador == identificadorConsumidor)
-            .Select(x => new RecursoConsumidorResponse(
-                Recurso: x.Recurso.Descricao,
-                Consumidor: x.Consumidor.Identificador,
-                Habilitado: x.Status == EnumStatusRecursoConsumidor.Habilitado
-            ))
+            .ProjectTo<RecursoConsumidorResponse>(Mapper.ConfigurationProvider)
             .FirstOrDefault();
 
         return Task.FromResult(recursosConsumidor);
@@ -30,13 +32,11 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
 
     public IQueryable<RecursoConsumidorResponse> RecuperarPorConsumidor(string identificadorConsumidor)
     {
-        var recursoConsumidores = Items
+        var query = Items.AsQueryable();
+
+        var recursoConsumidores = query
             .Where(x => x.Consumidor.Identificador == identificadorConsumidor)
-            .Select(x => new RecursoConsumidorResponse(
-                Recurso: x.Recurso.Descricao,
-                Consumidor: x.Consumidor.Identificador,
-                Habilitado: x.Status == EnumStatusRecursoConsumidor.Habilitado
-            ));
+            .ProjectTo<RecursoConsumidorResponse>(Mapper.ConfigurationProvider);
         
         return recursoConsumidores.AsQueryable();
     }

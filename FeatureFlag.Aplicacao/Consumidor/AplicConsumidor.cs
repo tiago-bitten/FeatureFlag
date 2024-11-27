@@ -20,13 +20,13 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
 
     public async Task<ConsumidorResponse> AdicionarAsync(CriarConsumidorRequest request)
     {
-        var consumidor = Mapear<CriarConsumidorRequest, Consumidor>(request);
+        var consumidor = Mapper.Map<Consumidor>(request);
 
         await IniciarTransacaoAsync();
         await _servConsumidor.AdicionarAsync(consumidor);
         await PersistirTransacaoAsync();
         
-        var response = Mapear<Consumidor, ConsumidorResponse>(consumidor);
+        var response = Mapper.Map<ConsumidorResponse>(consumidor);
         
         return response;
     }
