@@ -23,7 +23,39 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
     }
     #endregion
+    
+    #region AlgoritmoVitao
+    private async Task AlgoritmoVitao(string identificadorRecurso)
+    {
+        var porcentagemRecurso = await _repRecurso.RecuperarPorcentagemPorIdentificadorAsync(identificadorRecurso);
+        var consumidores = Repositorio.RecuperarPorRecurso(identificadorRecurso).ToList();
+        var totalConsumidores = consumidores.Count;
+        var habilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).Count();
 
+        foreach (var consumidor in consumidores)
+        {
+            var percentualAtual = habilitados / (decimal)totalConsumidores * 100;
+
+            if (percentualAtual < porcentagemRecurso)
+            {
+                if (consumidor.Status == EnumStatusRecursoConsumidor.Habilitado) continue;
+                consumidor.Habilitar();
+                habilitados++;
+            }
+            else
+            {
+                if (consumidor.Status == EnumStatusRecursoConsumidor.Desabilitado) continue;
+                consumidor.Desabilitar();
+                habilitados--;
+            }
+        }
+    }
+    #endregion
+
+
+
+    
+    #region OLD
     #region CalcularDisponibilidadesAsync
     public async Task<int> CalcularQuantidadeParaHabilitarAsync(string identificadorRecurso)
     {
@@ -115,32 +147,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
 
     #endregion
-
-    #region AlgoritmoVitao
-    private async Task AlgoritmoVitao(string identificadorRecurso)
-    {
-        var porcentagemRecurso = await _repRecurso.RecuperarPorcentagemPorIdentificadorAsync(identificadorRecurso);
-        var consumidores = Repositorio.RecuperarPorRecurso(identificadorRecurso).ToList();
-        var totalConsumidores = consumidores.Count;
-        var habilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).Count();
-
-        foreach (var consumidor in consumidores)
-        {
-            var percentualAtual = habilitados / (decimal)totalConsumidores * 100;
-
-            if (percentualAtual < porcentagemRecurso)
-            {
-                if (consumidor.Status == EnumStatusRecursoConsumidor.Habilitado) continue;
-                consumidor.Habilitar();
-                habilitados++;
-            }
-            else
-            {
-                if (consumidor.Status == EnumStatusRecursoConsumidor.Desabilitado) continue;
-                consumidor.Desabilitar();
-                habilitados--;
-            }
-        }
-    }
     #endregion
+
 }
