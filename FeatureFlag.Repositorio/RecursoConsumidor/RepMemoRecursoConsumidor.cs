@@ -17,26 +17,24 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
     }
     
-    public Task<RecursoConsumidorResponse?> RecuperarPorRecursoConsumidorAsync(string descricaoRecurso, string identificadorConsumidor)
+    public Task<RecursoConsumidor?> RecuperarPorRecursoConsumidorAsync(string identificadorRecurso, string identificadorConsumidor)
     {
         var query = Items.AsQueryable();
         
         var recursosConsumidor = query
-            .Where(x => x.Recurso.Descricao == descricaoRecurso && x.Consumidor.Identificador == identificadorConsumidor)
-            .ProjectTo<RecursoConsumidorResponse>(Mapper.ConfigurationProvider)
+            .Where(x => x.Recurso.Identificador == identificadorRecurso && x.Consumidor.Identificador == identificadorConsumidor)
             .FirstOrDefault();
 
         return Task.FromResult(recursosConsumidor);
     }
 
 
-    public IQueryable<RecursoConsumidorResponse> RecuperarPorConsumidor(string identificadorConsumidor)
+    public IQueryable<RecursoConsumidor> RecuperarPorConsumidor(string identificadorConsumidor)
     {
         var query = Items.AsQueryable();
 
         var recursoConsumidores = query
-            .Where(x => x.Consumidor.Identificador == identificadorConsumidor)
-            .ProjectTo<RecursoConsumidorResponse>(Mapper.ConfigurationProvider);
+            .Where(x => x.Consumidor.Identificador == identificadorConsumidor);
         
         return recursoConsumidores.AsQueryable();
     }

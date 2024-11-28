@@ -2,6 +2,7 @@
 using FeatureFlag.Aplicacao.Infra;
 using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.Dtos;
+using FeatureFlag.Shared.Extensions;
 
 namespace FeatureFlag.Aplicacao;
 
@@ -18,6 +19,7 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
     }
     #endregion
 
+    #region AdicionarAsync
     public async Task<ConsumidorResponse> AdicionarAsync(CriarConsumidorRequest request)
     {
         var consumidor = Mapper.Map<Consumidor>(request);
@@ -30,4 +32,23 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
         
         return response;
     }
+    #endregion
+    
+    #region AtualizarAsync
+    public async Task<ConsumidorResponse> AlterarAsync(AlterarConsumidorRequest request)
+    {
+        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
+        consumidor.ExcecaoSeNull("Consumidor não encontrado.");
+        
+        var consumidorAlterado = Mapper.Map(request, consumidor);
+
+        await IniciarTransacaoAsync();
+        _servConsumidor.Alterar(consumidorAlterado);
+        await PersistirTransacaoAsync();
+        
+        var response = Mapper.Map<ConsumidorResponse>(consumidorAlterado);
+        
+        return response;
+    }
+    #endregion
 }
