@@ -47,28 +47,4 @@
         }
         #endregion
 
-        public async Task AtualizarHabilitadosAsync()
-        {
-            var identificadoresRecursos = _servRecurso.Repositorio
-                .RecuperarTodos()
-                .Select(x => x.Identificador)
-                .ToList();
-
-            await IniciarTransacaoAsync();
-            foreach (var identificador in identificadoresRecursos)
-            {
-                var quantidadeParaHabilitar = await _servRecursoConsumidor.CalcularQuantidadeParaHabilitarAsync(identificador);
-                await _servRecursoConsumidor.AtualizarDisponibilidadesAsync(identificador, quantidadeParaHabilitar);
-            }
-            await PersistirTransacaoAsync();
-        }
-
-        public async Task AtualizarHabilitadosPorRecursoAsync(IdentificadorRecursoRequest request)
-        {
-            var quantidadeParaHabilitar = await _servRecursoConsumidor.CalcularQuantidadeParaHabilitarAsync(request.IdentificadorRecurso);
-
-            await IniciarTransacaoAsync();
-            await _servRecursoConsumidor.AtualizarDisponibilidadesAsync(request.IdentificadorRecurso, quantidadeParaHabilitar);
-            await PersistirTransacaoAsync();
-        }
     }
