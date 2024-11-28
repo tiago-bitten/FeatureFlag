@@ -12,5 +12,9 @@ public class RecursoProfile : Profile
             .ConstructUsing((src, dest) => Recurso.Criar(src.Identificador, src.Descricao, src.Porcentagem));
 
         CreateMap<Recurso, RecursoResponse>();
+        
+        CreateMap<AlterarRecursoRequest, Recurso>()
+            .ForAllMembers(opt => 
+                opt.Condition((_, _, srcMember) => srcMember != null));
     }
 }

@@ -32,16 +32,7 @@
             var recursoConsumidor = await _servRecursoConsumidor.Repositorio
                 .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorRecurso);
 
-            if (recursoConsumidor is not null)
-                return recursoConsumidor;
-            
-            var novoConsumidor = Consumidor.Criar(param.IdentificadorConsumidor);
-
-            await IniciarTransacaoAsync();
-            await _servConsumidor.AdicionarAsync(novoConsumidor);
-            await PersistirTransacaoAsync();
-            
-            return RecursoConsumidorResponse.ConsumidorSemRecurso(novoConsumidor, param.IdentificadorRecurso);
+            throw new NotImplementedException();
         }
         #endregion
         
@@ -51,8 +42,8 @@
             var recursosConsumidor = _servRecursoConsumidor.Repositorio
                 .RecuperarPorConsumidor(param.IdentificadorConsumidor)
                 .ToList();
-
-            return Task.FromResult(recursosConsumidor);
+            
+            throw new NotImplementedException();
         }
         #endregion
 

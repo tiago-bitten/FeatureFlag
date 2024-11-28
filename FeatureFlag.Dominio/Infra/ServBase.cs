@@ -13,10 +13,18 @@ public abstract class ServBase<TEntidade, TRepositorio> : IServBase<TEntidade, T
     }
     #endregion
 
-    #region InserirAsync
+    #region AdicionarAsync
     public async Task AdicionarAsync(TEntidade entidade)
     {
         await Repositorio.AdicionarAsync(entidade);
+    }
+    #endregion
+    
+    #region AlterarAsync
+    public void Alterar(TEntidade entidade)
+    {
+        entidade.Alterar();
+        Repositorio.Atualizar(entidade);
     }
     #endregion
 }
