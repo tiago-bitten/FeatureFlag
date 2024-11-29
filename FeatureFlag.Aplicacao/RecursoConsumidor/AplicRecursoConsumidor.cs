@@ -29,6 +29,23 @@
         #region RecuperarPorRecursoConsumidorAsync
         public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
         {
+            var porcentagem =
+                await _servRecurso.Repositorio.RecuperarPorcentagemPorIdentificadorAsync(param.IdentificadorRecurso);
+
+            switch (porcentagem)
+            {
+                case 100:
+                    // 1. Verificar se o consumidor está na blacklist;
+                    // 2. Se estiver, retornar que o recurso está desabilitado;
+                    // 3. Se não estiver, retornar que o recurso está habilitado;
+                    break;
+                case 0:
+                    // 1. Verificar se o consumidor está na whitelist;
+                    // 2. Se estiver, retornar que o recurso está habilitado;
+                    // 3. Se não estiver, retornar que o recurso está desabilitado;
+                    break;
+            }
+            
             var recursoConsumidor = await _servRecursoConsumidor.Repositorio
                 .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorRecurso);
 
