@@ -18,4 +18,13 @@ public class RepMemoControleAcessoConsumidor : RepMemoBase<ControleAcessoConsumi
                 x.Tipo == tipo)
             .AsQueryable();
     }
+    
+    public Task<bool> PossuiControleAcessoAsync(string identificadorRecurso, string identificadorConsumidor, EnumTipoControle tipo)
+    {
+        return Task.FromResult(Items
+            .Any(x => 
+                x.Recurso.Identificador == identificadorRecurso &&
+                x.Consumidor.Identificador == identificadorConsumidor &&
+                x.Tipo == tipo));
+    }
 }
