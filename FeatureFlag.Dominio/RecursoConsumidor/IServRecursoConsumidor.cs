@@ -5,4 +5,5 @@ namespace FeatureFlag.Domain;
 
 public interface IServRecursoConsumidor : IServBase<RecursoConsumidor, IRepRecursoConsumidor>
 {
+    Task AtualizarDisponibilidadeAsync();
 }
