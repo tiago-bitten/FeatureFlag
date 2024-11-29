@@ -12,4 +12,20 @@ public record RecursoConsumidorResponse(
             Consumidor: consumidor.Identificador,
             Habilitado: false);
     }
+    
+    public static RecursoConsumidorResponse Ativo(string identificadorRecurso, string identificadorConsumidor)
+    {
+        return new RecursoConsumidorResponse(
+            Recurso: identificadorRecurso,
+            Consumidor: identificadorConsumidor,
+            Habilitado: true);
+    }
+    
+    public static RecursoConsumidorResponse Desabilitado(string identificadorRecurso, string identificadorConsumidor)
+    {
+        return new RecursoConsumidorResponse(
+            Recurso: identificadorRecurso,
+            Consumidor: identificadorConsumidor,
+            Habilitado: false);
+    }
 }

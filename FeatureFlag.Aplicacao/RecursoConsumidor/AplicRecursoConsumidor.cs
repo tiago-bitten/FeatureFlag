@@ -13,41 +13,48 @@
         private readonly IServRecursoConsumidor _servRecursoConsumidor;
         private readonly IServConsumidor _servConsumidor;
         private readonly IServRecurso _servRecurso;
+        private readonly IServControleAcessoConsumidor _servControleAcessoConsumidor;
 
         public AplicRecursoConsumidor(IServRecursoConsumidor servRecursoConsumidor,
                                       IServConsumidor servConsumidor,
                                       IServRecurso servRecurso,
-                                      IMapper mapper) 
+                                      IMapper mapper,
+                                      IServControleAcessoConsumidor servControleAcessoConsumidor) 
             : base(mapper)
         {
             _servRecursoConsumidor = servRecursoConsumidor;
             _servConsumidor = servConsumidor;
             _servRecurso = servRecurso;
+            _servControleAcessoConsumidor = servControleAcessoConsumidor;
         }
         #endregion
 
         #region RecuperarPorRecursoConsumidorAsync
         public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
         {
+            var recursoConsumidor = await _servRecursoConsumidor.Repositorio
+                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
+            
             var porcentagem =
                 await _servRecurso.Repositorio.RecuperarPorcentagemPorIdentificadorAsync(param.IdentificadorRecurso);
-
+            
             switch (porcentagem)
             {
                 case 100:
-                    // 1. Verificar se o consumidor está na blacklist;
-                    // 2. Se estiver, retornar que o recurso está desabilitado;
-                    // 3. Se não estiver, retornar que o recurso está habilitado;
-                    break;
+                    var estaNaBlacklist = await _servControleAcessoConsumidor.Repositorio
+                        .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Blacklist);
+                    
+                    return estaNaBlacklist 
+                        ? RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor) 
+                        : RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor);
                 case 0:
-                    // 1. Verificar se o consumidor está na whitelist;
-                    // 2. Se estiver, retornar que o recurso está habilitado;
-                    // 3. Se não estiver, retornar que o recurso está desabilitado;
-                    break;
+                    var estaNaWhitelist = await _servControleAcessoConsumidor.Repositorio
+                        .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Whitelist);
+                    
+                    return estaNaWhitelist
+                        ? RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor)
+                        : RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor);
             }
-            
-            var recursoConsumidor = await _servRecursoConsumidor.Repositorio
-                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorRecurso);
 
             throw new NotImplementedException();
         }
