@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Dominio.Infra;
 using FeatureFlag.Shared.Extensions;
 using FeatureFlag.Shared.Helpers;
@@ -52,9 +53,45 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
 
+    #region RetornarCemPorcentoAsync
+    public async Task<RecursoConsumidorResponse> RetornarCemPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
+    {
+        var estaNaBlacklist = await _repControleAcessoConsumidor
+            .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Blacklist);
+            
+        return RetornarPermissao(estaNaBlacklist, EnumTipoControle.Blacklist, param);
+    }
+    #endregion
+        
+    #region RetornarZeroPorcentoAsync
+    public async Task<RecursoConsumidorResponse> RetornarZeroPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
+    {
+        var estaNaWhitelist = await _repControleAcessoConsumidor
+            .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Whitelist);
+            
+        return RetornarPermissao(estaNaWhitelist, EnumTipoControle.Whitelist, param);
+    }
+    #endregion
+        
+    #region RetornarPermissao
+    private RecursoConsumidorResponse RetornarPermissao(bool estaNaLista, EnumTipoControle tipo,
+        RecuperarPorRecursoConsumidorParam param)
+    {
+        return tipo switch
+        {
+            EnumTipoControle.Whitelist => estaNaLista
+                ? RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor)
+                : RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor),
 
+            EnumTipoControle.Blacklist => estaNaLista
+                ? RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor)
+                : RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor),
 
-    
+            _ => throw new NotImplementedException()
+        };
+    }
+    #endregion
+
     #region OLD
     #region CalcularDisponibilidadesAsync
     public async Task<int> CalcularQuantidadeParaHabilitarAsync(string identificadorRecurso)

@@ -22,8 +22,7 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
         var query = Items.AsQueryable();
         
         var recursosConsumidor = query
-            .Where(x => x.Recurso.Identificador == identificadorRecurso && x.Consumidor.Identificador == identificadorConsumidor)
-            .FirstOrDefault();
+            .FirstOrDefault(x => x.Recurso.Identificador == identificadorRecurso && x.Consumidor.Identificador == identificadorConsumidor);
 
         return Task.FromResult(recursosConsumidor);
     }
