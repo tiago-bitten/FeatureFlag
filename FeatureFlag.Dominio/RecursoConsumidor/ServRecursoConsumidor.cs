@@ -25,34 +25,60 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
     
-    #region AlgoritmoVitao
-    private async Task AlgoritmoVitao(string identificadorRecurso)
+    #region RecuperarDisponibilidadeAsync
+    public async Task<bool> RecuperarDisponibilidadeAsync(RecursoConsumidor recursoConsumidor)
     {
-        var porcentagemRecurso = await _repRecurso.RecuperarPorcentagemPorIdentificadorAsync(identificadorRecurso);
-        var consumidores = Repositorio.RecuperarPorRecurso(identificadorRecurso).ToList();
-        var totalConsumidores = consumidores.Count;
-        var habilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).Count();
-
-        foreach (var consumidor in consumidores)
-        {
-            var percentualAtual = habilitados / (decimal)totalConsumidores * 100;
-
-            if (percentualAtual < porcentagemRecurso)
-            {
-                if (consumidor.Status == EnumStatusRecursoConsumidor.Habilitado) continue;
-                consumidor.Habilitar();
-                habilitados++;
-            }
-            else
-            {
-                if (consumidor.Status == EnumStatusRecursoConsumidor.Desabilitado) continue;
-                consumidor.Desabilitar();
-                habilitados--;
-            }
-        }
+        await AtualizarStatusAsync(recursoConsumidor);
+        return recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado;
     }
     #endregion
+    
+    #region AtualizarPercentualDisponivelAsync
+    public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor)
+    {
+        var totalConsumidores = await _repConsumidor.CountAsync();
+        var totalRecursoConsumidoresHabilitados = Repositorio
+            .RecuperarPorStatus(EnumStatusRecursoConsumidor.Habilitado)
+            .Count(x => x.Recurso.Identificador == recursoConsumidor.Recurso.Identificador);
 
+        var porcentagemAtual = PorcentagemHelper.Calcular(totalRecursoConsumidoresHabilitados, totalConsumidores);
+
+        switch (porcentagemAtual.CompareTo(recursoConsumidor.Recurso.Porcentagem))
+        {
+            case < 0:
+                HabilitarRecursoConsumidor(recursoConsumidor);
+                break;
+            
+            case > 0:
+                DesabilitarRecursoConsumidor(recursoConsumidor);
+                break;
+        }
+        
+        Alterar(recursoConsumidor);
+    }
+
+    #region HabilitarRecursoConsumidor
+    private void HabilitarRecursoConsumidor(RecursoConsumidor recursoConsumidor)
+    {
+        if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado)
+            return;
+        
+        recursoConsumidor.Habilitar();
+    }
+    #endregion
+    
+    #region DesabilitarRecursoConsumidor
+    private void DesabilitarRecursoConsumidor(RecursoConsumidor recursoConsumidor)
+    {
+        if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Desabilitado)
+            return;
+        
+        recursoConsumidor.Desabilitar();
+    }
+    #endregion
+    
+    #endregion
+    
     #region RetornarCemPorcentoAsync
     public async Task<RecursoConsumidorResponse> RetornarCemPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
     {
@@ -91,99 +117,4 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         };
     }
     #endregion
-
-    #region OLD
-    #region CalcularDisponibilidadesAsync
-    public async Task<int> CalcularQuantidadeParaHabilitarAsync(string identificadorRecurso)
-    {
-        var porcentagemRecurso = await _repRecurso.RecuperarPorcentagemPorIdentificadorAsync(identificadorRecurso);
-        var totalConsumidores = await _repConsumidor.CountAsync();
-
-        if (porcentagemRecurso is 0 || totalConsumidores is 0)
-            return 0;
-
-        return (int)NumeroHelper.Arredondar(totalConsumidores * porcentagemRecurso / 100);
-    }
-    #endregion
-
-    #region AtualizarDisponibilidadesAsync
-    public Task AtualizarDisponibilidadesAsync(string identificadorRecurso, int quantidadeAlvo)
-    {
-        var consumidoresHabilitados = Repositorio.RecuperarHabilitadosPorRecurso(identificadorRecurso).ToList();
-        var consumidoresDesabilitados = Repositorio.RecuperarDesabilitadosPorRecurso(identificadorRecurso).ToList();
-        var consumidoresRestantes = quantidadeAlvo - consumidoresHabilitados.Count;
-
-        switch (consumidoresRestantes)
-        {
-            case > 0:
-                HabilitarConsumidores(consumidoresDesabilitados, consumidoresRestantes);
-                break;
-
-            case < 0:
-                DesabilitarConsumidores(consumidoresHabilitados, consumidoresRestantes);
-                break;
-        }
-
-        var consumidoresWhitelist = _repControleAcessoConsumidor.RecuperarPorTipo(identificadorRecurso, EnumTipoControle.Whitelist)
-            .SelectMany(x => x.Consumidor.RecursoConsumidores.Where(rc => rc.Consumidor.Identificador == identificadorRecurso))
-            .ToList();
-
-        var consumidoresBlacklist = _repControleAcessoConsumidor.RecuperarPorTipo(identificadorRecurso, EnumTipoControle.Blacklist)
-            .SelectMany(x => x.Consumidor.RecursoConsumidores.Where(rc => rc.Recurso.Identificador == identificadorRecurso))
-            .ToList();
-
-        HabilitarTodosConsumidores(consumidoresWhitelist);
-        DesabilitarTodosConsumidores(consumidoresBlacklist);
-
-        return Task.CompletedTask;
-    }
-
-    #region HabilitarConsumidores
-    private void HabilitarConsumidores(List<RecursoConsumidor> desabilitados, int quantidadeRestante)
-    {
-        var consumidoresParaHabilitar = desabilitados.EmbaralharFisherYates()
-            .Take(quantidadeRestante)
-            .ToList();
-        
-        HabilitarTodosConsumidores(consumidoresParaHabilitar);
-    }
-    
-    #region HabilitarTodosConsumidores
-    private void HabilitarTodosConsumidores(List<RecursoConsumidor> consumidores)
-    {
-        foreach (var consumidor in consumidores)
-        {
-            consumidor.Habilitar();
-        }
-    }
-    #endregion
-
-    #endregion
-
-    #region DesabilitarConsumidores
-    private void DesabilitarConsumidores(List<RecursoConsumidor> habilitados, int quantidadeParaDesabilitarNegativo)
-    {
-        var quantidadeParaDesabilitar = NumeroHelper.ValorAbsoluto(quantidadeParaDesabilitarNegativo);
-        var consumidoresParaDesabilitar = habilitados.EmbaralharFisherYates()
-            .Take(quantidadeParaDesabilitar)
-            .ToList();
-
-        DesabilitarTodosConsumidores(consumidoresParaDesabilitar);
-    }
-    
-    #region DesabilitarTodosConsumidores
-    private void DesabilitarTodosConsumidores(List<RecursoConsumidor> consumidores)
-    {
-        foreach (var consumidor in consumidores)
-        {
-            consumidor.Desabilitar();
-        }
-    }
-    #endregion
-
-    #endregion
-
-    #endregion
-    #endregion
-
 }
