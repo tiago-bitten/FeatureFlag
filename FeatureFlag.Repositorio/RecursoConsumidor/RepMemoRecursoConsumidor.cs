@@ -17,7 +17,7 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
     }
     
-    public Task<RecursoConsumidor?> RecuperarPorRecursoConsumidorAsync(string identificadorRecurso, string identificadorConsumidor)
+    public Task<RecursoConsumidor?> RecuperarPorRecursoConsumidorAsync(string identificadorRecurso, string identificadorConsumidor, params string[]? includes)
     {
         var query = Items.AsQueryable();
         
@@ -28,7 +28,7 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
     }
 
 
-    public IQueryable<RecursoConsumidor> RecuperarPorConsumidor(string identificadorConsumidor)
+    public IQueryable<RecursoConsumidor> RecuperarPorConsumidor(string identificadorConsumidor, params string[]? includes)
     {
         var query = Items.AsQueryable();
 
@@ -38,26 +38,21 @@ public class RepMemoRecursoConsumidor : RepMemoBase<RecursoConsumidor>, IRepRecu
         return recursoConsumidores.AsQueryable();
     }
 
-    public IQueryable<RecursoConsumidor> RecuperarPorRecurso(string identificadorRecurso)
+    public IQueryable<RecursoConsumidor> RecuperarPorRecurso(string identificadorRecurso, params string[]? includes)
     {
         return Items
             .Where(x => x.Recurso.Identificador == identificadorRecurso)
             .AsQueryable();
     }
 
-    public IQueryable<RecursoConsumidor> RecuperarHabilitadosPorRecurso(string identificadorRecurso)
+    public IQueryable<RecursoConsumidor> RecuperarPorStatus(EnumStatusRecursoConsumidor status, params string[]? includes)
     {
-        return RecuperarPorRecurso(identificadorRecurso)
-            .Where(x => x.Status == EnumStatusRecursoConsumidor.Habilitado);
-    }
-    
-    public IQueryable<RecursoConsumidor> RecuperarDesabilitadosPorRecurso(string identificadorRecurso)
-    {
-        return RecuperarPorRecurso(identificadorRecurso)
-            .Where(x => x.Status == EnumStatusRecursoConsumidor.Desabilitado);
+        return Items
+            .Where(x => x.Status == status)
+            .AsQueryable();
     }
 
-    public IQueryable<RecursoConsumidor> RecuperarPorTipo(string identificadorRecurso, EnumTipoControle tipo)
+    public IQueryable<RecursoConsumidor> RecuperarPorTipo(string identificadorRecurso, EnumTipoControle tipo, params string[]? includes)
     {
         throw new NotImplementedException();
     }

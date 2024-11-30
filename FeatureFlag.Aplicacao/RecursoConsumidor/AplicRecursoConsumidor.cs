@@ -32,22 +32,26 @@
         #region RecuperarPorRecursoConsumidorAsync
         public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
         {
-            var recursoConsumidor = await _servRecursoConsumidor.Repositorio
-                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
-            
-            var porcentagem =
+            var porcentagemConfigurada =
                 await _servRecurso.Repositorio.RecuperarPorcentagemPorIdentificadorAsync(param.IdentificadorRecurso);
             
-            switch (porcentagem)
+            switch (porcentagemConfigurada)
             {
                 case 100:
                     return await _servRecursoConsumidor.RetornarCemPorcentoAtivoAsync(param);
                 case 0:
                     return await _servRecursoConsumidor.RetornarZeroPorcentoAtivoAsync(param);
             }
+            
+            var recursoConsumidor = await _servRecursoConsumidor.Repositorio
+                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
+
+            var disponivel = true;
 
             throw new NotImplementedException();
         }
+        
+        
         #endregion
         
         #region RecuperarPorConsumidorAsync
