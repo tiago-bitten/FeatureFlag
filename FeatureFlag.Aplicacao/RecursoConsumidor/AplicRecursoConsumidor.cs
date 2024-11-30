@@ -41,19 +41,9 @@
             switch (porcentagem)
             {
                 case 100:
-                    var estaNaBlacklist = await _servControleAcessoConsumidor.Repositorio
-                        .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Blacklist);
-                    
-                    return estaNaBlacklist 
-                        ? RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor) 
-                        : RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor);
+                    return await _servRecursoConsumidor.RetornarCemPorcentoAtivoAsync(param);
                 case 0:
-                    var estaNaWhitelist = await _servControleAcessoConsumidor.Repositorio
-                        .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Whitelist);
-                    
-                    return estaNaWhitelist
-                        ? RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor)
-                        : RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor);
+                    return await _servRecursoConsumidor.RetornarZeroPorcentoAtivoAsync(param);
             }
 
             throw new NotImplementedException();
