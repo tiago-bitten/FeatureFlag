@@ -4,6 +4,7 @@
     using FeatureFlag.Domain.Dtos;
     using FeatureFlag.Dominio;
     using FeatureFlag.Dominio.Dtos;
+    using FeatureFlag.Shared.Extensions;
 
     namespace FeatureFlag.Aplicacao;
 
@@ -32,23 +33,32 @@
         #region RecuperarPorRecursoConsumidorAsync
         public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
         {
-            var porcentagemConfigurada =
-                await _servRecurso.Repositorio.RecuperarPorcentagemPorIdentificadorAsync(param.IdentificadorRecurso);
+            var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(param.IdentificadorRecurso);
+            recurso.ExcecaoSeNull("Recurso não encontrado");
             
-            switch (porcentagemConfigurada)
+            await IniciarTransacaoAsync();
+            var consumidor = await _servConsumidor.RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
+            await PersistirTransacaoAsync();
+            
+            switch (recurso.Porcentagem)
             {
                 case 100:
                     return await _servRecursoConsumidor.RetornarCemPorcentoAtivoAsync(param);
                 case 0:
                     return await _servRecursoConsumidor.RetornarZeroPorcentoAtivoAsync(param);
             }
+
+            await IniciarTransacaoAsync();
+            var recursoConsumidor = await _servRecursoConsumidor.RecuperarPorRecursoConsumidorAsync(recurso, consumidor);
+            await PersistirTransacaoAsync();
             
-            var recursoConsumidor = await _servRecursoConsumidor.Repositorio
-                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
+            await IniciarTransacaoAsync();
+            await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor);
+            await PersistirTransacaoAsync();
+            
+            var response = Mapper.Map<RecursoConsumidorResponse>(recursoConsumidor);
 
-            var disponivel = true;
-
-            throw new NotImplementedException();
+            return response;
         }
         
         
@@ -64,5 +74,4 @@
             throw new NotImplementedException();
         }
         #endregion
-
     }
