@@ -11,8 +11,8 @@ public sealed class RecursoConsumidor : EntidadeBase
     
     //
     
-    public Recurso Recurso { get; private set; }
-    public Consumidor Consumidor { get; private set; }
+    public Recurso Recurso { get; set; }
+    public Consumidor Consumidor { get; set; }
     
     #region Regras
     public void ValidarCodigos()
