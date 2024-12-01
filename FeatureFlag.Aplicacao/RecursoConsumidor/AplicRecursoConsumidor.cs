@@ -37,7 +37,7 @@
             recurso.ExcecaoSeNull("Recurso não encontrado");
             
             await IniciarTransacaoAsync();
-            var consumidor = await _servConsumidor.RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
+            var consumidor = await _servConsumidor.RecuperarPorIdentificadorOuCriarAsync(param.IdentificadorConsumidor);
             await PersistirTransacaoAsync();
             
             switch (recurso.Porcentagem)
@@ -49,7 +49,7 @@
             }
 
             await IniciarTransacaoAsync();
-            var recursoConsumidor = await _servRecursoConsumidor.RecuperarPorRecursoConsumidorAsync(recurso, consumidor);
+            var recursoConsumidor = await _servRecursoConsumidor.RecuperarPorRecursoConsumidorOuCriarAsync(recurso, consumidor);
             await PersistirTransacaoAsync();
             
             await IniciarTransacaoAsync();
@@ -60,8 +60,6 @@
 
             return response;
         }
-        
-        
         #endregion
         
         #region RecuperarPorConsumidorAsync

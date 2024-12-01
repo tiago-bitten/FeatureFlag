@@ -11,7 +11,7 @@ public class ServConsumidor : ServBase<Consumidor, IRepConsumidor>, IServConsumi
     #endregion
     
     #region RecuperarPorIdentificadorAsync
-    public async Task<Consumidor> RecuperarPorIdentificadorAsync(string identificador)
+    public async Task<Consumidor> RecuperarPorIdentificadorOuCriarAsync(string identificador)
     {
         var consumidor = await Repositorio.RecuperarPorIdentificadorAsync(identificador);
 
