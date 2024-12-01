@@ -26,14 +26,17 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
     
     #region RecuperarPorRecursoConsumidorAsync
-    public async Task<RecursoConsumidor> RecuperarPorRecursoConsumidorAsync(Recurso recurso, Consumidor consumidor)
+    public async Task<RecursoConsumidor> RecuperarPorRecursoConsumidorOuCriarAsync(Recurso recurso, Consumidor consumidor)
     {
         var recursoConsumidor = await Repositorio
-            .RecuperarPorRecursoConsumidorAsync(recurso.Identificador, consumidor.Identificador);
+            .RecuperarPorRecursoConsumidorAsync(recurso.Identificador, consumidor.Identificador, "Recurso", "Consumidor");
 
         if (recursoConsumidor is null)
         {
             recursoConsumidor = RecursoConsumidor.Criar(recurso.Id, consumidor.Id);
+            recursoConsumidor.Recurso = recurso;
+            recursoConsumidor.Consumidor = consumidor;
+            
             await AdicionarAsync(recursoConsumidor);
         }
         return recursoConsumidor;
