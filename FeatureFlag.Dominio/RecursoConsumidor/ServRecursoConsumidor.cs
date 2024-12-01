@@ -52,6 +52,10 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
             case > 0:
                 DesabilitarRecursoConsumidor(recursoConsumidor);
                 break;
+            
+            default:
+                NormalizarStatus(recursoConsumidor);
+                break;
         }
         
         Alterar(recursoConsumidor);
@@ -77,6 +81,16 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
     
+    #region NormalizarStatus
+    public void NormalizarStatus(RecursoConsumidor recursoConsumidor)
+    {
+        if (recursoConsumidor.Status is not (EnumStatusRecursoConsumidor.Habilitado 
+                                             or EnumStatusRecursoConsumidor.Desabilitado))
+        { 
+            recursoConsumidor.Desabilitar();
+        }
+    }
+    #endregion
     #endregion
     
     #region RetornarCemPorcentoAsync
