@@ -25,15 +25,22 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
     
-    #region RecuperarDisponibilidadeAsync
-    public async Task<bool> RecuperarDisponibilidadeAsync(RecursoConsumidor recursoConsumidor)
+    #region RecuperarPorRecursoConsumidorAsync
+    public async Task<RecursoConsumidor> RecuperarPorRecursoConsumidorAsync(Recurso recurso, Consumidor consumidor)
     {
-        await AtualizarStatusAsync(recursoConsumidor);
-        return recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado;
+        var recursoConsumidor = await Repositorio
+            .RecuperarPorRecursoConsumidorAsync(recurso.Identificador, consumidor.Identificador);
+
+        if (recursoConsumidor is null)
+        {
+            recursoConsumidor = RecursoConsumidor.Criar(recurso.Id, consumidor.Id);
+            await AdicionarAsync(recursoConsumidor);
+        }
+        return recursoConsumidor;
     }
     #endregion
     
-    #region AtualizarPercentualDisponivelAsync
+    #region AtualizarStatusAsync
     public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor)
     {
         var totalConsumidores = await _repConsumidor.CountAsync();
@@ -82,7 +89,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
     
     #region NormalizarStatus
-    public void NormalizarStatus(RecursoConsumidor recursoConsumidor)
+    private void NormalizarStatus(RecursoConsumidor recursoConsumidor)
     {
         if (recursoConsumidor.Status is not (EnumStatusRecursoConsumidor.Habilitado 
                                              or EnumStatusRecursoConsumidor.Desabilitado))

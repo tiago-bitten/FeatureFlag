@@ -11,5 +11,9 @@ public class RecursoConsumidorProfile : Profile
         CreateProjection<RecursoConsumidor, RecursoConsumidorResponse>()
             .ForMember(dest => dest.Habilitado, opt => 
                 opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
+        
+        CreateMap<RecursoConsumidor, RecursoConsumidorResponse>()
+            .ForMember(dest => dest.Habilitado, opt => 
+                opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
     }
 }
