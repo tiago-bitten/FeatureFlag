@@ -4,5 +4,4 @@ namespace FeatureFlag.Dominio;
 
 public interface IServConsumidor : IServBase<Consumidor, IRepConsumidor>
 {
-    Task<Consumidor> RecuperarPorIdentificadorOuCriarAsync(string identificador);
 }

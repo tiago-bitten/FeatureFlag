@@ -36,9 +36,17 @@
             var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(param.IdentificadorRecurso);
             recurso.ExcecaoSeNull("Recurso não encontrado");
             
-            await IniciarTransacaoAsync();
-            var consumidor = await _servConsumidor.RecuperarPorIdentificadorOuCriarAsync(param.IdentificadorConsumidor);
-            await PersistirTransacaoAsync();
+            var consumidor = await _servConsumidor.Repositorio
+                .RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
+            if (consumidor is null)
+            {
+                await IniciarTransacaoAsync();
+                
+                var novoConsumidor = Consumidor.Criar(param.IdentificadorConsumidor);
+                await _servConsumidor.AdicionarAsync(novoConsumidor);
+                
+                await PersistirTransacaoAsync();
+            }
             
             switch (recurso.Porcentagem)
             {
@@ -48,9 +56,20 @@
                     return await _servRecursoConsumidor.RetornarZeroPorcentoAtivoAsync(param);
             }
 
-            await IniciarTransacaoAsync();
-            var recursoConsumidor = await _servRecursoConsumidor.RecuperarPorRecursoConsumidorOuCriarAsync(recurso, consumidor);
-            await PersistirTransacaoAsync();
+            var recursoConsumidor = await _servRecursoConsumidor.Repositorio
+                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, "Recurso", "Consumidor");
+            if (recursoConsumidor is null)
+            {
+                await IniciarTransacaoAsync();
+                
+                // Remover padrão factory e utilizar constutores com inicialização
+                var novoRecursoConsumidor = RecursoConsumidor.Criar(recurso.Id, consumidor.Id);
+                novoRecursoConsumidor.Recurso = recurso;
+                novoRecursoConsumidor.Consumidor = consumidor;
+                await _servRecursoConsumidor.AdicionarAsync(novoRecursoConsumidor);
+                
+                await PersistirTransacaoAsync();
+            }
             
             await IniciarTransacaoAsync();
             await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor);
@@ -65,10 +84,6 @@
         #region RecuperarPorConsumidorAsync
         public Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
         {
-            var recursosConsumidor = _servRecursoConsumidor.Repositorio
-                .RecuperarPorConsumidor(param.IdentificadorConsumidor)
-                .ToList();
-            
             throw new NotImplementedException();
         }
         #endregion

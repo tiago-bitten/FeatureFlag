@@ -9,10 +9,10 @@ public sealed class RecursoConsumidor : EntidadeBase
     public Guid CodigoConsumidor { get; private set; }
     public EnumStatusRecursoConsumidor Status { get; private set; }
     
-    //
-    
+    #region Relacionamentos    
     public Recurso Recurso { get; set; }
     public Consumidor Consumidor { get; set; }
+    #endregion
     
     #region Regras
     public void ValidarCodigos()
