@@ -30,7 +30,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     {
         var totalConsumidores = await _repConsumidor.CountAsync();
         var totalRecursoConsumidoresHabilitados = Repositorio
-            .RecuperarPorStatus(EnumStatusRecursoConsumidor.Habilitado)
+            .RecuperarPorStatus(EnumStatusRecursoConsumidor.Habilitado, "Recurso.Identificador")
             .Count(x => x.Recurso.Identificador == recursoConsumidor.Recurso.Identificador);
 
         var porcentagemAtual = PorcentagemHelper.Calcular(totalRecursoConsumidoresHabilitados, totalConsumidores);
