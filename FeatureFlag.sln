@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.Tests", "Featur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.Shared", "FeatureFlag.Shared\FeatureFlag.Shared.csproj", "{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFlag.API", "FeatureFlag.API\FeatureFlag.API.csproj", "{80285504-7892-41CA-967C-D9774BB72DB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBE9D94A-EF35-44B7-B30C-0A9330704FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80285504-7892-41CA-967C-D9774BB72DB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80285504-7892-41CA-967C-D9774BB72DB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80285504-7892-41CA-967C-D9774BB72DB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80285504-7892-41CA-967C-D9774BB72DB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
