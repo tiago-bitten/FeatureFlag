@@ -1,6 +1,6 @@
 ﻿namespace FeatureFlag.Domain.Dtos;
 
-public record CriarRecursoRequest(
+public record AdicionarRecursoRequest(
     string Identificador,
     string Descricao,
     decimal Porcentagem);

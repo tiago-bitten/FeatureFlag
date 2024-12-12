@@ -4,6 +4,6 @@ namespace FeatureFlag.Domain;
 
 public interface IAplicRecurso
 {
-    Task<RecursoResponse> AdicionarAsync(CriarRecursoRequest request);
+    Task<RecursoResponse> AdicionarAsync(AdicionarRecursoRequest request);
     Task<RecursoResponse> AlterarAsync(AlterarRecursoRequest request);
 }
