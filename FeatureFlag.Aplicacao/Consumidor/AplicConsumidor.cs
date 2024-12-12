@@ -38,7 +38,7 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
     public async Task<ConsumidorResponse> AlterarAsync(AlterarConsumidorRequest request)
     {
         var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
-        consumidor.ExcecaoSeNull("Consumidor não encontrado.");
+        consumidor.ThrowIfNull();
         
         var consumidorAlterado = Mapper.Map(request, consumidor);
 

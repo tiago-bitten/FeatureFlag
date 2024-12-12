@@ -1,12 +1,13 @@
-﻿namespace FeatureFlag.Shared.Extensions;
+﻿using FeatureFlag.Shared.Helpers;
+
+namespace FeatureFlag.Shared.Extensions;
 
 public static class CoringaExtensions
 {
-    public static void ExcecaoSeNull<T>(this T obj, string mensagem)
+    public static void ThrowIfNull<T>(this T? obj, string mensagem = "Classe não existe.") where T : class
     {
         if (obj is null)
-        {
-            throw new ArgumentNullException(mensagem);
-        }
+            ThrowHelper.Null(mensagem);
     }
 }
+    
