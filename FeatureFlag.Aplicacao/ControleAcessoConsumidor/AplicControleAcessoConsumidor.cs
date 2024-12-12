@@ -30,13 +30,13 @@ public class AplicControleAcessoConsumidor : AplicBase, IAplicControleAcessoCons
     public async Task<ControleAcessoConsumidorResponse> AdicionarAsync(CriarControleAcessoConsumidorRequest request)
     {
         var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.IdentificadorConsumidor);
-        consumidor.ExcecaoSeNull("Consumidor não encontrado");
+        consumidor.ThrowIfNull();
         
         await IniciarTransacaoAsync();
         foreach (var identificadorRecurso in request.IdentificadoresRecursos)
         {
             var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(identificadorRecurso);
-            recurso.ExcecaoSeNull("Recurso não encontrado");
+            recurso.ThrowIfNull();
             
             var controleAcessoConsumidor = CriarPorTipo(consumidor, recurso, request.Tipo);
             

@@ -1,16 +1,15 @@
-﻿    using AutoMapper;
+﻿using AutoMapper;
     using FeatureFlag.Aplicacao.Infra;
     using FeatureFlag.Domain;
     using FeatureFlag.Domain.Dtos;
     using FeatureFlag.Dominio;
     using FeatureFlag.Dominio.Dtos;
     using FeatureFlag.Shared.Extensions;
+namespace FeatureFlag.Aplicacao;
 
-    namespace FeatureFlag.Aplicacao;
-
-    public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
-    {
-        #region Ctor
+public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor 
+{
+    #region Ctor
         private readonly IServRecursoConsumidor _servRecursoConsumidor;
         private readonly IServConsumidor _servConsumidor;
         private readonly IServRecurso _servRecurso;
@@ -29,12 +28,12 @@
             _servControleAcessoConsumidor = servControleAcessoConsumidor;
         }
         #endregion
-
-        #region RecuperarPorRecursoConsumidorAsync
+        
+    #region RecuperarPorRecursoConsumidorAsync
         public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
         {
             var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(param.IdentificadorRecurso);
-            recurso.ExcecaoSeNull("Recurso não encontrado");
+            recurso.ThrowIfNull("Recurso não foi encontrado.");
             
             var consumidor = await _servConsumidor.Repositorio
                 .RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
@@ -81,10 +80,10 @@
         }
         #endregion
         
-        #region RecuperarPorConsumidorAsync
+    #region RecuperarPorConsumidorAsync
         public Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
         {
             throw new NotImplementedException();
         }
         #endregion
-    }
+}

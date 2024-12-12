@@ -38,7 +38,7 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     public async Task<RecursoResponse> AlterarAsync(AlterarRecursoRequest request)
     {
         var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
-        recurso.ExcecaoSeNull("Recurso não encontrado.");
+        recurso.ThrowIfNull();
         
         var recursoAlterado = Mapper.Map(request, recurso);
 
