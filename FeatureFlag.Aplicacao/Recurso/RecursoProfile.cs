@@ -8,7 +8,7 @@ public class RecursoProfile : Profile
 {
     public RecursoProfile()
     {
-        CreateMap<CriarRecursoRequest, Recurso>()
+        CreateMap<AdicionarRecursoRequest, Recurso>()
             .ConstructUsing((src, dest) => Recurso.Criar(src.Identificador, src.Descricao, src.Porcentagem));
 
         CreateMap<Recurso, RecursoResponse>();

@@ -20,7 +20,7 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     #endregion
     
     #region AdicionarAsync
-    public async Task<RecursoResponse> AdicionarAsync(CriarRecursoRequest request)
+    public async Task<RecursoResponse> AdicionarAsync(AdicionarRecursoRequest request)
     {
         var recurso = Mapper.Map<Recurso>(request);
 
@@ -38,7 +38,7 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     public async Task<RecursoResponse> AlterarAsync(AlterarRecursoRequest request)
     {
         var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
-        recurso.ThrowIfNull();
+        recurso.ThrowIfNull("Recurso não foi encontrado.");
         
         var recursoAlterado = Mapper.Map(request, recurso);
 

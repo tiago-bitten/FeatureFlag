@@ -25,7 +25,7 @@ namespace FeatureFlag.Tests
         public async Task AdicionarAsync_CriarRecurso_Sucesso()
         {
             // Arrange
-            var request = new CriarRecursoRequest(
+            var request = new AdicionarRecursoRequest(
                 Identificador: "plugzapi",
                 Descricao: "Envio de mensagens para o WhatsApp",
                 50);
@@ -58,7 +58,7 @@ namespace FeatureFlag.Tests
         public async Task AdicionarAsync_CriarRecursoSemDescricao_DeveLancarErro()
         {
             // Arrange
-            var request = new CriarRecursoRequest(
+            var request = new AdicionarRecursoRequest(
                 Identificador: "plugzapi",
                 Descricao: string.Empty,
                 0); // Descrição vazia
