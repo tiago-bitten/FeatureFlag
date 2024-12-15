@@ -4,10 +4,19 @@ using MongoDB.Bson.Serialization;
 
 namespace FeatureFlag.Repositorio;
 
-public class RecursoConfig : IDocumentConfiguration<Recurso>
+public class RecursoConfig : EntidadeBaseConfig<Recurso> 
 {
-    public void Configurar(BsonClassMap<Recurso> builder)
+    public override void Configurar(BsonClassMap<Recurso> builder)
     {
-        builder.AutoMap();
+        base.Configurar(builder);
+        
+        builder.MapProperty(x => x.Identificador)
+            .SetElementName("identificador");
+        
+        builder.MapProperty(x => x.Descricao)
+            .SetElementName("descricao");
+        
+        builder.MapProperty(x => x.Porcentagem)
+            .SetElementName("porcentagem");
     }
 }
