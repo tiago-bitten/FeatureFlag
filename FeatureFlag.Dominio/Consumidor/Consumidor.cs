@@ -7,16 +7,8 @@ public sealed class Consumidor : EntidadeBase
 {
     public string Identificador { get; private set; }
     public string? Descricao { get; private set; }
-    
-    #region Relacionamentos
-    private List<Recurso> _recursos = [];
-    private List<RecursoConsumidor> _recursoConsumidores = [];
-    private List<ControleAcessoConsumidor> _controleAcessoConsumidores = [];
-
-    public IReadOnlyList<Recurso> Recursos => _recursos.AsReadOnly();
-    public IReadOnlyList<RecursoConsumidor> RecursoConsumidores => _recursoConsumidores.AsReadOnly();
-    public IReadOnlyList<ControleAcessoConsumidor> ControleAcessoConsumidores => _controleAcessoConsumidores.AsReadOnly();
-    #endregion
+    public List<RecursoConsumidorEmbedded> Recursos { get; private set; } = [];
+    public List<ControleAcessoConsumidorEmbedded> ControleAcessos { get; private set; } = [];
     
     #region Regras
     public void ValidarIdentificador()
@@ -41,3 +33,22 @@ public sealed class Consumidor : EntidadeBase
     }
     #endregion
 }
+
+#region Embeddeds
+
+#region RecursoConsumidorEmbedded
+public class RecursoConsumidorEmbedded
+{
+    public string IdentificadorRecurso { get; set; }
+    public EnumStatusRecursoConsumidor Status { get; set; }
+}
+#endregion
+
+#region ControleAcessoConsumidorEmbedded
+public class ControleAcessoConsumidorEmbedded
+{
+    public string IdentificadorRecurso { get; set; }
+    public EnumTipoControle Tipo { get; set; }
+}
+#endregion
+#endregion

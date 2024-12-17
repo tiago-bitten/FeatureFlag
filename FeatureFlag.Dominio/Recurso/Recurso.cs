@@ -1,5 +1,4 @@
 ﻿using FeatureFlag.Dominio.Infra;
-using FeatureFlag.Dominio;
 using FeatureFlag.Shared.Helpers;
 
 namespace FeatureFlag.Domain;
@@ -7,17 +6,17 @@ namespace FeatureFlag.Domain;
 public sealed class Recurso : EntidadeBase
 {
     public string Identificador { get; private set; }
-    public string Descricao { get; private set; }
+    public string Descricao { get; set; }
     public decimal Porcentagem { get; private set; }
     
-    #region Relacionamentos
-    private readonly List<Consumidor> _consumidores = [];
-    private readonly List<RecursoConsumidor> _recursoConsumidores = [];
-    private readonly List<ControleAcessoConsumidor> _controleAcessoConsumidores = [];
-
-    public IReadOnlyList<Consumidor> Consumidores => _consumidores.AsReadOnly();
-    public IReadOnlyList<RecursoConsumidor> RecursoConsumidores => _recursoConsumidores.AsReadOnly();
-    public IReadOnlyList<ControleAcessoConsumidor> ControleAcessoConsumidores => _controleAcessoConsumidores.AsReadOnly();
+    public ConsumidorEmbedded Consumidor { get; private set; } = new();
+    
+    #region Setters
+    public void AlterarPorcentagem(decimal porcentagem)
+    {
+        Porcentagem = porcentagem;
+        ValidarPorcentagem();
+    }
     #endregion
     
     #region Regras
@@ -60,3 +59,28 @@ public sealed class Recurso : EntidadeBase
     }
     #endregion
 }
+
+#region Embeddeds
+public class ConsumidorEmbedded
+{
+    public int TotalHabilitados { get; private set; }
+    public List<string> IdentificadoresHabilitados { get; private set; } = [];
+    
+    #region Adicionar
+    public void Adicionar(string identificador)
+    {
+        IdentificadoresHabilitados.Add(identificador);
+        TotalHabilitados++;
+    }
+    
+    #endregion
+    
+    #region Remover
+    public void Remover(string identificador)
+    {
+        IdentificadoresHabilitados.Remove(identificador);
+        TotalHabilitados--;
+    }
+    #endregion
+}
+#endregion

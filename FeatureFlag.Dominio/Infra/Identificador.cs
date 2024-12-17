@@ -2,5 +2,5 @@
 
 public abstract class Identificador
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public string Id { get; private set; }
 }

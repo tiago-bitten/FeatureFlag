@@ -56,15 +56,13 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
             }
 
             var recursoConsumidor = await _servRecursoConsumidor.Repositorio
-                .RecuperarPorRecursoConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, "Recurso", "Consumidor");
+                .RecuperarPorRecursoEConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
             if (recursoConsumidor is null)
             {
                 await IniciarTransacaoAsync();
                 
                 // Remover padrão factory e utilizar constutores com inicialização
                 var novoRecursoConsumidor = RecursoConsumidor.Criar(recurso.Id, consumidor.Id);
-                novoRecursoConsumidor.Recurso = recurso;
-                novoRecursoConsumidor.Consumidor = consumidor;
                 await _servRecursoConsumidor.AdicionarAsync(novoRecursoConsumidor);
                 
                 await PersistirTransacaoAsync();

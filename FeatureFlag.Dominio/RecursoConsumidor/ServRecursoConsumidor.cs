@@ -28,21 +28,20 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region AtualizarStatusAsync
     public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor)
     {
+        var recurso = await _repRecurso.RecuperarPorIdentificadorAsync(recursoConsumidor.Recurso.Identificador);
         var totalConsumidores = await _repConsumidor.CountAsync();
-        var totalRecursoConsumidoresHabilitados = Repositorio
-            .RecuperarPorStatus(EnumStatusRecursoConsumidor.Habilitado, "Recurso.Identificador")
-            .Count(x => x.Recurso.Identificador == recursoConsumidor.Recurso.Identificador);
+        var totalConsumidoresHabilitados = recurso.Consumidor.TotalHabilitados;
 
-        var porcentagemAtual = PorcentagemHelper.Calcular(totalRecursoConsumidoresHabilitados, totalConsumidores);
+        var porcentagemAtual = PorcentagemHelper.Calcular(totalConsumidoresHabilitados, totalConsumidores);
 
-        switch (porcentagemAtual.CompareTo(recursoConsumidor.Recurso.Porcentagem))
+        switch (porcentagemAtual.CompareTo(recurso.Porcentagem))
         {
             case < 0:
-                HabilitarRecursoConsumidor(recursoConsumidor);
+                HabilitarConsumidor(recursoConsumidor, recurso);
                 break;
             
             case > 0:
-                DesabilitarRecursoConsumidor(recursoConsumidor);
+                DesabilitarConsumidor(recursoConsumidor, recurso);
                 break;
             
             default:
@@ -50,26 +49,28 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 break;
         }
         
-        Alterar(recursoConsumidor);
+        await AlterarAsync(recursoConsumidor);
     }
 
-    #region HabilitarRecursoConsumidor
-    private void HabilitarRecursoConsumidor(RecursoConsumidor recursoConsumidor)
+    #region HabilitarConsumidor
+    private void HabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso)
     {
         if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado)
             return;
         
         recursoConsumidor.Habilitar();
+        recurso.Consumidor.Adicionar(recursoConsumidor.Consumidor.Identificador);
     }
     #endregion
     
-    #region DesabilitarRecursoConsumidor
-    private void DesabilitarRecursoConsumidor(RecursoConsumidor recursoConsumidor)
+    #region DesabilitarConsumidor
+    private void DesabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso)
     {
         if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Desabilitado)
             return;
         
         recursoConsumidor.Desabilitar();
+        recurso.Consumidor.Remover(recursoConsumidor.Consumidor.Identificador);
     }
     #endregion
     
@@ -85,11 +86,12 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
     #endregion
     
+    #region Retornar 0% ou 100%
     #region RetornarCemPorcentoAsync
     public async Task<RecursoConsumidorResponse> RetornarCemPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
     {
         var estaNaBlacklist = await _repControleAcessoConsumidor
-            .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Blacklist);
+            .PossuiPorTipoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Blacklist);
             
         return RetornarPermissao(estaNaBlacklist, EnumTipoControle.Blacklist, param);
     }
@@ -99,7 +101,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     public async Task<RecursoConsumidorResponse> RetornarZeroPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
     {
         var estaNaWhitelist = await _repControleAcessoConsumidor
-            .PossuiControleAcessoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Whitelist);
+            .PossuiPorTipoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Whitelist);
             
         return RetornarPermissao(estaNaWhitelist, EnumTipoControle.Whitelist, param);
     }
@@ -122,5 +124,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
             _ => throw new NotImplementedException()
         };
     }
+    #endregion
     #endregion
 }
