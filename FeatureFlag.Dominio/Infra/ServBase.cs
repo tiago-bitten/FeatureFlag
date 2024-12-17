@@ -21,10 +21,10 @@ public abstract class ServBase<TEntidade, TRepositorio> : IServBase<TEntidade, T
     #endregion
     
     #region AlterarAsync
-    public void Alterar(TEntidade entidade)
+    public async Task AlterarAsync(TEntidade entidade)
     {
         entidade.Alterar();
-        Repositorio.Atualizar(entidade);
+        await Repositorio.AtualizarAsync(entidade);
     }
     #endregion
 }

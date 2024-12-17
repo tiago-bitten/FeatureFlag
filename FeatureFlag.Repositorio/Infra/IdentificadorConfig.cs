@@ -9,6 +9,8 @@ public class IdentificadorConfig<T> : IDocumentConfiguration<T> where T : Identi
     {
         builder.AutoMap();
         
+        builder.SetIgnoreExtraElements(true);
+        
         builder.MapIdProperty(x => x.Id)
             .SetIdGenerator(MongoDB.Bson.Serialization.IdGenerators.StringObjectIdGenerator.Instance);
     }

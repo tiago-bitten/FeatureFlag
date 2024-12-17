@@ -5,42 +5,25 @@ namespace FeatureFlag.Dominio;
 
 public sealed class RecursoConsumidor : EntidadeBase
 {
-    public Guid CodigoRecurso { get; private set; }
-    public Guid CodigoConsumidor { get; private set; }
+    public RecursoEmbedded Recurso { get; private set; }
+    public ConsumidorEmbedded Consumidor { get; private set; }
     public EnumStatusRecursoConsumidor Status { get; private set; }
-    
-    #region Relacionamentos    
-    public Recurso Recurso { get; set; }
-    public Consumidor Consumidor { get; set; }
-    #endregion
-    
-    #region Regras
-    public void ValidarCodigos()
-    {
-        if (string.IsNullOrWhiteSpace(CodigoRecurso.ToString()) ||
-            string.IsNullOrWhiteSpace(CodigoConsumidor.ToString()))
-        {
-            throw new Exception();
-        }
-    }
-    #endregion
-    
-    #region Status
+
+    #region Setters
     public void Habilitar() => Status = EnumStatusRecursoConsumidor.Habilitado;
     public void Desabilitar() => Status = EnumStatusRecursoConsumidor.Desabilitado;
     #endregion
-    
+
     #region Fábrica estática
-    private RecursoConsumidor(Guid codigoRecurso, Guid codigoConsumidor)
+    private RecursoConsumidor(string codigoRecurso, string codigoConsumidor)
     {
-        CodigoConsumidor = codigoConsumidor;
-        CodigoRecurso = codigoRecurso;
+        Consumidor.Id = codigoConsumidor;
+        Recurso.Id = codigoRecurso;
     }
 
-    public static RecursoConsumidor Criar(Guid codigoRecurso, Guid codigoConsumidor)
+    public static RecursoConsumidor Criar(string codigoRecurso, string codigoConsumidor)
     {
         var recursoConsumidor = new RecursoConsumidor(codigoRecurso, codigoConsumidor);
-        recursoConsumidor.ValidarCodigos();
 
         return recursoConsumidor;
     }    

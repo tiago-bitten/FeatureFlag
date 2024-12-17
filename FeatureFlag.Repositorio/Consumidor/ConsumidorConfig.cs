@@ -1,25 +1,25 @@
-﻿using FeatureFlag.Domain;
+﻿using FeatureFlag.Dominio;
 using FeatureFlag.Repositorio.Infra;
 using MongoDB.Bson.Serialization;
 
 namespace FeatureFlag.Repositorio;
 
-public class RecursoConfig : EntidadeBaseConfig<Recurso> 
+public class ConsumidorConfig : EntidadeBaseConfig<Consumidor>
 {
-    public override void Configurar(BsonClassMap<Recurso> builder)
+    public override void Configurar(BsonClassMap<Consumidor> builder)
     {
         base.Configurar(builder);
-        
+
         builder.MapProperty(x => x.Identificador)
             .SetElementName("identificador");
-        
+
         builder.MapProperty(x => x.Descricao)
             .SetElementName("descricao");
         
-        builder.MapProperty(x => x.Porcentagem)
-            .SetElementName("porcentagem");
+        builder.MapProperty(x => x.Recursos)
+            .SetElementName("recursos");
         
-        builder.MapProperty(x => x.Consumidor)
-            .SetElementName("consumidor");
+        builder.MapProperty(x => x.ControleAcessos)
+            .SetElementName("controle_acessos");
     }
 }

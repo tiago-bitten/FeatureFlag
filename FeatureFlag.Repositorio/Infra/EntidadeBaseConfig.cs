@@ -10,10 +10,10 @@ public class EntidadeBaseConfig<T> : IdentificadorConfig<T> where T : EntidadeBa
         base.Configurar(builder);
         
         builder.MapProperty(x => x.DataCriacao)
-            .SetElementName("datacriacao");
+            .SetElementName("data_criacao");
         
         builder.MapProperty(x => x.DataAlteracao)
-            .SetElementName("dataalteracao");
+            .SetElementName("data_alteracao");
         
         builder.MapProperty(x => x.Inativo)
             .SetElementName("inativo");

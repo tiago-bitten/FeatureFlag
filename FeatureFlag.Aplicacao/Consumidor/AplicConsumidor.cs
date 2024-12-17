@@ -43,7 +43,7 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
         var consumidorAlterado = Mapper.Map(request, consumidor);
 
         await IniciarTransacaoAsync();
-        _servConsumidor.Alterar(consumidorAlterado);
+        await _servConsumidor.AlterarAsync(consumidorAlterado);
         await PersistirTransacaoAsync();
         
         var response = Mapper.Map<ConsumidorResponse>(consumidorAlterado);
