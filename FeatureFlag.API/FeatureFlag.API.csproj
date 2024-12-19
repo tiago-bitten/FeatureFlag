@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\FeatureFlag.Aplicacao\FeatureFlag.Aplicacao.csproj" />
       <ProjectReference Include="..\FeatureFlag.Dominio\FeatureFlag.Dominio.csproj" />
       <ProjectReference Include="..\FeatureFlag.Repositorio\FeatureFlag.Repositorio.csproj" />
     </ItemGroup>
