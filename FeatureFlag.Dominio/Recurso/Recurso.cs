@@ -58,29 +58,29 @@ public sealed class Recurso : EntidadeBase
         return recurso;
     }
     #endregion
-}
-
-#region Embeddeds
-public class ConsumidorEmbedded
-{
-    public int TotalHabilitados { get; private set; }
-    public List<string> IdentificadoresHabilitados { get; private set; } = [];
     
-    #region Adicionar
-    public void Adicionar(string identificador)
+    #region Embeddeds
+    public class ConsumidorEmbedded
     {
-        IdentificadoresHabilitados.Add(identificador);
-        TotalHabilitados++;
-    }
+        public int TotalHabilitados { get; private set; }
+        public List<string> IdentificadoresHabilitados { get; private set; } = [];
     
-    #endregion
+        #region Adicionar
+        public void Adicionar(string identificador)
+        {
+            IdentificadoresHabilitados.Add(identificador);
+            TotalHabilitados++;
+        }
     
-    #region Remover
-    public void Remover(string identificador)
-    {
-        IdentificadoresHabilitados.Remove(identificador);
-        TotalHabilitados--;
+        #endregion
+    
+        #region Remover
+        public void Remover(string identificador)
+        {
+            IdentificadoresHabilitados.Remove(identificador);
+            TotalHabilitados--;
+        }
+        #endregion
     }
     #endregion
 }
-#endregion

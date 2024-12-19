@@ -9,7 +9,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
-builder.Services.ConfigurarBanco("mongodb://localhost:27017", "feature-flag");
+
+var mongoConnectionString = builder.Configuration.GetConnectionString("MongoConnection") ?? "mongodb://localhost:27017";
+var mongoDatabaseName = builder.Configuration["MongoDatabaseName"] ?? "feature-flag";
+builder.Services.ConfigurarBanco(mongoConnectionString, mongoDatabaseName);
+
 builder.Services.ConfigurarRepositorios();
 builder.Services.ConfigurarServicos();
 DocumentsRegistration.Registrar();

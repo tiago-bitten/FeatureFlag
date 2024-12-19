@@ -32,23 +32,23 @@ public sealed class Consumidor : EntidadeBase
         return consumidor;
     }
     #endregion
-}
+    
+    #region Embeddeds
 
-#region Embeddeds
+    #region RecursoConsumidorEmbedded
+    public class RecursoConsumidorEmbedded
+    {
+        public string IdentificadorRecurso { get; set; }
+        public EnumStatusRecursoConsumidor Status { get; set; }
+    }
+    #endregion
 
-#region RecursoConsumidorEmbedded
-public class RecursoConsumidorEmbedded
-{
-    public string IdentificadorRecurso { get; set; }
-    public EnumStatusRecursoConsumidor Status { get; set; }
+    #region ControleAcessoConsumidorEmbedded
+    public class ControleAcessoConsumidorEmbedded
+    {
+        public string IdentificadorRecurso { get; set; }
+        public EnumTipoControle Tipo { get; set; }
+    }
+    #endregion
+    #endregion
 }
-#endregion
-
-#region ControleAcessoConsumidorEmbedded
-public class ControleAcessoConsumidorEmbedded
-{
-    public string IdentificadorRecurso { get; set; }
-    public EnumTipoControle Tipo { get; set; }
-}
-#endregion
-#endregion

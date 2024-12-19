@@ -33,6 +33,25 @@ public sealed class ControleAcessoConsumidor : EntidadeBase
         return controleAcessoConsumidor;
     }
     #endregion
+    
+    #region Embeddeds
+
+    #region ConsumidorEmbedded
+    public class ConsumidorEmbedded
+    {
+        public string Id { get; set; }
+        public string Identificador { get; set; }
+    }
+    #endregion
+
+    #region RecursoEmbedded
+    public class RecursoEmbedded
+    {
+        public string Id { get; set; }
+        public string Identificador { get; set; }
+    }
+    #endregion
+    #endregion
 }
 
 public enum EnumTipoControle
@@ -40,22 +59,3 @@ public enum EnumTipoControle
     Whitelist = 1,
     Blacklist = 2
 }
-
-#region Embeddeds
-
-#region ConsumidorEmbedded
-public partial class ConsumidorEmbedded
-{
-    public string Id { get; set; }
-    public string Identificador { get; set; }
-}
-#endregion
-
-#region RecursoEmbedded
-public class RecursoEmbedded
-{
-    public string Id { get; set; }
-    public string Identificador { get; set; }
-}
-#endregion
-#endregion

@@ -2,7 +2,7 @@
 
 namespace FeatureFlag.Domain;
 
-public class ServRecurso : ServBase<Recurso, IRepRecurso>
+public class ServRecurso : ServBase<Recurso, IRepRecurso>, IServRecurso
 {
     #region Ctor
     public ServRecurso(IRepRecurso repositorio) : base(repositorio)

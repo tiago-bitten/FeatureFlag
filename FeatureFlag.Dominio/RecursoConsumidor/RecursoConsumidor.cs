@@ -28,6 +28,25 @@ public sealed class RecursoConsumidor : EntidadeBase
         return recursoConsumidor;
     }    
     #endregion
+    
+    #region Embeddeds
+
+    #region ConsumidorEmbedded
+    public class ConsumidorEmbedded
+    {
+        public string Id { get; set; }
+        public string Identificador { get; set; }
+    }
+    #endregion
+
+    #region RecursoEmbedded
+    public class RecursoEmbedded
+    {
+        public string Id { get; set; }
+        public string Identificador { get; set; }
+    }
+    #endregion
+    #endregion
 }
 
 public enum EnumStatusRecursoConsumidor
