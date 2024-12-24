@@ -8,12 +8,10 @@ public class RecursoConsumidorProfile : Profile
 {
     public RecursoConsumidorProfile()
     {
-        CreateProjection<RecursoConsumidor, RecursoConsumidorResponse>()
-            .ForMember(dest => dest.Habilitado, opt => 
-                opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
-        
         CreateMap<RecursoConsumidor, RecursoConsumidorResponse>()
-            .ForMember(dest => dest.Habilitado, opt => 
-                opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
+            .ForCtorParam("Recurso", opt => opt.MapFrom(src => src.Recurso.Identificador))
+            .ForCtorParam("Consumidor", opt => opt.MapFrom(src => src.Consumidor.Identificador))
+            .ForCtorParam("Habilitado", opt => opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
+
     }
-}
+}   
