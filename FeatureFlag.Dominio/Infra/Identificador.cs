@@ -1,6 +1,8 @@
-﻿namespace FeatureFlag.Dominio.Infra;
+﻿using MongoDB.Bson;
+
+namespace FeatureFlag.Dominio.Infra;
 
 public abstract class Identificador
 {
-    public string Id { get; set; }
+    public ObjectId Id { get; set; }
 }

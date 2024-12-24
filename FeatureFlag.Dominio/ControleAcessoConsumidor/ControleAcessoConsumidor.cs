@@ -1,4 +1,5 @@
 ﻿using FeatureFlag.Dominio.Infra;
+using MongoDB.Bson;
 
 namespace FeatureFlag.Dominio;
 
@@ -14,20 +15,20 @@ public sealed class ControleAcessoConsumidor : EntidadeBase
     #endregion
 
     #region Fábrica Estática
-    private ControleAcessoConsumidor(string codigoConsumidor, string codigoRecurso, EnumTipoControle tipoControle)
+    private ControleAcessoConsumidor(ObjectId codigoConsumidor, ObjectId codigoRecurso, EnumTipoControle tipoControle)
     {
         Consumidor.Id = codigoConsumidor;
         Recurso.Id = codigoRecurso;
         Tipo = tipoControle;
     }
 
-    public static ControleAcessoConsumidor CriarWhitelist(string codigoConsumidor, string codigoRecurso)
+    public static ControleAcessoConsumidor CriarWhitelist(ObjectId codigoConsumidor, ObjectId codigoRecurso)
     {
         var controleAcessoConsumidor = new ControleAcessoConsumidor(codigoConsumidor, codigoRecurso, EnumTipoControle.Whitelist);
         return controleAcessoConsumidor;
     }
 
-    public static ControleAcessoConsumidor CriarBlacklist(string codigoConsumidor, string codigoRecurso)
+    public static ControleAcessoConsumidor CriarBlacklist(ObjectId codigoConsumidor, ObjectId codigoRecurso)
     {
         var controleAcessoConsumidor = new ControleAcessoConsumidor(codigoConsumidor, codigoRecurso, EnumTipoControle.Blacklist);
         return controleAcessoConsumidor;
@@ -39,7 +40,7 @@ public sealed class ControleAcessoConsumidor : EntidadeBase
     #region ConsumidorEmbedded
     public class ConsumidorEmbedded
     {
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Identificador { get; set; }
     }
     #endregion
@@ -47,7 +48,7 @@ public sealed class ControleAcessoConsumidor : EntidadeBase
     #region RecursoEmbedded
     public class RecursoEmbedded
     {
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Identificador { get; set; }
     }
     #endregion

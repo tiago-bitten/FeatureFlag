@@ -18,7 +18,6 @@ builder.Services.ConfigurarRepositorios();
 builder.Services.ConfigurarServicos();
 builder.Services.ConfigurarServicosAplicacao();
 builder.Services.ConfigurarAutoMapper();
-DocumentsRegistration.Registrar();
 
 var app = builder.Build();
 

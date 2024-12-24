@@ -1,32 +1,35 @@
 ﻿using FeatureFlag.Domain;
 using FeatureFlag.Dominio.Infra;
+using MongoDB.Bson;
 
 namespace FeatureFlag.Dominio;
 
 public sealed class RecursoConsumidor : EntidadeBase
 {
-    public RecursoEmbedded Recurso { get; private set; }
-    public ConsumidorEmbedded Consumidor { get; private set; }
-    public EnumStatusRecursoConsumidor Status { get; private set; }
+    public RecursoEmbedded Recurso { get; set; } = new();
+    public ConsumidorEmbedded Consumidor { get; set; } = new();
+    public EnumStatusRecursoConsumidor Status { get; set; }
 
     #region Setters
     public void Habilitar() => Status = EnumStatusRecursoConsumidor.Habilitado;
     public void Desabilitar() => Status = EnumStatusRecursoConsumidor.Desabilitado;
     #endregion
 
-    #region Fábrica estática
-    private RecursoConsumidor(string codigoRecurso, string codigoConsumidor)
+    #region Ctor
+    public RecursoConsumidor(Recurso recurso, Consumidor consumidor)
     {
-        Consumidor.Id = codigoConsumidor;
-        Recurso.Id = codigoRecurso;
+        Recurso = new RecursoEmbedded
+        {
+            Id = recurso.Id,
+            Identificador = recurso.Identificador
+        };
+        
+        Consumidor = new ConsumidorEmbedded
+        {
+            Id = consumidor.Id,
+            Identificador = consumidor.Identificador
+        };
     }
-
-    public static RecursoConsumidor Criar(string codigoRecurso, string codigoConsumidor)
-    {
-        var recursoConsumidor = new RecursoConsumidor(codigoRecurso, codigoConsumidor);
-
-        return recursoConsumidor;
-    }    
     #endregion
     
     #region Embeddeds
@@ -34,7 +37,7 @@ public sealed class RecursoConsumidor : EntidadeBase
     #region ConsumidorEmbedded
     public class ConsumidorEmbedded
     {
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Identificador { get; set; }
     }
     #endregion
@@ -42,7 +45,7 @@ public sealed class RecursoConsumidor : EntidadeBase
     #region RecursoEmbedded
     public class RecursoEmbedded
     {
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Identificador { get; set; }
     }
     #endregion

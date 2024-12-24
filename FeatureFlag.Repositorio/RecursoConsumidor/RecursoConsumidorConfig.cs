@@ -1,13 +1,16 @@
-﻿using FeatureFlag.Repositorio.Infra;
+﻿using FeatureFlag.Dominio;
+using FeatureFlag.Repositorio.Infra;
 using MongoDB.Bson.Serialization;
 
 namespace FeatureFlag.Repositorio;
 
-public class RecursoConsumidorConfig : EntidadeBaseConfig<Dominio.RecursoConsumidor>
+public class RecursoConsumidorConfig : EntidadeBaseConfig<RecursoConsumidor>
 {
-    public override void Configurar(BsonClassMap<Dominio.RecursoConsumidor> builder)
+    public override void Configurar(BsonClassMap<RecursoConsumidor> builder)
     {
         base.Configurar(builder);
+        
+        builder.SetIsRootClass(false);
 
         builder.MapProperty(x => x.Recurso)
             .SetElementName("recurso");

@@ -16,11 +16,14 @@ public static class IoC
         services.AddSingleton<IMongoDatabase>(sp =>
         {
             var client = sp.GetRequiredService<IMongoClient>();
-            return client.GetDatabase(databaseName);
+            var database = client.GetDatabase(databaseName);
+            
+            DocumentsRegistration.Inicializar(database, recriarBanco: true);
+            
+            return database;
         });
 
         services.AddScoped<MongoDbContext>();
-
         return services;
     }
 

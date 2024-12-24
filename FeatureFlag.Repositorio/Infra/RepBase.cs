@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using FeatureFlag.Dominio.Infra;
+using MongoDB.Bson;
 
 namespace FeatureFlag.Repositorio.Infra;
 
@@ -23,7 +24,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #endregion
 
     #region RecuperarPorId
-    public async Task<T?> RecuperarPorIdAsync(string id)
+    public async Task<T?> RecuperarPorIdAsync(ObjectId id)
     {
         var filter = Builders<T>.Filter.Eq(e => e.Id, id);
         return await Collection.Find(filter).FirstOrDefaultAsync();
@@ -46,7 +47,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #endregion
 
     #region Remover
-    public async Task RemoverAsync(string id)
+    public async Task RemoverAsync(ObjectId id)
     {
         var filter = Builders<T>.Filter.Eq(e => e.Id, id);
         await Collection.DeleteOneAsync(filter);

@@ -9,10 +9,12 @@ public class IdentificadorConfig<T> : IDocumentConfiguration<T> where T : Identi
     {
         builder.SetIgnoreExtraElements(true);
         
+        builder.SetIsRootClass(true);
+        
         if (typeof(T).IsAssignableFrom(typeof(Identificador)))
         {
             builder.MapIdProperty(x => x.Id)
-                   .SetIdGenerator(MongoDB.Bson.Serialization.IdGenerators.StringObjectIdGenerator.Instance);
+                   .SetIdGenerator(MongoDB.Bson.Serialization.IdGenerators.ObjectIdGenerator.Instance);
         }
     }
 }

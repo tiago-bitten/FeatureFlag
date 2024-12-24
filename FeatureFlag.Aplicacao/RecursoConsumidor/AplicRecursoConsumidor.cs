@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
     using FeatureFlag.Aplicacao.Infra;
     using FeatureFlag.Domain;
-    using FeatureFlag.Domain.Dtos;
     using FeatureFlag.Dominio;
     using FeatureFlag.Dominio.Dtos;
     using FeatureFlag.Shared.Extensions;
@@ -39,12 +38,8 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
                 .RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
             if (consumidor is null)
             {
-                await IniciarTransacaoAsync();
-                
-                var novoConsumidor = Consumidor.Criar(param.IdentificadorConsumidor);
-                await _servConsumidor.AdicionarAsync(novoConsumidor);
-                
-                await PersistirTransacaoAsync();
+                consumidor = Consumidor.Criar(param.IdentificadorConsumidor);
+                await _servConsumidor.AdicionarAsync(consumidor);
             }
             
             switch (recurso.Porcentagem)
@@ -59,18 +54,12 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
                 .RecuperarPorRecursoEConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
             if (recursoConsumidor is null)
             {
-                await IniciarTransacaoAsync();
-                
                 // Remover padrão factory e utilizar constutores com inicialização
-                var novoRecursoConsumidor = RecursoConsumidor.Criar(recurso.Id, consumidor.Id);
-                await _servRecursoConsumidor.AdicionarAsync(novoRecursoConsumidor);
-                
-                await PersistirTransacaoAsync();
+                recursoConsumidor = new RecursoConsumidor(recurso, consumidor);
+                await _servRecursoConsumidor.AdicionarAsync(recursoConsumidor);
             }
             
-            await IniciarTransacaoAsync();
             await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor);
-            await PersistirTransacaoAsync();
             
             var response = Mapper.Map<RecursoConsumidorResponse>(recursoConsumidor);
 
