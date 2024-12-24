@@ -7,8 +7,7 @@ public sealed class Recurso : EntidadeBase
 {
     public string Identificador { get; private set; }
     public string Descricao { get; set; }
-    public decimal Porcentagem { get; private set; }
-    
+    public PorcentagemEmbedded Porcentagem { get; private set; } = new();
     public ConsumidorEmbedded Consumidor { get; private set; } = new();
     
     #region Setters
@@ -34,7 +33,7 @@ public sealed class Recurso : EntidadeBase
 
     public void ValidarPorcentagem()
     {
-        if (!PorcentagemHelper.Validar(Porcentagem))
+        if (!PorcentagemHelper.Validar(Porcentagem.Alvo))
             throw new Exception("A porcentagem deve ser entre 0 e 100");
     }
     #endregion
@@ -44,7 +43,7 @@ public sealed class Recurso : EntidadeBase
     {
         Identificador = identificador;
         Descricao = descricao;
-        Porcentagem = porcentagem;
+        Porcentagem.Alvo = porcentagem;
     }
     
     public static Recurso Criar(string identificador, string descricao, decimal porcentagem)
@@ -60,6 +59,7 @@ public sealed class Recurso : EntidadeBase
     #endregion
     
     #region Embeddeds
+    #region ConsumidorEmbedded
     public class ConsumidorEmbedded
     {
         public int TotalHabilitados { get; private set; }
@@ -75,12 +75,23 @@ public sealed class Recurso : EntidadeBase
         #endregion
     
         #region Remover
-        public void Remover(string identificador)
+        public void Remover(string identificador, bool? atualizarTotal = true)
         {
             IdentificadoresHabilitados.Remove(identificador);
-            TotalHabilitados--;
+            if (atualizarTotal is true)
+                TotalHabilitados--;
         }
         #endregion
     }
+    #endregion
+    
+    #region PorcentagemEmbedded
+    public class PorcentagemEmbedded
+    {
+        public decimal Alvo { get; set; }
+        public bool Atingido { get; private set; }
+        public decimal ValorAtingido { get; private set; }
+    }
+    #endregion
     #endregion
 }

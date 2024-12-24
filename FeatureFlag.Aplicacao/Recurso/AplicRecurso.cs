@@ -43,7 +43,7 @@ public class AplicRecurso : AplicBase, IAplicRecurso
         var recursoAlterado = Mapper.Map(request, recurso);
 
         await IniciarTransacaoAsync();
-        await _servRecurso.AlterarAsync(recursoAlterado);
+        await _servRecurso.AtualizarAsync(recursoAlterado);
         await PersistirTransacaoAsync();
         
         var response = Mapper.Map<RecursoResponse>(recursoAlterado);

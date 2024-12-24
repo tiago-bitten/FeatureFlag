@@ -9,26 +9,30 @@ namespace FeatureFlag.Dominio;
 public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoConsumidor>, IServRecursoConsumidor
 {
     #region Ctor
+    private readonly IRepRecurso _repRecurso;
     private readonly IRepConsumidor _repConsumidor;
     private readonly IRepControleAcessoConsumidor _repControleAcessoConsumidor;
-    private readonly IServRecurso _servRecurso;
 
-    public ServRecursoConsumidor(IRepRecursoConsumidor repositorio,
+    public ServRecursoConsumidor(IRepRecurso repRecurso,
+                                 IRepRecursoConsumidor repositorio,
                                  IRepConsumidor repConsumidor,
-                                 IRepControleAcessoConsumidor repControleAcessoConsumidor,
-                                 IServRecurso servRecurso)
+                                 IRepControleAcessoConsumidor repControleAcessoConsumidor)
         : base(repositorio)
     {
+        _repRecurso = repRecurso;
         _repConsumidor = repConsumidor;
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
-        _servRecurso = servRecurso;
     }
     #endregion
     
     #region AtualizarStatusAsync
-    public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor)
+    /**
+     * TODO:
+     * Adicionar um Lock nos consumidores que estão ativos, afim de evitar que sejam desabilitados e habilitados toda hora.
+     * Isso em casos onde a porcentagem não foi alterada, então, deve haver uma tolerância na porcentagem, pois pode passar um pouco da configurada 
+     */
+    public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso)
     {
-        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(recursoConsumidor.Recurso.Identificador);
         var totalConsumidores = await _repConsumidor.CountAsync();
         var totalConsumidoresHabilitados = recurso.Consumidor.TotalHabilitados;
 
@@ -49,8 +53,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 break;
         }
         
-        await AlterarAsync(recursoConsumidor);
-        await _servRecurso.AlterarAsync(recurso);
+        await AtualizarAsync(recursoConsumidor);
     }
 
     #region HabilitarConsumidor
@@ -67,11 +70,17 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region DesabilitarConsumidor
     private void DesabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso)
     {
-        if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Desabilitado)
-            return;
-        
+        switch (recursoConsumidor.Status)
+        {
+            case EnumStatusRecursoConsumidor.Desabilitado:
+                return;
+            
+            case EnumStatusRecursoConsumidor.Habilitado:
+                recurso.Consumidor.Remover(recursoConsumidor.Consumidor.Identificador);
+                break;
+        }
+
         recursoConsumidor.Desabilitar();
-        recurso.Consumidor.Remover(recursoConsumidor.Consumidor.Identificador);
     }
     #endregion
     
