@@ -1,38 +1,28 @@
 ﻿using MongoDB.Bson.Serialization;
-using System.Reflection;
 
-namespace FeatureFlag.Repositorio.Infra;
-
-public static class DocumentsRegistration
+namespace FeatureFlag.Repositorio.Infra
 {
-    private static bool _isRegistered;
-
-    public static void Registrar()
+    public static class DocumentsRegistration
     {
-        if (_isRegistered) return;
-
-        var configs = Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => t.BaseType != null && t.BaseType.IsGenericType &&
-                        t.BaseType.GetGenericTypeDefinition() == typeof(EntidadeBaseConfig<>));
-
-        foreach (var configType in configs)
+        public static void Registrar()
         {
-            var instance = Activator.CreateInstance(configType);
-            var metodoConfigurar = configType.GetMethod("Configurar");
-            if (instance == null || metodoConfigurar == null) continue;
-                
-            var tipoEntidade = configType.BaseType?.GetGenericArguments()[0];
-            if (tipoEntidade == null) continue;
-                
-            var bsonClassMap = Activator.CreateInstance(
-                typeof(BsonClassMap<>).MakeGenericType(tipoEntidade)
-            );
-
-            metodoConfigurar.Invoke(instance, [bsonClassMap]);
-            BsonClassMap.RegisterClassMap((BsonClassMap)bsonClassMap!);
+            // Instanciação explícita dos configuradores
+            RegistrarConfigurador(new ConsumidorConfig());
+            RegistrarConfigurador(new RecursoConfig());
+            RegistrarConfigurador(new RecursoConsumidorConfig());
+            RegistrarConfigurador(new ControleAcessoConsumidorConfig());
         }
 
-        _isRegistered = true;
+        private static void RegistrarConfigurador<T>(IDocumentConfiguration<T> configurador) where T : class
+        {
+            // Verifica se o mapa já foi registrado para evitar duplicação
+            if (BsonClassMap.IsClassMapRegistered(typeof(T))) return;
+
+            // Cria o mapa e aplica a configuração
+            var bsonClassMap = new BsonClassMap<T>(configurador.Configurar);
+
+            // Registra o mapa
+            BsonClassMap.RegisterClassMap(bsonClassMap);
+        }
     }
 }

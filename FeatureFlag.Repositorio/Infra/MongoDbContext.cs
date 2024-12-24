@@ -9,10 +9,9 @@ namespace FeatureFlag.Repositorio.Infra
         private readonly IMongoDatabase _database;
 
         #region Ctor
-        public MongoDbContext(string connectionString, string databaseName)
+        public MongoDbContext(IMongoDatabase database)
         {
-            var client = new MongoClient(connectionString);
-            _database = client.GetDatabase(databaseName);
+            _database = database;
         }
         #endregion
 

@@ -2,6 +2,7 @@
 using FeatureFlag.Domain;
 using FeatureFlag.Dominio;
 using FeatureFlag.Repositorio;
+using FeatureFlag.Repositorio.Infra;
 using MongoDB.Driver;
 
 namespace FeatureFlag.API.Infra;
@@ -17,6 +18,21 @@ public static class IoC
             var client = sp.GetRequiredService<IMongoClient>();
             return client.GetDatabase(databaseName);
         });
+
+        services.AddScoped<MongoDbContext>();
+
+        return services;
+    }
+
+    #endregion
+
+    #region AutoMapper
+    public static IServiceCollection ConfigurarAutoMapper(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(RecursoProfile).Assembly);
+        services.AddAutoMapper(typeof(ConsumidorProfile).Assembly);
+        services.AddAutoMapper(typeof(RecursoConsumidorProfile).Assembly);
+        services.AddAutoMapper(typeof(ControleAcessoConsumidorProfile).Assembly);
         
         return services;
     }

@@ -11,15 +11,15 @@ public class ConsumidorConfig : EntidadeBaseConfig<Consumidor>
         base.Configurar(builder);
 
         builder.MapProperty(x => x.Identificador)
-            .SetElementName("identificador");
+               .SetElementName("identificador");
 
         builder.MapProperty(x => x.Descricao)
-            .SetElementName("descricao");
+               .SetElementName("descricao");
         
         builder.MapProperty(x => x.Recursos)
-            .SetElementName("recursos");
+               .SetElementName("recursos");
         
         builder.MapProperty(x => x.ControleAcessos)
-            .SetElementName("controle_acessos");
+               .SetElementName("controle_acessos");
     }
 }
