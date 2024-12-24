@@ -42,7 +42,7 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
                 await _servConsumidor.AdicionarAsync(consumidor);
             }
             
-            switch (recurso.Porcentagem)
+            switch (recurso.Porcentagem.Alvo)
             {
                 case 100:
                     return await _servRecursoConsumidor.RetornarCemPorcentoAtivoAsync(param);

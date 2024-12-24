@@ -18,7 +18,7 @@ public class RepRecurso : RepBase<Recurso>, IRepRecurso
     {
         return Collection
             .Find(x => x.Identificador == identificador)
-            .Project(x => x.Porcentagem)
+            .Project(x => x.Porcentagem.Alvo)
             .FirstOrDefaultAsync();
     }
     #endregion

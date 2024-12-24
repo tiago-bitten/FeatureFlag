@@ -1,4 +1,5 @@
-﻿using FeatureFlag.Domain;
+﻿using System.Runtime.InteropServices.JavaScript;
+using FeatureFlag.Domain;
 using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Dominio.Infra;
 using FeatureFlag.Shared.Extensions;
@@ -38,10 +39,11 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
 
         var porcentagemAtual = PorcentagemHelper.Calcular(totalConsumidoresHabilitados, totalConsumidores);
 
-        switch (porcentagemAtual.CompareTo(recurso.Porcentagem))
+        switch (porcentagemAtual.CompareTo(recurso.Porcentagem.Alvo))
         {
             case < 0:
                 HabilitarConsumidor(recursoConsumidor, recurso);
+                VerificarSeAtingiu(recurso, porcentagemAtual, totalConsumidores);
                 break;
             
             case > 0:
@@ -64,6 +66,8 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         
         recursoConsumidor.Habilitar();
         recurso.Consumidor.Adicionar(recursoConsumidor.Consumidor.Identificador);
+        
+        
     }
     #endregion
     
@@ -94,6 +98,23 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         }
     }
     #endregion
+
+    private void VerificarSeAtingiu(Recurso recurso, decimal porcentagemAtual, int totalCosumidores)
+    {
+        if (recurso.Consumidor.TotalHabilitados is 0)
+        {
+            return;
+        }
+        
+        var totalHabilitadosMenosUm = recurso.Consumidor.TotalHabilitados - 1;
+        
+        var porcentagemEstimada = PorcentagemHelper.Calcular(totalHabilitadosMenosUm, totalCosumidores);
+
+        if (porcentagemEstimada < porcentagemAtual)
+        {
+            recurso.Porcentagem.Atingir(porcentagemAtual);
+        }
+    }
     #endregion
     
     #region Retornar 0% ou 100%
