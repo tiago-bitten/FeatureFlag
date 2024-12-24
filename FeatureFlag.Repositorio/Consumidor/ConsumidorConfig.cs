@@ -9,6 +9,8 @@ public class ConsumidorConfig : EntidadeBaseConfig<Consumidor>
     public override void Configurar(BsonClassMap<Consumidor> builder)
     {
         base.Configurar(builder);
+        
+        builder.SetIsRootClass(false);
 
         builder.MapProperty(x => x.Identificador)
                .SetElementName("identificador");

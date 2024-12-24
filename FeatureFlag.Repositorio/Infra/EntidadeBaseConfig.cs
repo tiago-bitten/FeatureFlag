@@ -8,6 +8,8 @@ public class EntidadeBaseConfig<T> : IdentificadorConfig<T> where T : EntidadeBa
     public override void Configurar(BsonClassMap<T> builder)
     {
         base.Configurar(builder);
+        
+        builder.SetIsRootClass(true);
 
         if (typeof(T) != typeof(EntidadeBase)) return;
         

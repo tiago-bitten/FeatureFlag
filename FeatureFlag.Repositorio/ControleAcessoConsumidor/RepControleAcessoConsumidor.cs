@@ -17,7 +17,7 @@ public class RepControleAcessoConsumidor : RepBase<ControleAcessoConsumidor>, IR
     public Task<bool> PossuiPorTipoAsync(string identificadorRecurso, string identificadorConsumidor, EnumTipoControle tipoControle)
     {
         return Collection
-            .Find(x => x.Recurso.Id == identificadorRecurso &&
+            .Find(x => x.Recurso.Identificador == identificadorRecurso &&
                        x.Consumidor.Identificador == identificadorConsumidor && 
                        x.Tipo == tipoControle)
             .AnyAsync();
