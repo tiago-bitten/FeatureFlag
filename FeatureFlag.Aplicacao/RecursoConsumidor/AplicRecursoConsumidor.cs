@@ -59,7 +59,8 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
                 await _servRecursoConsumidor.AdicionarAsync(recursoConsumidor);
             }
             
-            await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor);
+            await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor, recurso);
+            await _servRecurso.AtualizarAsync(recurso);
             
             var response = Mapper.Map<RecursoConsumidorResponse>(recursoConsumidor);
 

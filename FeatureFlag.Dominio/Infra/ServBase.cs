@@ -21,7 +21,7 @@ public abstract class ServBase<TEntidade, TRepositorio> : IServBase<TEntidade, T
     #endregion
     
     #region AlterarAsync
-    public async Task AlterarAsync(TEntidade entidade)
+    public async Task AtualizarAsync(TEntidade entidade)
     {
         entidade.Alterar();
         await Repositorio.AtualizarAsync(entidade);

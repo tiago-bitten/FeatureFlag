@@ -7,5 +7,5 @@ public interface IServBase<TEntidade, TRepositorio>
     TRepositorio Repositorio { get; }
     
     Task AdicionarAsync(TEntidade entidade);
-    Task AlterarAsync(TEntidade entidade);
+    Task AtualizarAsync(TEntidade entidade);
 }
