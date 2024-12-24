@@ -7,11 +7,12 @@ public class IdentificadorConfig<T> : IDocumentConfiguration<T> where T : Identi
 {
     public virtual void Configurar(BsonClassMap<T> builder)
     {
-        builder.AutoMap();
-        
         builder.SetIgnoreExtraElements(true);
         
-        builder.MapIdProperty(x => x.Id)
-            .SetIdGenerator(MongoDB.Bson.Serialization.IdGenerators.StringObjectIdGenerator.Instance);
+        if (typeof(T).IsAssignableFrom(typeof(Identificador)))
+        {
+            builder.MapIdProperty(x => x.Id)
+                   .SetIdGenerator(MongoDB.Bson.Serialization.IdGenerators.StringObjectIdGenerator.Instance);
+        }
     }
 }
