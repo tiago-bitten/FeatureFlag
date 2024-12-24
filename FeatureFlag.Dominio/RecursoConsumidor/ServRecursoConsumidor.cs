@@ -9,26 +9,26 @@ namespace FeatureFlag.Dominio;
 public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoConsumidor>, IServRecursoConsumidor
 {
     #region Ctor
-    private readonly IRepRecurso _repRecurso;
     private readonly IRepConsumidor _repConsumidor;
     private readonly IRepControleAcessoConsumidor _repControleAcessoConsumidor;
+    private readonly IServRecurso _servRecurso;
 
     public ServRecursoConsumidor(IRepRecursoConsumidor repositorio,
-                                 IRepRecurso repRecurso,
                                  IRepConsumidor repConsumidor,
-                                 IRepControleAcessoConsumidor repControleAcessoConsumidor)
+                                 IRepControleAcessoConsumidor repControleAcessoConsumidor,
+                                 IServRecurso servRecurso)
         : base(repositorio)
     {
-        _repRecurso = repRecurso;
         _repConsumidor = repConsumidor;
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
+        _servRecurso = servRecurso;
     }
     #endregion
     
     #region AtualizarStatusAsync
     public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor)
     {
-        var recurso = await _repRecurso.RecuperarPorIdentificadorAsync(recursoConsumidor.Recurso.Identificador);
+        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(recursoConsumidor.Recurso.Identificador);
         var totalConsumidores = await _repConsumidor.CountAsync();
         var totalConsumidoresHabilitados = recurso.Consumidor.TotalHabilitados;
 
@@ -50,6 +50,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         }
         
         await AlterarAsync(recursoConsumidor);
+        await _servRecurso.AlterarAsync(recurso);
     }
 
     #region HabilitarConsumidor

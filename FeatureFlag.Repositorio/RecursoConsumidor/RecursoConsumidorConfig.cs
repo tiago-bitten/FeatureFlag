@@ -13,9 +13,12 @@ public class RecursoConsumidorConfig : EntidadeBaseConfig<RecursoConsumidor>
         builder.SetIsRootClass(false);
 
         builder.MapProperty(x => x.Recurso)
-            .SetElementName("recurso");
+               .SetElementName("recurso");
         
         builder.MapProperty(x => x.Consumidor)
-            .SetElementName("consumidor");
+               .SetElementName("consumidor");
+
+        builder.MapProperty(x => x.Status)
+               .SetElementName("status");
     }
 }
