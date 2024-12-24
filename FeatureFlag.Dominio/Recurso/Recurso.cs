@@ -10,14 +10,6 @@ public sealed class Recurso : EntidadeBase
     public PorcentagemEmbedded Porcentagem { get; private set; } = new();
     public ConsumidorEmbedded Consumidor { get; private set; } = new();
     
-    #region Setters
-    public void AlterarPorcentagem(decimal porcentagem)
-    {
-        Porcentagem = porcentagem;
-        ValidarPorcentagem();
-    }
-    #endregion
-    
     #region Regras
     public void ValidarIdentificador()
     {
@@ -30,12 +22,6 @@ public sealed class Recurso : EntidadeBase
         if (string.IsNullOrWhiteSpace(Descricao))
             throw new Exception("Descrição é obrigatória");
     }
-
-    public void ValidarPorcentagem()
-    {
-        if (!PorcentagemHelper.Validar(Porcentagem.Alvo))
-            throw new Exception("A porcentagem deve ser entre 0 e 100");
-    }
     #endregion
     
     #region Fábrica estática
@@ -43,7 +29,7 @@ public sealed class Recurso : EntidadeBase
     {
         Identificador = identificador;
         Descricao = descricao;
-        Porcentagem.Alvo = porcentagem;
+        Porcentagem.Atualizar(porcentagem);
     }
     
     public static Recurso Criar(string identificador, string descricao, decimal porcentagem)
@@ -52,7 +38,6 @@ public sealed class Recurso : EntidadeBase
         
         recurso.ValidarIdentificador();
         recurso.ValidarDescricao();
-        recurso.ValidarPorcentagem();
         
         return recurso;
     }
@@ -88,10 +73,43 @@ public sealed class Recurso : EntidadeBase
     #region PorcentagemEmbedded
     public class PorcentagemEmbedded
     {
-        public decimal Alvo { get; set; }
+        public decimal Alvo { get; private set; }
         public bool Atingido { get; private set; }
         public decimal ValorAtingido { get; private set; }
+
+        #region ValidarAlvo
+        public void ValidarAlvo(decimal alvo)
+        {
+            if (!PorcentagemHelper.Validar(alvo))
+                throw new Exception("A porcentagem deve ser entre 0 e 100");
+        }
+        #endregion
+
+        #region Atualizar
+        public void Atualizar(decimal novoAlvo)
+        {
+            ValidarAlvo(novoAlvo);
+            Alvo = novoAlvo;
+            Resetar();
+        }
+        #endregion
+        
+        #region Atingir
+        public void Atingir(decimal valor)
+        {
+            ValorAtingido = valor;
+            Atingido = true;
+        }
+        #endregion
+        
+        #region Resetar
+        public void Resetar()
+        {
+            Atingido = false;
+            ValorAtingido = 0;
+        }
+        #endregion
     }
     #endregion
-    #endregion
+    #endregion  
 }
