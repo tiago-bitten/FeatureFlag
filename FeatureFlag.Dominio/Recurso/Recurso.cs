@@ -95,7 +95,7 @@ public sealed class Recurso : EntidadeBase
         #endregion
         
         #region Atingir
-        public void Atingir(decimal valor)
+        public void  Atingir(decimal valor)
         {
             ValorAtingido = valor;
             Atingido = true;

@@ -35,15 +35,13 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso)
     {
         var totalConsumidores = await _repConsumidor.CountAsync();
-        var totalConsumidoresHabilitados = recurso.Consumidor.TotalHabilitados;
-
-        var porcentagemAtual = PorcentagemHelper.Calcular(totalConsumidoresHabilitados, totalConsumidores);
+        var porcentagemAtual = PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalConsumidores);
 
         switch (porcentagemAtual.CompareTo(recurso.Porcentagem.Alvo))
         {
             case < 0:
                 HabilitarConsumidor(recursoConsumidor, recurso);
-                VerificarSeAtingiu(recurso, porcentagemAtual, totalConsumidores);
+                VerificarSeAtingiu(recurso, totalConsumidores);
                 break;
             
             case > 0:
@@ -80,7 +78,10 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 return;
             
             case EnumStatusRecursoConsumidor.Habilitado:
-                recurso.Consumidor.Remover(recursoConsumidor.Consumidor.Identificador);
+                if (!recurso.Porcentagem.Atingido)
+                {
+                    recurso.Consumidor.Remover(recursoConsumidor.Consumidor.Identificador);
+                }
                 break;
         }
 
@@ -99,22 +100,22 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
 
-    private void VerificarSeAtingiu(Recurso recurso, decimal porcentagemAtual, int totalCosumidores)
+    #region VerificarSeAtingiu
+    private void VerificarSeAtingiu(Recurso recurso, int totalCosumidores)
     {
         if (recurso.Consumidor.TotalHabilitados is 0)
         {
             return;
         }
         
-        var totalHabilitadosMenosUm = recurso.Consumidor.TotalHabilitados - 1;
-        
-        var porcentagemEstimada = PorcentagemHelper.Calcular(totalHabilitadosMenosUm, totalCosumidores);
+        var porcentagemAtualizada = PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalCosumidores);
 
-        if (porcentagemEstimada < porcentagemAtual)
+        if (porcentagemAtualizada > recurso.Porcentagem.Alvo)
         {
-            recurso.Porcentagem.Atingir(porcentagemAtual);
+            recurso.Porcentagem.Atingir(porcentagemAtualizada);
         }
     }
+    #endregion
     #endregion
     
     #region Retornar 0% ou 100%

@@ -24,9 +24,7 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     {
         var recurso = Mapper.Map<Recurso>(request);
 
-        await IniciarTransacaoAsync();
         await _servRecurso.AdicionarAsync(recurso);
-        await PersistirTransacaoAsync();
 
         var response = Mapper.Map<RecursoResponse>(recurso);
 
