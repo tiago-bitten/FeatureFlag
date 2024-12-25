@@ -48,24 +48,13 @@ public sealed class Recurso : EntidadeBase
     public class ConsumidorEmbedded
     {
         public int TotalHabilitados { get; private set; }
-        public List<string> IdentificadoresHabilitados { get; private set; } = [];
     
         #region Adicionar
-        public void Adicionar(string identificador)
-        {
-            IdentificadoresHabilitados.Add(identificador);
-            TotalHabilitados++;
-        }
-    
+        public void Adicionar() => TotalHabilitados++;
         #endregion
     
         #region Remover
-        public void Remover(string identificador, bool? atualizarTotal = true)
-        {
-            IdentificadoresHabilitados.Remove(identificador);
-            if (atualizarTotal is true)
-                TotalHabilitados--;
-        }
+        public void Remover() => TotalHabilitados--;
         #endregion
     }
     #endregion
