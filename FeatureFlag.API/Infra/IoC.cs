@@ -18,7 +18,7 @@ public static class IoC
             var client = sp.GetRequiredService<IMongoClient>();
             var database = client.GetDatabase(databaseName);
             
-            DocumentsRegistration.Inicializar(database, recriarBanco: true);
+            DocumentsRegistration.Inicializar(database, recriarBanco: false);
             
             return database;
         });
