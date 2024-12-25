@@ -18,6 +18,33 @@ public sealed class Consumidor : EntidadeBase
     }
     #endregion
     
+    #region Setters
+    #region AdicionarRecursoHabilitado
+    public void AdicionarRecursoHabilitado(string identificadorRecurso)
+    {
+        var recursoConsumidor = new RecursoConsumidorEmbedded();
+        recursoConsumidor.AdicioniarHabilitado(identificadorRecurso);
+        Recursos.Add(recursoConsumidor);
+    }
+    #endregion
+    
+    #region AdicionarRecursoDesabilitado
+    public void AdicionarRecursoDesabilitado(string identificadorRecurso)
+    {
+        var recursoConsumidor = new RecursoConsumidorEmbedded();
+        recursoConsumidor.AdicioniarDesabilitado(identificadorRecurso);
+        Recursos.Add(recursoConsumidor);
+    }
+    #endregion
+    
+    #region RemoverRecurso
+    public void RemoverRecurso(string identificadorRecurso)
+    {
+        Recursos.RemoveAll(x => x.IdentificadorRecurso == identificadorRecurso);
+    }
+    #endregion
+    #endregion
+    
     #region Fábrica estática
     private Consumidor(string identificador, string? descricao = null)
     {
@@ -38,8 +65,20 @@ public sealed class Consumidor : EntidadeBase
     #region RecursoConsumidorEmbedded
     public class RecursoConsumidorEmbedded
     {
-        public string IdentificadorRecurso { get; set; }
-        public EnumStatusRecursoConsumidor Status { get; set; }
+        public string IdentificadorRecurso { get; private set; }
+        public EnumStatusRecursoConsumidor Status { get; private set; }
+        
+        public void AdicioniarHabilitado(string identificadorRecurso)
+        {
+            IdentificadorRecurso = identificadorRecurso;
+            Status = EnumStatusRecursoConsumidor.Habilitado;
+        }
+        
+        public void AdicioniarDesabilitado(string identificadorRecurso)
+        {
+            IdentificadorRecurso = identificadorRecurso;
+            Status = EnumStatusRecursoConsumidor.Desabilitado;
+        }
     }
     #endregion
 

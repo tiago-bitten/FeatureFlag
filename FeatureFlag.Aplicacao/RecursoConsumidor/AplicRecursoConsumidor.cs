@@ -54,13 +54,13 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
                 .RecuperarPorRecursoEConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
             if (recursoConsumidor is null)
             {
-                // Remover padrão factory e utilizar constutores com inicialização
                 recursoConsumidor = new RecursoConsumidor(recurso, consumidor);
                 await _servRecursoConsumidor.AdicionarAsync(recursoConsumidor);
             }
             
-            await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor, recurso);
+            await _servRecursoConsumidor.AtualizarStatusAsync(recursoConsumidor, recurso, consumidor);
             await _servRecurso.AtualizarAsync(recurso);
+            await _servConsumidor.AtualizarAsync(consumidor);
             
             var response = Mapper.Map<RecursoConsumidorResponse>(recursoConsumidor);
 

@@ -1,9 +1,17 @@
-﻿namespace FeatureFlag.API.Controllers.Infra;
+﻿using System.Text.Json.Serialization;
+
+namespace FeatureFlag.API.Controllers.Infra;
 
 public record RespostaBase<T>(
     bool Sucesso,
+    
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     T? Conteudo,
+    
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     string? Mensagem,
+    
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     int? Total)
     where T : class;
 

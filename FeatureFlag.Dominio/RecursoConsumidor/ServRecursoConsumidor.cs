@@ -27,12 +27,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
     
     #region AtualizarStatusAsync
-    /**
-     * TODO:
-     * Adicionar um Lock nos consumidores que estão ativos, afim de evitar que sejam desabilitados e habilitados toda hora.
-     * Isso em casos onde a porcentagem não foi alterada, então, deve haver uma tolerância na porcentagem, pois pode passar um pouco da configurada 
-     */
-    public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso)
+    public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
         var totalConsumidores = await _repConsumidor.CountAsync();
         var porcentagemAtual = PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalConsumidores);
@@ -40,16 +35,16 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         switch (porcentagemAtual.CompareTo(recurso.Porcentagem.Alvo))
         {
             case < 0:
-                HabilitarConsumidor(recursoConsumidor, recurso);
+                HabilitarConsumidor(recursoConsumidor, recurso, consumidor);
                 VerificarSeAtingiu(recurso, totalConsumidores);
                 break;
             
             case > 0:
-                DesabilitarConsumidor(recursoConsumidor, recurso);
+                DesabilitarConsumidor(recursoConsumidor, recurso, consumidor);
                 break;
             
             default:
-                NormalizarStatus(recursoConsumidor);
+                NormalizarStatus(recursoConsumidor, consumidor);
                 break;
         }
         
@@ -57,20 +52,19 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
 
     #region HabilitarConsumidor
-    private void HabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso)
+    private void HabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
         if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado)
             return;
         
         recursoConsumidor.Habilitar();
-        recurso.Consumidor.Adicionar(recursoConsumidor.Consumidor.Identificador);
-        
-        
+        recurso.Consumidor.Adicionar();
+        consumidor.AdicionarRecursoHabilitado(recurso.Identificador);
     }
     #endregion
     
     #region DesabilitarConsumidor
-    private void DesabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso)
+    private void DesabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
         switch (recursoConsumidor.Status)
         {
@@ -80,7 +74,8 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
             case EnumStatusRecursoConsumidor.Habilitado:
                 if (!recurso.Porcentagem.Atingido)
                 {
-                    recurso.Consumidor.Remover(recursoConsumidor.Consumidor.Identificador);
+                    recurso.Consumidor.Remover();
+                    consumidor.AdicionarRecursoDesabilitado(recurso.Identificador);
                 }
                 break;
         }
@@ -90,7 +85,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
     
     #region NormalizarStatus
-    private void NormalizarStatus(RecursoConsumidor recursoConsumidor)
+    private void NormalizarStatus(RecursoConsumidor recursoConsumidor, Consumidor consumidor)
     {
         if (recursoConsumidor.Status is not (EnumStatusRecursoConsumidor.Habilitado 
                                              or EnumStatusRecursoConsumidor.Desabilitado))

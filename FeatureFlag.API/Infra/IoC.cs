@@ -1,4 +1,7 @@
-﻿using FeatureFlag.Aplicacao;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using FeatureFlag.Aplicacao;
 using FeatureFlag.Domain;
 using FeatureFlag.Dominio;
 using FeatureFlag.Repositorio;
@@ -76,4 +79,16 @@ public static class IoC
         return services;
     }
     #endregion
+    
+    public static IServiceCollection ConfigurarJsonOptions(this IServiceCollection services)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = null,
+        };
+
+        services.AddSingleton(options);
+        return services;
+    }
+
 }

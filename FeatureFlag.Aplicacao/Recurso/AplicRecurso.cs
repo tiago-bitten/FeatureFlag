@@ -40,9 +40,21 @@ public class AplicRecurso : AplicBase, IAplicRecurso
         
         var recursoAlterado = Mapper.Map(request, recurso);
 
-        await IniciarTransacaoAsync();
         await _servRecurso.AtualizarAsync(recursoAlterado);
-        await PersistirTransacaoAsync();
+        
+        var response = Mapper.Map<RecursoResponse>(recursoAlterado);
+        
+        return response;
+    }
+    #endregion
+
+    #region AlterarPorcentagemAsync
+    public async Task<RecursoResponse> AlterarPorcentagemAsync(AlterarRecursoPorcentagemRequest request)
+    {
+        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
+        recurso.ThrowIfNull("Recurso não foi encontrado.");
+        
+        var recursoAlterado = await _servRecurso.AlterarPorcentagemAsync(recurso, request.Porcentagem);
         
         var response = Mapper.Map<RecursoResponse>(recursoAlterado);
         
