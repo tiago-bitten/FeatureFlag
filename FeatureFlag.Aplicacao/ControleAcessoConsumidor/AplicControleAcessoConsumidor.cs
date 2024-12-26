@@ -30,35 +30,30 @@ public class AplicControleAcessoConsumidor : AplicBase, IAplicControleAcessoCons
     public async Task<ControleAcessoConsumidorResponse> AdicionarAsync(CriarControleAcessoConsumidorRequest request)
     {
         var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.IdentificadorConsumidor);
-        consumidor.ThrowIfNull();
+        consumidor.ThrowIfNull("Consumidor não foi encontrado.");
         
-        await IniciarTransacaoAsync();
-        foreach (var identificadorRecurso in request.IdentificadoresRecursos)
+        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.IdentificadorRecurso);
+        recurso.ThrowIfNull("Recurso não foi encontrado.");
+
+        var controleAcessoConsumidor = new ControleAcessoConsumidor(consumidor, recurso, request.Tipo);
+        await _servControleAcessoConsumidor.AdicionarAsync(controleAcessoConsumidor);
+
+        switch (request.Tipo)
         {
-            var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(identificadorRecurso);
-            recurso.ThrowIfNull();
-            
-            var controleAcessoConsumidor = CriarPorTipo(consumidor, recurso, request.Tipo);
-            
-            await _servControleAcessoConsumidor.AdicionarAsync(controleAcessoConsumidor);
+            case EnumTipoControle.Whitelist:
+                consumidor.AdicionarWhitelist(recurso.Identificador);
+                break;
+            case EnumTipoControle.Blacklist:
+                consumidor.AdicionarBlacklist(recurso.Identificador);
+                break;
         }
-        await PersistirTransacaoAsync();
         
-        var response = Mapper.Map<ControleAcessoConsumidorResponse>(request);
+        await _servConsumidor.AtualizarAsync(consumidor);
+        
+        var response = Mapper.Map<ControleAcessoConsumidorResponse>(controleAcessoConsumidor);
 
         return response;
     }
     
-    #region CriarPorTipo
-    private ControleAcessoConsumidor CriarPorTipo(Consumidor consumidor, Recurso recurso, EnumTipoControle tipo)
-    {
-        return tipo switch
-        {
-            EnumTipoControle.Whitelist => ControleAcessoConsumidor.CriarWhitelist(consumidor.Id, recurso.Id),
-            EnumTipoControle.Blacklist => ControleAcessoConsumidor.CriarBlacklist(consumidor.Id, recurso.Id),
-            _ => throw new ArgumentOutOfRangeException(nameof(tipo), tipo, null)
-        };
-    }
-    #endregion
     #endregion
 }
