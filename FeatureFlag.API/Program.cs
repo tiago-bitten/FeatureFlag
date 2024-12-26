@@ -18,6 +18,7 @@ builder.Services.ConfigurarRepositorios();
 builder.Services.ConfigurarServicos();
 builder.Services.ConfigurarServicosAplicacao();
 builder.Services.ConfigurarAutoMapper();
+builder.Services.ConfigurarJsonOptions();
 
 var app = builder.Build();
 

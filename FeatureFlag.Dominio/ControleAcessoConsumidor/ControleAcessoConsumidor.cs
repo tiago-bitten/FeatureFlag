@@ -1,14 +1,32 @@
-﻿using FeatureFlag.Dominio.Infra;
+﻿using FeatureFlag.Domain;
+using FeatureFlag.Dominio.Infra;
 using MongoDB.Bson;
 
 namespace FeatureFlag.Dominio;
 
 public sealed class ControleAcessoConsumidor : EntidadeBase
 {
-    public ConsumidorEmbedded Consumidor { get; private set; }
-    public RecursoEmbedded Recurso { get; private set; }
+    public ConsumidorEmbedded Consumidor { get; private set; } = new();
+    public RecursoEmbedded Recurso { get; private set; } = new();
     public EnumTipoControle Tipo { get; private set; }
 
+    public ControleAcessoConsumidor(Consumidor consumidor, Recurso recurso, EnumTipoControle tipo)
+    {
+        Consumidor = new ConsumidorEmbedded
+        {
+            Id = consumidor.Id,
+            Identificador = consumidor.Identificador
+        };
+        
+        Recurso = new RecursoEmbedded
+        {
+            Id = recurso.Id,
+            Identificador = recurso.Identificador
+        };
+        
+        Tipo = tipo;
+    }
+    
     #region Setters
     public void DefinirWhitelist() => Tipo = EnumTipoControle.Whitelist;
     public void DefinirBlacklist() => Tipo = EnumTipoControle.Blacklist;

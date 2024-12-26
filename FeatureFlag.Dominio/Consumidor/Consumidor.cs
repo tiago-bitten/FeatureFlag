@@ -45,6 +45,39 @@ public sealed class Consumidor : EntidadeBase
         Recursos.RemoveAll(x => x.IdentificadorRecurso == identificadorRecurso);
     }
     #endregion
+    
+    #region AdicionarWhitelist
+    public void AdicionarWhitelist(string identificadorRecurso)
+    {
+        RemoverControleAcesso(identificadorRecurso);
+        var controleAcesso = new ControleAcessoConsumidorEmbedded
+        {
+            IdentificadorRecurso = identificadorRecurso,
+            Tipo = EnumTipoControle.Whitelist
+        };
+        ControleAcessos.Add(controleAcesso);
+    }
+    #endregion
+    
+    #region AdicionarBlacklist
+    public void AdicionarBlacklist(string identificadorRecurso)
+    {
+        RemoverControleAcesso(identificadorRecurso);
+        var controleAcesso = new ControleAcessoConsumidorEmbedded
+        {
+            IdentificadorRecurso = identificadorRecurso,
+            Tipo = EnumTipoControle.Blacklist
+        };
+        ControleAcessos.Add(controleAcesso);
+    }
+    #endregion
+    
+    #region RemoverControleAcesso
+    public void RemoverControleAcesso(string identificadorRecurso)
+    {
+        ControleAcessos.RemoveAll(x => x.IdentificadorRecurso == identificadorRecurso);
+    }
+    #endregion
     #endregion
     
     #region Fábrica estática
