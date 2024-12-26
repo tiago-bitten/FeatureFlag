@@ -10,6 +10,14 @@ public sealed class Recurso : EntidadeBase
     public PorcentagemEmbedded Porcentagem { get; private set; } = new();
     public ConsumidorEmbedded Consumidor { get; private set; } = new();
     
+    #region Setters
+    public void AlterarIdentificador(string novoIdentificador)
+    {
+        Identificador = novoIdentificador;
+        ValidarIdentificador();
+    }
+    #endregion
+    
     #region Regras
     public void ValidarIdentificador()
     {

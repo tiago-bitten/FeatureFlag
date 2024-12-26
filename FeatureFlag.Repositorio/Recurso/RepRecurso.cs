@@ -31,4 +31,13 @@ public class RepRecurso : RepBase<Recurso>, IRepRecurso
             .FirstOrDefaultAsync();
     }
     #endregion
+    
+    #region ExistePorIdentificador
+    public Task<bool> ExistePorIdentificadorAsync(string identificador)
+    {
+        return Collection
+            .Find(x => x.Identificador == identificador)
+            .AnyAsync();
+    }
+    #endregion
 }

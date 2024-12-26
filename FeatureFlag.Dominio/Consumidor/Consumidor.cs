@@ -22,6 +22,7 @@ public sealed class Consumidor : EntidadeBase
     #region AdicionarRecursoHabilitado
     public void AdicionarRecursoHabilitado(string identificadorRecurso)
     {
+        RemoverRecurso(identificadorRecurso);
         var recursoConsumidor = new RecursoConsumidorEmbedded();
         recursoConsumidor.AdicioniarHabilitado(identificadorRecurso);
         Recursos.Add(recursoConsumidor);
@@ -31,6 +32,7 @@ public sealed class Consumidor : EntidadeBase
     #region AdicionarRecursoDesabilitado
     public void AdicionarRecursoDesabilitado(string identificadorRecurso)
     {
+        RemoverRecurso(identificadorRecurso);
         var recursoConsumidor = new RecursoConsumidorEmbedded();
         recursoConsumidor.AdicioniarDesabilitado(identificadorRecurso);
         Recursos.Add(recursoConsumidor);
