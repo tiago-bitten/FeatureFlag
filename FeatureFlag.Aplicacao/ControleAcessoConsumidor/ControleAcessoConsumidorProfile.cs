@@ -10,7 +10,7 @@ public class ControleAcessoConsumidorProfile : Profile
     {
         CreateMap<ControleAcessoConsumidor, ControleAcessoConsumidorResponse>()
             .ForCtorParam("IdentificadorConsumidor", opt => opt.MapFrom(src => src.Consumidor.Identificador))
-            .ForCtorParam("IdentificadoresRecurso", opt => opt.MapFrom(src => src.Recurso.Identificador))
+            .ForCtorParam("IdentificadorRecurso", opt => opt.MapFrom(src => src.Recurso.Identificador))
             .ForCtorParam("Tipo", opt => opt.MapFrom(src => src.Tipo));
     }
 }
