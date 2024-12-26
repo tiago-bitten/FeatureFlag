@@ -1,6 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using FeatureFlag.Aplicacao;
 using FeatureFlag.Domain;
 using FeatureFlag.Dominio;
@@ -21,7 +19,7 @@ public static class IoC
             var client = sp.GetRequiredService<IMongoClient>();
             var database = client.GetDatabase(databaseName);
             
-            DocumentsRegistration.Inicializar(database, recriarBanco: false);
+            DocumentsRegistration.Inicializar(database, recriarBanco: true);
             
             return database;
         });

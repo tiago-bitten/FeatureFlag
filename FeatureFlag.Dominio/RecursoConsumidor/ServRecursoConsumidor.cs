@@ -1,28 +1,25 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using FeatureFlag.Domain;
+﻿using FeatureFlag.Domain;
 using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Dominio.Infra;
-using FeatureFlag.Shared.Extensions;
-using FeatureFlag.Shared.Helpers;
 
 namespace FeatureFlag.Dominio;
 
 public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoConsumidor>, IServRecursoConsumidor
 {
     #region Ctor
-    private readonly IRepRecurso _repRecurso;
+    private readonly IServRecurso _servRecurso;
     private readonly IRepConsumidor _repConsumidor;
     private readonly IRepControleAcessoConsumidor _repControleAcessoConsumidor;
 
-    public ServRecursoConsumidor(IRepRecurso repRecurso,
-                                 IRepRecursoConsumidor repositorio,
+    public ServRecursoConsumidor(IRepRecursoConsumidor repositorio,
                                  IRepConsumidor repConsumidor,
-                                 IRepControleAcessoConsumidor repControleAcessoConsumidor)
+                                 IRepControleAcessoConsumidor repControleAcessoConsumidor,
+                                 IServRecurso servRecurso)
         : base(repositorio)
     {
-        _repRecurso = repRecurso;
         _repConsumidor = repConsumidor;
         _repControleAcessoConsumidor = repControleAcessoConsumidor;
+        _servRecurso = servRecurso;
     }
     #endregion
     
@@ -30,13 +27,12 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
         var totalConsumidores = await _repConsumidor.CountAsync();
-        var porcentagemAtual = PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalConsumidores);
+        var porcentagemAtual = await _servRecurso.CalcularPorcentagemAsync(recurso, totalConsumidores);
 
         switch (porcentagemAtual.CompareTo(recurso.Porcentagem.Alvo))
         {
             case < 0:
                 HabilitarConsumidor(recursoConsumidor, recurso, consumidor);
-                VerificarSeAtingiu(recurso, totalConsumidores);
                 break;
             
             case > 0:
@@ -48,14 +44,17 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 break;
         }
         
+        await _servRecurso.VerificarPorcentagemAlvoAtingidaAsync(recurso, totalConsumidores);
         await AtualizarAsync(recursoConsumidor);
     }
 
     #region HabilitarConsumidor
     private void HabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
-        if (recursoConsumidor.Status == EnumStatusRecursoConsumidor.Habilitado)
+        if (recursoConsumidor.Status is EnumStatusRecursoConsumidor.Habilitado)
+        {
             return;
+        }
         
         recursoConsumidor.Habilitar();
         recurso.Consumidor.Adicionar();
@@ -66,49 +65,26 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region DesabilitarConsumidor
     private void DesabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
-        switch (recursoConsumidor.Status)
+        if (recursoConsumidor.Status is EnumStatusRecursoConsumidor.Desabilitado || recurso.Porcentagem.Atingido)
         {
-            case EnumStatusRecursoConsumidor.Desabilitado:
-                return;
-            
-            case EnumStatusRecursoConsumidor.Habilitado:
-                if (!recurso.Porcentagem.Atingido)
-                {
-                    recurso.Consumidor.Remover();
-                    consumidor.AdicionarRecursoDesabilitado(recurso.Identificador);
-                }
-                break;
+            return;
         }
-
+        
         recursoConsumidor.Desabilitar();
+        recurso.Consumidor.Remover();
+        consumidor.AdicionarRecursoDesabilitado(recurso.Identificador);
     }
     #endregion
     
     #region NormalizarStatus
     private void NormalizarStatus(RecursoConsumidor recursoConsumidor, Consumidor consumidor)
     {
-        if (recursoConsumidor.Status is not (EnumStatusRecursoConsumidor.Habilitado 
-                                             or EnumStatusRecursoConsumidor.Desabilitado))
-        { 
-            recursoConsumidor.Desabilitar();
-        }
-    }
-    #endregion
-
-    #region VerificarSeAtingiu
-    private void VerificarSeAtingiu(Recurso recurso, int totalCosumidores)
-    {
-        if (recurso.Consumidor.TotalHabilitados is 0)
+        if (recursoConsumidor.Status is EnumStatusRecursoConsumidor.Habilitado or EnumStatusRecursoConsumidor.Desabilitado)
         {
             return;
         }
-        
-        var porcentagemAtualizada = PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalCosumidores);
-
-        if (porcentagemAtualizada > recurso.Porcentagem.Alvo)
-        {
-            recurso.Porcentagem.Atingir(porcentagemAtualizada);
-        }
+        recursoConsumidor.Desabilitar();
+        consumidor.AdicionarRecursoDesabilitado(recursoConsumidor.Recurso.Identificador);
     }
     #endregion
     #endregion
