@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: ./FeatureFlag.API
+      context: .
       dockerfile: Dockerfile.dockerfile
     ports:
       - 8080:8080
