@@ -15,7 +15,7 @@ public class RecursoConsumidorProfile : Profile
             .ForCtorParam("Habilitado", opt => opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
 
         CreateMap<Consumidor.RecursoConsumidorEmbedded, RecursoConsumidorResponse>()
-            .ForCtorParam("Recurso", opt => opt.MapFrom(src => src.Recurso))
+            .ForCtorParam("Recurso", opt => opt.MapFrom(src => src.Recurso.Identificador))
             .ForCtorParam("Consumidor", opt => opt.MapFrom((_, context) => context.Items["Consumidor"]!.ToString()))
             .ForCtorParam("Habilitado", opt => opt.MapFrom(src => src.Status == EnumStatusRecursoConsumidor.Habilitado));
     }
