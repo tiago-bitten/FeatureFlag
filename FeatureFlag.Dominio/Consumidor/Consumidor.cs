@@ -1,24 +1,32 @@
 ﻿using FeatureFlag.Domain;
 using FeatureFlag.Dominio.Infra;
+using FeatureFlag.Shared.ValueObjects;
 
 namespace FeatureFlag.Dominio;
 
 public sealed class Consumidor : EntidadeBase
 {
-    public string Identificador { get; private set; }
+    public Identificador Identificador { get; private set; }
     public string? Descricao { get; private set; }
     public List<RecursoConsumidorEmbedded> Recursos { get; private set; } = [];
     public List<ControleAcessoConsumidorEmbedded> ControleAcessos { get; private set; } = [];
-    
-    #region Regras
-    public void ValidarIdentificador()
+
+    #region Ctor
+    public Consumidor(string identificador)
     {
-        if (string.IsNullOrWhiteSpace(Identificador))
-            throw new Exception("Identificador é obrigatório");
+        Identificador = new Identificador(identificador);
     }
     #endregion
     
     #region Setters
+    #region AlterarDados
+    public void AlterarDados(string identificador, string? descricao)
+    {
+        Identificador = new Identificador(identificador);
+        Descricao = descricao;
+    }
+    #endregion
+    
     #region AdicionarRecursoHabilitado
     public void AdicionarRecursoHabilitado(string identificadorRecurso)
     {
@@ -50,11 +58,8 @@ public sealed class Consumidor : EntidadeBase
     public void AdicionarWhitelist(string identificadorRecurso)
     {
         RemoverControleAcesso(identificadorRecurso);
-        var controleAcesso = new ControleAcessoConsumidorEmbedded
-        {
-            IdentificadorRecurso = identificadorRecurso,
-            Tipo = EnumTipoControle.Whitelist
-        };
+        var controleAcesso = new ControleAcessoConsumidorEmbedded();
+        controleAcesso.AdicionarWhitelist(identificadorRecurso);
         ControleAcessos.Add(controleAcesso);
     }
     #endregion
@@ -63,11 +68,8 @@ public sealed class Consumidor : EntidadeBase
     public void AdicionarBlacklist(string identificadorRecurso)
     {
         RemoverControleAcesso(identificadorRecurso);
-        var controleAcesso = new ControleAcessoConsumidorEmbedded
-        {
-            IdentificadorRecurso = identificadorRecurso,
-            Tipo = EnumTipoControle.Blacklist
-        };
+        var controleAcesso = new ControleAcessoConsumidorEmbedded();
+        controleAcesso.AdicionarBlacklist(identificadorRecurso);
         ControleAcessos.Add(controleAcesso);
     }
     #endregion
@@ -78,21 +80,6 @@ public sealed class Consumidor : EntidadeBase
         ControleAcessos.RemoveAll(x => x.IdentificadorRecurso == identificadorRecurso);
     }
     #endregion
-    #endregion
-    
-    #region Fábrica estática
-    private Consumidor(string identificador, string? descricao = null)
-    {
-        Identificador = identificador;
-        Descricao = descricao;
-        ValidarIdentificador();
-    }
-    
-    public static Consumidor Criar(string identificador, string? descricao = null)
-    {
-        var consumidor = new Consumidor(identificador, descricao);
-        return consumidor;
-    }
     #endregion
     
     #region Embeddeds
@@ -109,7 +96,7 @@ public sealed class Consumidor : EntidadeBase
             Status = EnumStatusRecursoConsumidor.Habilitado;
         }
         
-        public void AdicioniarDesabilitado(string identificadorRecurso)
+        public void  AdicioniarDesabilitado(string identificadorRecurso)
         {
             IdentificadorRecurso = identificadorRecurso;
             Status = EnumStatusRecursoConsumidor.Desabilitado;
@@ -120,8 +107,20 @@ public sealed class Consumidor : EntidadeBase
     #region ControleAcessoConsumidorEmbedded
     public class ControleAcessoConsumidorEmbedded
     {
-        public string IdentificadorRecurso { get; set; }
-        public EnumTipoControle Tipo { get; set; }
+        public string IdentificadorRecurso { get; private set; }
+        public EnumTipoControle Tipo { get; private set; }
+        
+        public void AdicionarWhitelist(string identificadorRecurso)
+        {
+            IdentificadorRecurso = identificadorRecurso;
+            Tipo = EnumTipoControle.Whitelist;
+        }
+        
+        public void AdicionarBlacklist(string identificadorRecurso)
+        {
+            IdentificadorRecurso = identificadorRecurso;
+            Tipo = EnumTipoControle.Blacklist;
+        }
     }
     #endregion
     #endregion

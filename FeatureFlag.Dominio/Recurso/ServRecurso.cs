@@ -58,40 +58,13 @@ public class ServRecurso : ServBase<Recurso, IRepRecurso>, IServRecurso
     }
     #endregion
     #endregion
-    
-    #region AlterarPorcentagemAsync
-    public async Task<Recurso> AlterarPorcentagemAsync(Recurso recurso, decimal novaPorcentagem)
-    {
-        recurso.Porcentagem.Atualizar(novaPorcentagem);
-        await AtualizarAsync(recurso);
-        
-        return recurso;
-    }
-    #endregion
-    
+
     #region CalcularPorcentagemAsync
     public async Task<decimal> CalcularPorcentagemAsync(Recurso recurso, int? totalConsumidores = null)
     {
         totalConsumidores ??= await _repConsumidor.CountAsync();
         
         return PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalConsumidores.Value);
-    }
-    #endregion
-
-    #region VerificarPorcentagemAlvoAtingida
-    public async Task VerificarPorcentagemAlvoAtingidaAsync(Recurso recurso, int totalConsumidores)
-    {
-        if (recurso.Consumidor.TotalHabilitados is 0)
-        {
-            return;
-        }
-        
-        var porcentagemAtualizada = await CalcularPorcentagemAsync(recurso, totalConsumidores);
-
-        if (porcentagemAtualizada > recurso.Porcentagem.Alvo)
-        {
-            recurso.Porcentagem.Atingir(porcentagemAtualizada);
-        }
     }
     #endregion
 }

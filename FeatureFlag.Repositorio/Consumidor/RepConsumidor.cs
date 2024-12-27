@@ -21,4 +21,13 @@ public class RepConsumidor : RepBase<Consumidor>, IRepConsumidor
             .FirstOrDefaultAsync();
     }
     #endregion
+    
+    #region ExistePorIdentificador
+    public Task<bool> ExistePorIdentificadorAsync(string identificador)
+    {
+        return Collection
+            .Find(x => x.Identificador == identificador)
+            .AnyAsync();
+    }
+    #endregion
 }

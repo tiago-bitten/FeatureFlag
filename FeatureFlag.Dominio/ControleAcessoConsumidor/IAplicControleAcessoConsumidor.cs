@@ -4,5 +4,5 @@ namespace FeatureFlag.Dominio;
 
 public interface IAplicControleAcessoConsumidor
 {
-    Task<ControleAcessoConsumidorResponse> AdicionarAsync(CriarControleAcessoConsumidorRequest request);
+    Task<ControleAcessoConsumidorResponse> AdicionarAsync(AdicionarControleAcessoConsumidorRequest request);
 }

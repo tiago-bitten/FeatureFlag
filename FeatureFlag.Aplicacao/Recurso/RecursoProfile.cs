@@ -11,12 +11,12 @@ public class RecursoProfile : Profile
     {
         CreateMap<AdicionarRecursoRequest, Recurso>()
             .ForMember(dest => dest.Porcentagem, opt => opt.Ignore())
-            .ConstructUsing((src) => Recurso.Criar(src.Identificador, src.Descricao, src.Porcentagem));
+            .ConstructUsing((src) => new Recurso(src.Identificador, src.Descricao, src.Porcentagem));
 
         CreateMap<Recurso, RecursoResponse>()
             .ForCtorParam("Identificador", opt => opt.MapFrom(src => src.Identificador))
             .ForCtorParam("Descricao", opt => opt.MapFrom(src => src.Descricao))
-            .ForCtorParam("Porcentagem", opt => opt.MapFrom(src => src.Porcentagem.Alvo));
+            .ForCtorParam("Porcentagem", opt => opt.MapFrom(src => src.Porcentagem));
         
         CreateMap<AlterarRecursoRequest, Recurso>()
             .ForAllMembers(opt => 

@@ -1,5 +1,6 @@
 ﻿using FeatureFlag.Dominio;
 using FeatureFlag.Repositorio.Infra;
+using FeatureFlag.Shared.Serializers;
 using MongoDB.Bson.Serialization;
 
 namespace FeatureFlag.Repositorio;
@@ -13,7 +14,8 @@ public class ConsumidorConfig : EntidadeBaseConfig<Consumidor>
         builder.SetIsRootClass(false);
 
         builder.MapProperty(x => x.Identificador)
-               .SetElementName("identificador");
+               .SetElementName("identificador")
+               .SetSerializer(new IdentificadorSerializer());
 
         builder.MapProperty(x => x.Descricao)
                .SetElementName("descricao");

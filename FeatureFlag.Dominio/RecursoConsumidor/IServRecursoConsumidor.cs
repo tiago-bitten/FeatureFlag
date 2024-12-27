@@ -6,7 +6,8 @@ namespace FeatureFlag.Domain;
 
 public interface IServRecursoConsumidor : IServBase<RecursoConsumidor, IRepRecursoConsumidor>
 {
-    Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor);
+    Task AtualizarDisponibilidadeAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor);
+    Task DescongelarTodosPorRecursoAsync(Recurso recurso);
     Task<RecursoConsumidorResponse> RetornarCemPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param);
     Task<RecursoConsumidorResponse> RetornarZeroPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param);
 }
