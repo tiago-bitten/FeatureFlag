@@ -41,10 +41,10 @@ public class AplicControleAcessoConsumidor : AplicBase, IAplicControleAcessoCons
         switch (request.Tipo)
         {
             case EnumTipoControle.Whitelist:
-                consumidor.AdicionarWhitelist(recurso.Identificador);
+                consumidor.AdicionarWhitelist(recurso);
                 break;
             case EnumTipoControle.Blacklist:
-                consumidor.AdicionarBlacklist(recurso.Identificador);
+                consumidor.AdicionarBlacklist(recurso);
                 break;
         }
         

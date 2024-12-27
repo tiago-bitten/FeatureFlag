@@ -35,4 +35,14 @@ public class RecursosController : ControllerBaseFeatureFlag
         return Sucesso(resposta, "Recurso alterado com sucesso.");
     }
     #endregion
+    
+    #region RecuperarTodos
+    [HttpGet]
+    public async Task<IActionResult> RecuperarTodos()
+    {
+        var resposta = await _aplicRecurso.RecuperarTodosAsync();
+        
+        return Sucesso(resposta, resposta.Count, "Recursos recuperados com sucesso.");
+    }
+    #endregion
 }

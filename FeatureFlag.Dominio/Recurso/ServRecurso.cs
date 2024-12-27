@@ -8,12 +8,18 @@ public class ServRecurso : ServBase<Recurso, IRepRecurso>, IServRecurso
 {
     #region Ctor
     private readonly IRepConsumidor _repConsumidor;
+    private readonly IRepRecursoConsumidor _repRecursoConsumidor;
+    private readonly IRepControleAcessoConsumidor _repControleAcessoConsumidor;
     
     public ServRecurso(IRepRecurso repositorio, 
-                       IRepConsumidor repConsumidor) 
+                       IRepConsumidor repConsumidor, 
+                       IRepRecursoConsumidor repRecursoConsumidor, 
+                       IRepControleAcessoConsumidor repControleAcessoConsumidor) 
         : base(repositorio)
     {
         _repConsumidor = repConsumidor;
+        _repRecursoConsumidor = repRecursoConsumidor;
+        _repControleAcessoConsumidor = repControleAcessoConsumidor;
         _repConsumidor = repConsumidor;
     }
     #endregion
@@ -66,5 +72,53 @@ public class ServRecurso : ServBase<Recurso, IRepRecurso>, IServRecurso
         
         return PorcentagemHelper.Calcular(recurso.Consumidor.TotalHabilitados, totalConsumidores.Value);
     }
+    #endregion
+    
+    #region SincronizarEmbedded
+    #region SincronizarConsumidores
+    public void SincronizarConsumidores(Recurso recursoAtualizado, List<Consumidor> consumidores)
+    {
+        foreach (var consumidor in consumidores)
+        {
+            var consumidorRecursoConsumidores = consumidor.RecursoConsumidores
+                .Where(x => x.Recurso.Id == recursoAtualizado.Id)
+                .ToList();
+
+            foreach (var recursoConsumidor in consumidorRecursoConsumidores)
+            {
+                recursoConsumidor.Recurso.Identificador = recursoAtualizado.Identificador;
+            }
+            
+            var consumidorControleAcesso = consumidor.ControleAcessos
+                .Where(x => x.Recurso.Id == recursoAtualizado.Id)
+                .ToList();
+
+            foreach (var controleAcesso in consumidorControleAcesso)
+            {
+                controleAcesso.Recurso.Identificador = recursoAtualizado.Identificador;
+            }
+        }
+    }
+    #endregion
+
+    #region SincronizarRecursoConsumidores
+    public void SincronizarRecursoConsumidores(Recurso recursoAtualizado, List<RecursoConsumidor> recursoConsumidores)
+    {
+        foreach (var recursoConsumidor in recursoConsumidores)
+        {
+            recursoConsumidor.Recurso.Identificador = recursoAtualizado.Identificador;
+        }
+    }
+    #endregion
+
+    #region SincronizarControleAcessoConsumidores
+    public void SincronizarControleAcessoConsumidores(Recurso recursoAtualizado, List<ControleAcessoConsumidor> controleAcessoConsumidores)
+    {
+        foreach (var controleAcessoConsumidor in controleAcessoConsumidores)
+        {
+            controleAcessoConsumidor.Recurso.Identificador = recursoAtualizado.Identificador;
+        }
+    }
+    #endregion
     #endregion
 }

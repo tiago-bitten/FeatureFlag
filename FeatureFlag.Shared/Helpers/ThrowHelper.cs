@@ -12,21 +12,16 @@ public static class ThrowHelper
         throw new FeatureFlagAppExeception(EnumTipoExcecao.BusinessException, mensagem);
     }
     
-    public static void FieldRequiredException(string campo)
+    public static void RequiredFieldException(string campo)
     {
-        throw new FeatureFlagAppExeception(EnumTipoExcecao.FieldRequired, $"Campo {campo} é obrigatório");
+        throw new FeatureFlagAppExeception(EnumTipoExcecao.RequiredField, $"Campo {campo} é obrigatório.");
     }
 }
 
 #region FeatureFlagAppExeception
-public class FeatureFlagAppExeception : Exception
+public class FeatureFlagAppExeception(EnumTipoExcecao codigoErro, string mensagem) : Exception(mensagem)
 {
-    private EnumTipoExcecao CodigoErro { get; }
-    
-    public FeatureFlagAppExeception(EnumTipoExcecao codigoErro, string mensagem) : base(mensagem)
-    {
-        CodigoErro = codigoErro;
-    }
+    private EnumTipoExcecao CodigoErro { get; } = codigoErro;
 }
 #endregion
 
@@ -36,6 +31,6 @@ public enum EnumTipoExcecao
 {
     EntidadeNull = 1,
     BusinessException = 2,
-    FieldRequired = 3
+    RequiredField = 3
 }
 #endregion

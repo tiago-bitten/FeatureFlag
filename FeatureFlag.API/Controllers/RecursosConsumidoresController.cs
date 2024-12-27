@@ -17,12 +17,22 @@ public class RecursosConsumidoresController : ControllerBaseFeatureFlag
     #endregion
     
     #region RecuperarPorRecursoConsumidor
-    [HttpGet]
+    [HttpGet("[action]")]
     public async Task<IActionResult> RecuperarPorRecursoConsumidor([FromQuery] RecuperarPorRecursoConsumidorParam param)
     {
         var resposta = await _aplicRecursoConsumidor.RecuperarPorRecursoConsumidorAsync(param);
         
-        return Sucesso(resposta, "Recursos consumidores recuperados com sucesso.");
+        return Sucesso(resposta, "Recursos e consumidores recuperados com sucesso.");
+    }
+    #endregion
+    
+    #region RecuperarPorConsumidor
+    [HttpGet("[action]")]
+    public async Task<IActionResult> RecuperarPorConsumidor([FromQuery] RecuperarPorConsumidorParam param)
+    {
+        var resposta = await _aplicRecursoConsumidor.RecuperarPorConsumidorAsync(param);
+        
+        return Sucesso(resposta, resposta.Count, "Recursos do consumidor recuperados com sucesso.");
     }
     #endregion
 }

@@ -12,7 +12,7 @@ public sealed class Identificador
     public Identificador(string valor)
     {
         if (string.IsNullOrWhiteSpace(valor))
-            ThrowHelper.FieldRequiredException("Identificador");
+            ThrowHelper.RequiredFieldException("Identificador");
 
         if (valor.Length is < TamanhoMinimo or > TamanhoMaximo)
             ThrowHelper.BusinessException("O identificador deve ter entre 1 e 25 caracteres.");

@@ -40,7 +40,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 break;
             
             default:
-                NormalizarStatus(recursoConsumidor, consumidor);
+                NormalizarStatus(recursoConsumidor, recurso, consumidor);
                 break;
         }
         
@@ -58,7 +58,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         recursoConsumidor.Habilitar();
         recursoConsumidor.Congelar();
         recurso.Consumidor.Adicionar();
-        consumidor.AdicionarRecursoHabilitado(recurso.Identificador);
+        consumidor.AdicionarRecursoHabilitado(recurso);
     }
     #endregion
     
@@ -72,19 +72,19 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         
         recursoConsumidor.Desabilitar();
         recurso.Consumidor.Remover();
-        consumidor.AdicionarRecursoDesabilitado(recurso.Identificador);
+        consumidor.AdicionarRecursoDesabilitado(recurso);
     }
     #endregion
     
     #region NormalizarStatus
-    private void NormalizarStatus(RecursoConsumidor recursoConsumidor, Consumidor consumidor)
+    private void NormalizarStatus(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
         if (recursoConsumidor.Status is EnumStatusRecursoConsumidor.Habilitado or EnumStatusRecursoConsumidor.Desabilitado)
         {
             return;
         }
         recursoConsumidor.Desabilitar();
-        consumidor.AdicionarRecursoDesabilitado(recursoConsumidor.Recurso.Identificador);
+        consumidor.AdicionarRecursoDesabilitado(recurso);
     }
     #endregion
     #endregion
