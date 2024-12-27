@@ -24,4 +24,13 @@ public class ControleAcessosController : ControllerBaseFeatureFlag
         return Sucesso(resposta, "Controle de acesso adicionado com sucesso.");
     }
     #endregion
+    
+    #region RecuperarPorConsumidor
+    [HttpGet("Consumidor/{codigoConsumidor:int}")]
+    public async Task<IActionResult> RecuperarPorConsumidor(int codigoConsumidor)
+    {
+        var resposta = await _aplicControleAcessoConsumidor.RecuperarPorConsumidorAsync(codigoConsumidor);
+        return Sucesso(resposta, resposta.Count, "Controles de acesso recuperados com sucesso.");
+    }
+    #endregion
 }

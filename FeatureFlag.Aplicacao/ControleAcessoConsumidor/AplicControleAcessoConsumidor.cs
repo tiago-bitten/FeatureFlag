@@ -54,6 +54,10 @@ public class AplicControleAcessoConsumidor : AplicBase, IAplicControleAcessoCons
 
         return response;
     }
-    
     #endregion
+
+    public Task<List<ControleAcessoConsumidorResponse>> RecuperarPorConsumidorAsync(int codigoConsumidor)
+    {
+        throw new NotImplementedException();
+    }
 }
