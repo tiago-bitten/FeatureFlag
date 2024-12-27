@@ -9,4 +9,16 @@ public class ServConsumidor : ServBase<Consumidor, IRepConsumidor>, IServConsumi
     {
     }
     #endregion
+
+    public override async Task AdicionarAsync(Consumidor consumidor)
+    {
+        var consumidorPorIdentificador = await Repositorio.RecuperarPorIdentificadorAsync(consumidor.Identificador);
+        if (consumidorPorIdentificador is not null)
+        {
+            consumidor.AlterarDados(consumidorPorIdentificador.Identificador, consumidorPorIdentificador.Descricao);
+            return;
+        }
+        
+        await base.AdicionarAsync(consumidor);
+    }
 }

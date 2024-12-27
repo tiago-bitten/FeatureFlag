@@ -20,7 +20,7 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
     #endregion
 
     #region AdicionarAsync
-    public async Task<ConsumidorResponse> AdicionarAsync(CriarConsumidorRequest request)
+    public async Task<ConsumidorResponse> AdicionarAsync(AdicionarConsumidorRequest request)
     {
         var consumidor = Mapper.Map<Consumidor>(request);
 
@@ -38,13 +38,11 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
     public async Task<ConsumidorResponse> AlterarAsync(AlterarConsumidorRequest request)
     {
         var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
-        consumidor.ThrowIfNull();
+        consumidor.ThrowIfNull("Consumidor foi não encontrado.");
         
         var consumidorAlterado = Mapper.Map(request, consumidor);
 
-        await IniciarTransacaoAsync();
         await _servConsumidor.AtualizarAsync(consumidorAlterado);
-        await PersistirTransacaoAsync();
         
         var response = Mapper.Map<ConsumidorResponse>(consumidorAlterado);
         

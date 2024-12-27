@@ -21,7 +21,7 @@ public sealed class ControleAcessoConsumidor : EntidadeBase
         Recurso = new RecursoEmbedded
         {
             Id = recurso.Id,
-            Identificador = recurso.Identificador
+            Identificador = recurso.Identificador  
         };
         
         Tipo = tipo;

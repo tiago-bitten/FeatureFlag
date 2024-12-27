@@ -35,14 +35,4 @@ public class RecursosController : ControllerBaseFeatureFlag
         return Sucesso(resposta, "Recurso alterado com sucesso.");
     }
     #endregion
-    
-    #region AlterarPorcentagem
-    [HttpPut("[action]")]
-    public async Task<IActionResult> AlterarPorcentagem([FromBody] AlterarRecursoPorcentagemRequest request)
-    {
-        var resposta = await _aplicRecurso.AlterarPorcentagemAsync(request);
-        
-        return Sucesso(resposta, "Porcentagem do recurso alterada com sucesso.");
-    }
-    #endregion
 }

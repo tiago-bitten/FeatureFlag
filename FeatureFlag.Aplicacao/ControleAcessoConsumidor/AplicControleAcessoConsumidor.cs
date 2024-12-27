@@ -27,7 +27,7 @@ public class AplicControleAcessoConsumidor : AplicBase, IAplicControleAcessoCons
     #endregion
 
     #region AdicionarAsync
-    public async Task<ControleAcessoConsumidorResponse> AdicionarAsync(CriarControleAcessoConsumidorRequest request)
+    public async Task<ControleAcessoConsumidorResponse> AdicionarAsync(AdicionarControleAcessoConsumidorRequest request)
     {
         var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.IdentificadorConsumidor);
         consumidor.ThrowIfNull("Consumidor não foi encontrado.");

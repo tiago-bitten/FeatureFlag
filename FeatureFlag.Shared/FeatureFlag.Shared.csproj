@@ -10,4 +10,8 @@
       <Folder Include="Attributes\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Bson" Version="3.1.0" />
+    </ItemGroup>
+
 </Project>

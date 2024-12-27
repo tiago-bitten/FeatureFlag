@@ -1,5 +1,5 @@
 ﻿namespace FeatureFlag.Dominio.Dtos;
 
-public record CriarControleAcessoConsumidorRequest(string IdentificadorConsumidor,
+public record AdicionarControleAcessoConsumidorRequest(string IdentificadorConsumidor,
                                                    string IdentificadorRecurso,
                                                    EnumTipoControle Tipo);

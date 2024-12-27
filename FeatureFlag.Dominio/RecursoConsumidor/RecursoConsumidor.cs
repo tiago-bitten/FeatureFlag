@@ -9,10 +9,13 @@ public sealed class RecursoConsumidor : EntidadeBase
     public RecursoEmbedded Recurso { get; set; } = new();
     public ConsumidorEmbedded Consumidor { get; set; } = new();
     public EnumStatusRecursoConsumidor Status { get; set; }
+    public bool Congelado { get; private set; }
 
     #region Setters
     public void Habilitar() => Status = EnumStatusRecursoConsumidor.Habilitado;
     public void Desabilitar() => Status = EnumStatusRecursoConsumidor.Desabilitado;
+    public void Congelar() => Congelado = true;
+    public void Descongelar() => Congelado = false;
     #endregion
 
     #region Ctor

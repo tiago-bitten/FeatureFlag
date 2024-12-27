@@ -10,12 +10,15 @@ public class AplicRecurso : AplicBase, IAplicRecurso
 {
     #region Ctor
     private readonly IServRecurso _servRecurso;
+    private readonly IServRecursoConsumidor _servRecursoConsumidor;
 
     public AplicRecurso(IServRecurso servRecurso,
-                        IMapper mapper) 
+                        IMapper mapper, 
+                        IServRecursoConsumidor servRecursoConsumidor) 
         : base(mapper)
     {
         _servRecurso = servRecurso;
+        _servRecursoConsumidor = servRecursoConsumidor;
     }
     #endregion
     
@@ -42,19 +45,11 @@ public class AplicRecurso : AplicBase, IAplicRecurso
 
         await _servRecurso.AtualizarAsync(recursoAlterado);
         
-        var response = Mapper.Map<RecursoResponse>(recursoAlterado);
-        
-        return response;
-    }
-    #endregion
-
-    #region AlterarPorcentagemAsync
-    public async Task<RecursoResponse> AlterarPorcentagemAsync(AlterarRecursoPorcentagemRequest request)
-    {
-        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
-        recurso.ThrowIfNull("Recurso não foi encontrado.");
-        
-        var recursoAlterado = await _servRecurso.AlterarPorcentagemAsync(recurso, request.Porcentagem);
+        var porcentagemAlteradaEstaMenor = recurso.Porcentagem > recursoAlterado.Porcentagem;
+        if (porcentagemAlteradaEstaMenor)
+        {
+            await _servRecursoConsumidor.DescongelarTodosPorRecursoAsync(recursoAlterado);
+        }
         
         var response = Mapper.Map<RecursoResponse>(recursoAlterado);
         

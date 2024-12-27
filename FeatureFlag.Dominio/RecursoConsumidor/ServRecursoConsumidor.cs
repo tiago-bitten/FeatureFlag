@@ -24,12 +24,12 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #endregion
     
     #region AtualizarStatusAsync
-    public async Task AtualizarStatusAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
+    public async Task AtualizarDisponibilidadeAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
         var totalConsumidores = await _repConsumidor.CountAsync();
         var porcentagemAtual = await _servRecurso.CalcularPorcentagemAsync(recurso, totalConsumidores);
 
-        switch (porcentagemAtual.CompareTo(recurso.Porcentagem.Alvo))
+        switch (porcentagemAtual.CompareTo(recurso.Porcentagem))
         {
             case < 0:
                 HabilitarConsumidor(recursoConsumidor, recurso, consumidor);
@@ -44,7 +44,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
                 break;
         }
         
-        await _servRecurso.VerificarPorcentagemAlvoAtingidaAsync(recurso, totalConsumidores);
         await AtualizarAsync(recursoConsumidor);
     }
 
@@ -57,6 +56,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         }
         
         recursoConsumidor.Habilitar();
+        recursoConsumidor.Congelar();
         recurso.Consumidor.Adicionar();
         consumidor.AdicionarRecursoHabilitado(recurso.Identificador);
     }
@@ -65,7 +65,7 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     #region DesabilitarConsumidor
     private void DesabilitarConsumidor(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor)
     {
-        if (recursoConsumidor.Status is EnumStatusRecursoConsumidor.Desabilitado || recurso.Porcentagem.Atingido)
+        if (recursoConsumidor.Status is EnumStatusRecursoConsumidor.Desabilitado)
         {
             return;
         }
@@ -87,6 +87,18 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         consumidor.AdicionarRecursoDesabilitado(recursoConsumidor.Recurso.Identificador);
     }
     #endregion
+    #endregion
+    
+    #region DescongelarTodosAsync
+    public async Task DescongelarTodosPorRecursoAsync(Recurso recurso)
+    {
+        var recursosConsumidores = await Repositorio.RecuperarPorRecursoAsync(recurso.Id);
+        foreach (var recursoConsumidor in recursosConsumidores)
+        {
+            recursoConsumidor.Descongelar();
+            await AtualizarAsync(recursoConsumidor);
+        }
+    }
     #endregion
     
     #region Retornar 0% ou 100%

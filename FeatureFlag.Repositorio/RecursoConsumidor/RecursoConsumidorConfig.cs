@@ -20,5 +20,8 @@ public class RecursoConsumidorConfig : EntidadeBaseConfig<RecursoConsumidor>
 
         builder.MapProperty(x => x.Status)
                .SetElementName("status");
+
+        builder.MapProperty(x => x.Congelado)
+               .SetElementName("congelado");
     }
 }

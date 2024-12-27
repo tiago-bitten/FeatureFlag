@@ -78,6 +78,7 @@ public static class IoC
     }
     #endregion
     
+    #region ConfigurarJsonOptions
     public static IServiceCollection ConfigurarJsonOptions(this IServiceCollection services)
     {
         var options = new JsonSerializerOptions
@@ -88,5 +89,5 @@ public static class IoC
         services.AddSingleton(options);
         return services;
     }
-
+    #endregion
 }

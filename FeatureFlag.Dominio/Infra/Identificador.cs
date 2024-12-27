@@ -2,7 +2,7 @@
 
 namespace FeatureFlag.Dominio.Infra;
 
-public abstract class Identificador
+public abstract class IdentificadorObjectId
 {
     public ObjectId Id { get; set; }
 }

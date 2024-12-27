@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization;
 
 namespace FeatureFlag.Repositorio.Infra;
 
-public class IdentificadorConfig<T> : IDocumentConfiguration<T> where T : Identificador
+public class IdentificadorConfig<T> : IDocumentConfiguration<T> where T : IdentificadorObjectId
 {
     public virtual void Configurar(BsonClassMap<T> builder)
     {
@@ -11,7 +11,7 @@ public class IdentificadorConfig<T> : IDocumentConfiguration<T> where T : Identi
         
         builder.SetIsRootClass(true);
         
-        if (typeof(T).IsAssignableFrom(typeof(Identificador)))
+        if (typeof(T).IsAssignableFrom(typeof(IdentificadorObjectId)))
         {
             builder.MapIdProperty(x => x.Id)
                    .SetIdGenerator(MongoDB.Bson.Serialization.IdGenerators.ObjectIdGenerator.Instance);
