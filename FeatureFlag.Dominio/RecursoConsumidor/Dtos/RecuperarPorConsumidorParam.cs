@@ -1,4 +1,3 @@
 ﻿namespace FeatureFlag.Dominio.Dtos;
 
-public record RecuperarPorConsumidorParam(
-    string IdentificadorConsumidor);
+public record RecuperarPorConsumidorParam(string IdentificadorConsumidor);

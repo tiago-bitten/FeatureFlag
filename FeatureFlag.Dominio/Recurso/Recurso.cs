@@ -12,6 +12,8 @@ public sealed class Recurso : EntidadeBase
     public ConsumidorEmbedded Consumidor { get; private set; } = new();
     
     #region Ctor
+    public Recurso() {}
+    
     public Recurso(string identificador, string descricao, decimal porcentagem)
     {
         Identificador = new Identificador(identificador);
@@ -34,7 +36,7 @@ public sealed class Recurso : EntidadeBase
     public void ValidarDescricao()
     {
         if (string.IsNullOrWhiteSpace(Descricao))
-            ThrowHelper.FieldRequiredException("Descrição");
+            ThrowHelper.RequiredFieldException("Descrição");
     }
 
     public void ValidarPorcentagem()

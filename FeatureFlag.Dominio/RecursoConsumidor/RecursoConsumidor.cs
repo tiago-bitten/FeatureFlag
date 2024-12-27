@@ -6,9 +6,9 @@ namespace FeatureFlag.Dominio;
 
 public sealed class RecursoConsumidor : EntidadeBase
 {
-    public RecursoEmbedded Recurso { get; set; } = new();
-    public ConsumidorEmbedded Consumidor { get; set; } = new();
-    public EnumStatusRecursoConsumidor Status { get; set; }
+    public RecursoEmbedded Recurso { get; private set; }
+    public ConsumidorEmbedded Consumidor { get; private set; }
+    public EnumStatusRecursoConsumidor Status { get; private set; }
     public bool Congelado { get; private set; }
 
     #region Setters
@@ -21,17 +21,8 @@ public sealed class RecursoConsumidor : EntidadeBase
     #region Ctor
     public RecursoConsumidor(Recurso recurso, Consumidor consumidor)
     {
-        Recurso = new RecursoEmbedded
-        {
-            Id = recurso.Id,
-            Identificador = recurso.Identificador
-        };
-        
-        Consumidor = new ConsumidorEmbedded
-        {
-            Id = consumidor.Id,
-            Identificador = consumidor.Identificador
-        };
+        Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
+        Consumidor = new ConsumidorEmbedded(consumidor.Id, consumidor.Identificador);
     }
     #endregion
     
@@ -40,16 +31,28 @@ public sealed class RecursoConsumidor : EntidadeBase
     #region ConsumidorEmbedded
     public class ConsumidorEmbedded
     {
-        public ObjectId Id { get; set; }
+        public ObjectId Id { get; init; }
         public string Identificador { get; set; }
+        
+        public ConsumidorEmbedded(ObjectId id, string identificador)
+        {
+            Id = id;
+            Identificador = identificador;
+        }
     }
     #endregion
 
     #region RecursoEmbedded
     public class RecursoEmbedded
     {
-        public ObjectId Id { get; set; }
+        public ObjectId Id { get; init; }
         public string Identificador { get; set; }
+        
+        public RecursoEmbedded(ObjectId id, string identificador)
+        {
+            Id = id;
+            Identificador = identificador;
+        }
     }
     #endregion
     #endregion

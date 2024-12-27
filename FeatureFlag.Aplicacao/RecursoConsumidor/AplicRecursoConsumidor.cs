@@ -28,8 +28,7 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
     #endregion
 
     #region RecuperarPorRecursoConsumidorAsync
-    public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(
-        RecuperarPorRecursoConsumidorParam param)
+    public async Task<RecursoConsumidorResponse> RecuperarPorRecursoConsumidorAsync(RecuperarPorRecursoConsumidorParam param)
     {
         var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(param.IdentificadorRecurso);
         recurso.ThrowIfNull("Recurso não foi encontrado.");
@@ -74,10 +73,20 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
 
     #region RecuperarPorConsumidorAsync
 
-    public Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
+    public async Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
     {
-        throw new NotImplementedException();
-    }
+        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
+        consumidor.ThrowIfNull("Consumidor não foi encontrado.");
 
+        var response = consumidor.RecursoConsumidores
+            .Where(x => x.Status is EnumStatusRecursoConsumidor.Habilitado)
+            .Select(x => Mapper.Map<RecursoConsumidorResponse>(x, opt =>
+            {
+                opt.Items["Consumidor"] = consumidor.Identificador;
+            }))
+            .ToList();
+
+        return response;
+    }
     #endregion
 }

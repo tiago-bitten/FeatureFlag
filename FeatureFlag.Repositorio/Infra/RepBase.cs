@@ -45,6 +45,19 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
         await Collection.ReplaceOneAsync(filter, entidade);
     }
     #endregion
+    
+    #region AtualizarVarios
+    public async Task AtualizarVariosAsync(List<T> entidades)
+    {
+        var updates = entidades.Select(e =>
+            new ReplaceOneModel<T>(
+                Builders<T>.Filter.Eq(x => x.Id, e.Id),
+                e
+            )
+        ).ToList();
+        await Collection.BulkWriteAsync(updates);
+    }
+    #endregion
 
     #region Remover
     public async Task RemoverAsync(ObjectId id)

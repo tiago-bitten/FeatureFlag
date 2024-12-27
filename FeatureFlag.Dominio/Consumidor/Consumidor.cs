@@ -1,6 +1,7 @@
 ﻿using FeatureFlag.Domain;
 using FeatureFlag.Dominio.Infra;
 using FeatureFlag.Shared.ValueObjects;
+using MongoDB.Bson;
 
 namespace FeatureFlag.Dominio;
 
@@ -8,7 +9,7 @@ public sealed class Consumidor : EntidadeBase
 {
     public Identificador Identificador { get; private set; }
     public string? Descricao { get; private set; }
-    public List<RecursoConsumidorEmbedded> Recursos { get; private set; } = [];
+    public List<RecursoConsumidorEmbedded> RecursoConsumidores { get; private set; } = [];
     public List<ControleAcessoConsumidorEmbedded> ControleAcessos { get; private set; } = [];
 
     #region Ctor
@@ -28,48 +29,48 @@ public sealed class Consumidor : EntidadeBase
     #endregion
     
     #region AdicionarRecursoHabilitado
-    public void AdicionarRecursoHabilitado(string identificadorRecurso)
+    public void AdicionarRecursoHabilitado(Recurso recurso)
     {
-        RemoverRecurso(identificadorRecurso);
+        RemoverRecurso(recurso.Identificador);
         var recursoConsumidor = new RecursoConsumidorEmbedded();
-        recursoConsumidor.AdicioniarHabilitado(identificadorRecurso);
-        Recursos.Add(recursoConsumidor);
+        recursoConsumidor.AdicioniarHabilitado(recurso);
+        RecursoConsumidores.Add(recursoConsumidor);
     }
     #endregion
     
     #region AdicionarRecursoDesabilitado
-    public void AdicionarRecursoDesabilitado(string identificadorRecurso)
+    public void AdicionarRecursoDesabilitado(Recurso recurso)
     {
-        RemoverRecurso(identificadorRecurso);
+        RemoverRecurso(recurso.Identificador);
         var recursoConsumidor = new RecursoConsumidorEmbedded();
-        recursoConsumidor.AdicioniarDesabilitado(identificadorRecurso);
-        Recursos.Add(recursoConsumidor);
+        recursoConsumidor.AdicioniarDesabilitado(recurso);
+        RecursoConsumidores.Add(recursoConsumidor);
     }
     #endregion
     
     #region RemoverRecurso
     public void RemoverRecurso(string identificadorRecurso)
     {
-        Recursos.RemoveAll(x => x.IdentificadorRecurso == identificadorRecurso);
+        RecursoConsumidores.RemoveAll(x => x.Recurso.Identificador == identificadorRecurso);
     }
     #endregion
     
     #region AdicionarWhitelist
-    public void AdicionarWhitelist(string identificadorRecurso)
+    public void AdicionarWhitelist(Recurso recurso)
     {
-        RemoverControleAcesso(identificadorRecurso);
+        RemoverControleAcesso(recurso.Identificador);
         var controleAcesso = new ControleAcessoConsumidorEmbedded();
-        controleAcesso.AdicionarWhitelist(identificadorRecurso);
+        controleAcesso.AdicionarWhitelist(recurso);
         ControleAcessos.Add(controleAcesso);
     }
     #endregion
     
     #region AdicionarBlacklist
-    public void AdicionarBlacklist(string identificadorRecurso)
+    public void AdicionarBlacklist(Recurso recurso)
     {
-        RemoverControleAcesso(identificadorRecurso);
+        RemoverControleAcesso(recurso.Identificador);
         var controleAcesso = new ControleAcessoConsumidorEmbedded();
-        controleAcesso.AdicionarBlacklist(identificadorRecurso);
+        controleAcesso.AdicionarBlacklist(recurso);
         ControleAcessos.Add(controleAcesso);
     }
     #endregion
@@ -77,7 +78,7 @@ public sealed class Consumidor : EntidadeBase
     #region RemoverControleAcesso
     public void RemoverControleAcesso(string identificadorRecurso)
     {
-        ControleAcessos.RemoveAll(x => x.IdentificadorRecurso == identificadorRecurso);
+        ControleAcessos.RemoveAll(x => x.Recurso.Identificador == identificadorRecurso);
     }
     #endregion
     #endregion
@@ -87,18 +88,18 @@ public sealed class Consumidor : EntidadeBase
     #region RecursoConsumidorEmbedded
     public class RecursoConsumidorEmbedded
     {
-        public string IdentificadorRecurso { get; private set; }
-        public EnumStatusRecursoConsumidor Status { get; private set; }
+        public RecursoEmbedded Recurso { get; private set; }
+        public EnumStatusRecursoConsumidor Status { get; set; }
         
-        public void AdicioniarHabilitado(string identificadorRecurso)
+        public void AdicioniarHabilitado(Recurso recurso)
         {
-            IdentificadorRecurso = identificadorRecurso;
+            Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
             Status = EnumStatusRecursoConsumidor.Habilitado;
         }
         
-        public void  AdicioniarDesabilitado(string identificadorRecurso)
+        public void  AdicioniarDesabilitado(Recurso recurso)
         {
-            IdentificadorRecurso = identificadorRecurso;
+            Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
             Status = EnumStatusRecursoConsumidor.Desabilitado;
         }
     }
@@ -107,19 +108,33 @@ public sealed class Consumidor : EntidadeBase
     #region ControleAcessoConsumidorEmbedded
     public class ControleAcessoConsumidorEmbedded
     {
-        public string IdentificadorRecurso { get; private set; }
+        public RecursoEmbedded Recurso { get; private set; }
         public EnumTipoControle Tipo { get; private set; }
         
-        public void AdicionarWhitelist(string identificadorRecurso)
+        public void AdicionarWhitelist(Recurso recurso)
         {
-            IdentificadorRecurso = identificadorRecurso;
+            Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
             Tipo = EnumTipoControle.Whitelist;
         }
         
-        public void AdicionarBlacklist(string identificadorRecurso)
+        public void AdicionarBlacklist(Recurso recurso)
         {
-            IdentificadorRecurso = identificadorRecurso;
+            Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
             Tipo = EnumTipoControle.Blacklist;
+        }
+    }
+    #endregion
+    
+    #region RecursoEmbedded
+    public class RecursoEmbedded
+    {
+        public ObjectId Id { get; init; }
+        public string Identificador { get; set; }
+        
+        public RecursoEmbedded(ObjectId id, string identificador)
+        {
+            Id = id;
+            Identificador = identificador;
         }
     }
     #endregion

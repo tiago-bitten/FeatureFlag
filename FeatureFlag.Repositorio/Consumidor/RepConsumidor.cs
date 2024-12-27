@@ -1,5 +1,6 @@
 ﻿using FeatureFlag.Dominio;
 using FeatureFlag.Repositorio.Infra;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace FeatureFlag.Repositorio;
@@ -28,6 +29,14 @@ public class RepConsumidor : RepBase<Consumidor>, IRepConsumidor
         return Collection
             .Find(x => x.Identificador == identificador)
             .AnyAsync();
+    }
+    #endregion
+    
+    #region RecuperarPorRecursoAsync
+    public Task<List<Consumidor>> RecuperarPorRecursoAsync(ObjectId codigoRecurso)
+    {
+        var filter = Builders<Consumidor>.Filter.ElemMatch(x => x.RecursoConsumidores, x => x.Recurso.Id == codigoRecurso);
+        return Collection.Find(filter).ToListAsync();
     }
     #endregion
 }

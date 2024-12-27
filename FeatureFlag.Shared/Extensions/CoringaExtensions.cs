@@ -1,4 +1,5 @@
-﻿using FeatureFlag.Shared.Helpers;
+﻿using System.Text.Json;
+using FeatureFlag.Shared.Helpers;
 
 namespace FeatureFlag.Shared.Extensions;
 
@@ -9,5 +10,6 @@ public static class CoringaExtensions
         if (obj is null)
             ThrowHelper.NullException(mensagem);
     }
+    
 }
     
