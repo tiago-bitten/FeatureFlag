@@ -40,18 +40,20 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     {
         var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
         recurso.ThrowIfNull("Recurso não foi encontrado.");
-        
-        var recursoAlterado = Mapper.Map(request, recurso);
 
-        await _servRecurso.AtualizarAsync(recursoAlterado);
+        var porcentagemAntiga = recurso.Porcentagem;
         
-        var porcentagemAlteradaEstaMenor = recurso.Porcentagem > recursoAlterado.Porcentagem;
+        Mapper.Map(request, recurso);
+
+        await _servRecurso.AtualizarAsync(recurso);
+        
+        var porcentagemAlteradaEstaMenor = porcentagemAntiga > recurso.Porcentagem;
         if (porcentagemAlteradaEstaMenor)
         {
-            await _servRecursoConsumidor.DescongelarTodosPorRecursoAsync(recursoAlterado);
+            await _servRecursoConsumidor.DescongelarTodosPorRecursoAsync(recurso);
         }
         
-        var response = Mapper.Map<RecursoResponse>(recursoAlterado);
+        var response = Mapper.Map<RecursoResponse>(recurso);
         
         return response;
     }
