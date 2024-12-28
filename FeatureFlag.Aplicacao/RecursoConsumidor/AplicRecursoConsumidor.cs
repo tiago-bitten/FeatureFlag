@@ -43,9 +43,14 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
         switch (recurso.Porcentagem)
         {
             case 100:
-                return await _servRecursoConsumidor.RetornarCemPorcentoAtivoAsync(param);
+                return _servRecursoConsumidor.RetornarCemPorcentoAtivo(consumidor, recurso);
             case 0:
-                return await _servRecursoConsumidor.RetornarZeroPorcentoAtivoAsync(param);
+                return _servRecursoConsumidor.RetornarZeroPorcentoAtivo(consumidor, recurso);
+        }
+        
+        if (consumidor.PossuiControleAcessoPorRecurso(recurso.Id))
+        {
+            return _servRecursoConsumidor.RetornarComControleAcesso(consumidor, recurso);
         }
 
         var recursoConsumidor = await _servRecursoConsumidor.Repositorio.RecuperarPorRecursoEConsumidorAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor);
@@ -57,7 +62,7 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
 
         if (recursoConsumidor.Congelado)
         {
-            return RecursoConsumidorResponse.Ativo(recurso.Identificador, consumidor.Identificador);
+            return RecursoConsumidorResponse.Ativo(consumidor.Identificador, recurso.Identificador);
         }
 
         await _servRecursoConsumidor.AtualizarDisponibilidadeAsync(recursoConsumidor, recurso, consumidor);

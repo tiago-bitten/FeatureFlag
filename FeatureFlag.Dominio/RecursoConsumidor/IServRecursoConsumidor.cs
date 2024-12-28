@@ -8,6 +8,7 @@ public interface IServRecursoConsumidor : IServBase<RecursoConsumidor, IRepRecur
 {
     Task AtualizarDisponibilidadeAsync(RecursoConsumidor recursoConsumidor, Recurso recurso, Consumidor consumidor);
     Task DescongelarTodosPorRecursoAsync(Recurso recurso);
-    Task<RecursoConsumidorResponse> RetornarCemPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param);
-    Task<RecursoConsumidorResponse> RetornarZeroPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param);
+    RecursoConsumidorResponse RetornarComControleAcesso(Consumidor consumidor, Recurso recurso);
+    RecursoConsumidorResponse RetornarCemPorcentoAtivo(Consumidor consumidor, Recurso recurso);
+    RecursoConsumidorResponse RetornarZeroPorcentoAtivo(Consumidor consumidor, Recurso recurso);
 }

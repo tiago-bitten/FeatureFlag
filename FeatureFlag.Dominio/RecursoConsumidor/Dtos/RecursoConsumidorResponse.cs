@@ -1,30 +1,22 @@
 ﻿namespace FeatureFlag.Dominio.Dtos;
 
-public record RecursoConsumidorResponse(string Recurso,
-                                        string Consumidor,
+public record RecursoConsumidorResponse(string Consumidor,
+                                        string Recurso,
                                         bool Habilitado)
 {
-    public static RecursoConsumidorResponse ConsumidorSemRecurso(Consumidor consumidor, string recurso)
+    public static RecursoConsumidorResponse Ativo(string identificadorConsumidor, string identificadorRecurso)
     {
         return new RecursoConsumidorResponse(
-            Recurso: recurso,
-            Consumidor: consumidor.Identificador,
-            Habilitado: false);
-    }
-    
-    public static RecursoConsumidorResponse Ativo(string identificadorRecurso, string identificadorConsumidor)
-    {
-        return new RecursoConsumidorResponse(
-            Recurso: identificadorRecurso,
             Consumidor: identificadorConsumidor,
+            Recurso: identificadorRecurso,
             Habilitado: true);
     }
     
-    public static RecursoConsumidorResponse Desabilitado(string identificadorRecurso, string identificadorConsumidor)
+    public static RecursoConsumidorResponse Desabilitado(string identificadorConsumidor, string identificadorRecurso)
     {
         return new RecursoConsumidorResponse(
-            Recurso: identificadorRecurso,
             Consumidor: identificadorConsumidor,
+            Recurso: identificadorRecurso,
             Habilitado: false);
     }
 }

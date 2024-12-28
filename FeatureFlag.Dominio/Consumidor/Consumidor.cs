@@ -10,6 +10,7 @@ public sealed class Consumidor : EntidadeBase
     public Identificador Identificador { get; private set; }
     public string? Descricao { get; private set; }
     public List<ControleAcessoConsumidorEmbedded> ControleAcessos { get; private set; } = [];
+    public bool PossuiControleAcessoPorRecurso(ObjectId codigoRecurso) => ControleAcessos.Any(x => x.Recurso.Id == codigoRecurso);
 
     #region Ctor
     public Consumidor(string identificador)

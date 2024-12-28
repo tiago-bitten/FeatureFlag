@@ -1,6 +1,7 @@
 ﻿using FeatureFlag.Domain;
 using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Dominio.Infra;
+using MongoDB.Bson;
 
 namespace FeatureFlag.Dominio;
 
@@ -98,40 +99,54 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
     
+    #region RetornarComControleAcesso
+    public RecursoConsumidorResponse RetornarComControleAcesso(Consumidor consumidor, Recurso recurso)
+    {
+        var controleAcesso = consumidor.ControleAcessos
+            .FirstOrDefault(x => x.Recurso.Id == recurso.Id);
+
+        return controleAcesso?.Tipo switch
+        {
+            EnumTipoControle.Whitelist => RecursoConsumidorResponse.Ativo(consumidor.Identificador, recurso.Identificador),
+            EnumTipoControle.Blacklist => RecursoConsumidorResponse.Desabilitado(consumidor.Identificador, recurso.Identificador),
+            _ => throw new NotImplementedException()
+        };
+    }
+    #endregion
+    
     #region Retornar 0% ou 100%
     #region RetornarCemPorcentoAsync
-    public async Task<RecursoConsumidorResponse> RetornarCemPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
+    public RecursoConsumidorResponse RetornarCemPorcentoAtivo(Consumidor consumidor, Recurso recurso)
     {
-        var estaNaBlacklist = await _repControleAcessoConsumidor
-            .PossuiPorTipoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Blacklist);
+        var estaNaBlacklist = consumidor.ControleAcessos
+            .FirstOrDefault(x => x.Recurso.Id == recurso.Id && x.Tipo == EnumTipoControle.Blacklist) is not null;
             
-        return RetornarPermissao(estaNaBlacklist, EnumTipoControle.Blacklist, param);
+        return RetornarPermissao(estaNaBlacklist, EnumTipoControle.Blacklist, consumidor, recurso);
     }
     #endregion
         
     #region RetornarZeroPorcentoAsync
-    public async Task<RecursoConsumidorResponse> RetornarZeroPorcentoAtivoAsync(RecuperarPorRecursoConsumidorParam param)
+    public RecursoConsumidorResponse RetornarZeroPorcentoAtivo(Consumidor consumidor, Recurso recurso)
     {
-        var estaNaWhitelist = await _repControleAcessoConsumidor
-            .PossuiPorTipoAsync(param.IdentificadorRecurso, param.IdentificadorConsumidor, EnumTipoControle.Whitelist);
+        var estaNaWhitelist = consumidor.ControleAcessos
+            .FirstOrDefault(x => x.Recurso.Id == recurso.Id && x.Tipo == EnumTipoControle.Whitelist) is not null;
             
-        return RetornarPermissao(estaNaWhitelist, EnumTipoControle.Whitelist, param);
+        return RetornarPermissao(estaNaWhitelist, EnumTipoControle.Whitelist, consumidor, recurso);
     }
     #endregion
         
     #region RetornarPermissao
-    private RecursoConsumidorResponse RetornarPermissao(bool estaNaLista, EnumTipoControle tipo,
-        RecuperarPorRecursoConsumidorParam param)
+    private RecursoConsumidorResponse RetornarPermissao(bool estaNaLista, EnumTipoControle tipo, Consumidor consumidor, Recurso recurso)
     {
         return tipo switch
         {
             EnumTipoControle.Whitelist => estaNaLista
-                ? RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor)
-                : RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor),
+                ? RecursoConsumidorResponse.Ativo(consumidor.Identificador, recurso.Identificador)
+                : RecursoConsumidorResponse.Desabilitado(consumidor.Identificador, recurso.Identificador),
 
             EnumTipoControle.Blacklist => estaNaLista
-                ? RecursoConsumidorResponse.Desabilitado(param.IdentificadorRecurso, param.IdentificadorConsumidor)
-                : RecursoConsumidorResponse.Ativo(param.IdentificadorRecurso, param.IdentificadorConsumidor),
+                ? RecursoConsumidorResponse.Desabilitado(consumidor.Identificador, recurso.Identificador)
+                : RecursoConsumidorResponse.Ativo(consumidor.Identificador, recurso.Identificador),
 
             _ => throw new NotImplementedException()
         };
