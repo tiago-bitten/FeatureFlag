@@ -17,7 +17,7 @@ public class RecursosController : ControllerBaseFeatureFlag
     #endregion
 
     #region Adicionar
-    [HttpPost("[action]")]
+    [HttpPost]
     public async Task<IActionResult> Adicionar([FromBody] AdicionarRecursoRequest request)
     {
         var resposta = await _aplicRecurso.AdicionarAsync(request);
@@ -27,10 +27,10 @@ public class RecursosController : ControllerBaseFeatureFlag
     #endregion
     
     #region Alterar
-    [HttpPut("[action]")]
-    public async Task<IActionResult> Alterar([FromBody] AlterarRecursoRequest request)
+    [HttpPut("{identificador}")]
+    public async Task<IActionResult> Alterar([FromBody] AlterarRecursoRequest request, string identificador)
     {
-        var resposta = await _aplicRecurso.AlterarAsync(request);
+        var resposta = await _aplicRecurso.AlterarAsync(identificador, request);
         
         return Sucesso(resposta, "Recurso alterado com sucesso.");
     }

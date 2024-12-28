@@ -17,7 +17,7 @@ public class ControleAcessosController : ControllerBaseFeatureFlag
     #endregion
     
     #region Adicionar
-    [HttpPost("[action]")]
+    [HttpPost]
     public async Task<IActionResult> Adicionar([FromBody] AdicionarControleAcessoConsumidorRequest request)
     {
         var resposta = await _aplicControleAcessoConsumidor.AdicionarAsync(request);

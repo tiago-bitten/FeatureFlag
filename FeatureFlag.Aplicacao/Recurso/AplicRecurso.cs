@@ -43,9 +43,9 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     #endregion
     
     #region AlterarAsync
-    public async Task<RecursoResponse> AlterarAsync(AlterarRecursoRequest request)
+    public async Task<RecursoResponse> AlterarAsync(string identificador, AlterarRecursoRequest request)
     {
-        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
+        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(identificador);
         recurso.ThrowIfNull("Recurso não foi encontrado.");
 
         var porcentagemAntiga = recurso.Porcentagem;

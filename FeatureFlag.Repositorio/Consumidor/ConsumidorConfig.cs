@@ -20,9 +20,6 @@ public class ConsumidorConfig : EntidadeBaseConfig<Consumidor>
         builder.MapProperty(x => x.Descricao)
                .SetElementName("descricao");
         
-        builder.MapProperty(x => x.RecursoConsumidores)
-               .SetElementName("recursos");
-        
         builder.MapProperty(x => x.ControleAcessos)
                .SetElementName("controle_acessos");
     }

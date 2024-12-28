@@ -19,7 +19,6 @@ public class ServConsumidor : ServBase<Consumidor, IRepConsumidor>, IServConsumi
         var consumidorPorIdentificador = await Repositorio.RecuperarPorIdentificadorAsync(consumidor.Identificador);
         if (consumidorPorIdentificador is not null)
         {
-            consumidor.AlterarDados(consumidorPorIdentificador.Identificador, consumidorPorIdentificador.Descricao);
             return;
         }
         

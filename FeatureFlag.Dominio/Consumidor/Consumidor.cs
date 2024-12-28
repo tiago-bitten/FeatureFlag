@@ -9,7 +9,6 @@ public sealed class Consumidor : EntidadeBase
 {
     public Identificador Identificador { get; private set; }
     public string? Descricao { get; private set; }
-    public List<RecursoConsumidorEmbedded> RecursoConsumidores { get; private set; } = [];
     public List<ControleAcessoConsumidorEmbedded> ControleAcessos { get; private set; } = [];
 
     #region Ctor
@@ -20,41 +19,6 @@ public sealed class Consumidor : EntidadeBase
     #endregion
     
     #region Setters
-    #region AlterarDados
-    public void AlterarDados(string identificador, string? descricao)
-    {
-        Identificador = new Identificador(identificador);
-        Descricao = descricao;
-    }
-    #endregion
-    
-    #region AdicionarRecursoHabilitado
-    public void AdicionarRecursoHabilitado(Recurso recurso)
-    {
-        RemoverRecurso(recurso.Identificador);
-        var recursoConsumidor = new RecursoConsumidorEmbedded();
-        recursoConsumidor.AdicioniarHabilitado(recurso);
-        RecursoConsumidores.Add(recursoConsumidor);
-    }
-    #endregion
-    
-    #region AdicionarRecursoDesabilitado
-    public void AdicionarRecursoDesabilitado(Recurso recurso)
-    {
-        RemoverRecurso(recurso.Identificador);
-        var recursoConsumidor = new RecursoConsumidorEmbedded();
-        recursoConsumidor.AdicioniarDesabilitado(recurso);
-        RecursoConsumidores.Add(recursoConsumidor);
-    }
-    #endregion
-    
-    #region RemoverRecurso
-    public void RemoverRecurso(string identificadorRecurso)
-    {
-        RecursoConsumidores.RemoveAll(x => x.Recurso.Identificador == identificadorRecurso);
-    }
-    #endregion
-    
     #region AdicionarWhitelist
     public void AdicionarWhitelist(Recurso recurso)
     {
@@ -84,26 +48,6 @@ public sealed class Consumidor : EntidadeBase
     #endregion
     
     #region Embeddeds
-
-    #region RecursoConsumidorEmbedded
-    public class RecursoConsumidorEmbedded
-    {
-        public RecursoEmbedded Recurso { get; private set; }
-        public EnumStatusRecursoConsumidor Status { get; set; }
-        
-        public void AdicioniarHabilitado(Recurso recurso)
-        {
-            Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
-            Status = EnumStatusRecursoConsumidor.Habilitado;
-        }
-        
-        public void  AdicioniarDesabilitado(Recurso recurso)
-        {
-            Recurso = new RecursoEmbedded(recurso.Id, recurso.Identificador);
-            Status = EnumStatusRecursoConsumidor.Desabilitado;
-        }
-    }
-    #endregion
 
     #region ControleAcessoConsumidorEmbedded
     public class ControleAcessoConsumidorEmbedded

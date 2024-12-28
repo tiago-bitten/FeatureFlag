@@ -31,12 +31,4 @@ public class RepConsumidor : RepBase<Consumidor>, IRepConsumidor
             .AnyAsync();
     }
     #endregion
-    
-    #region RecuperarPorRecursoAsync
-    public Task<List<Consumidor>> RecuperarPorRecursoAsync(ObjectId codigoRecurso)
-    {
-        var filter = Builders<Consumidor>.Filter.ElemMatch(x => x.RecursoConsumidores, x => x.Recurso.Id == codigoRecurso);
-        return Collection.Find(filter).ToListAsync();
-    }
-    #endregion
 }
