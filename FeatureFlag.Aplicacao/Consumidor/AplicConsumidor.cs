@@ -35,9 +35,9 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
     #endregion
     
     #region AtualizarAsync
-    public async Task<ConsumidorResponse> AlterarAsync(AlterarConsumidorRequest request)
+    public async Task<ConsumidorResponse> AlterarAsync(string identificador, AlterarConsumidorRequest request)
     {
-        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(request.Identificador);
+        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(identificador);
         consumidor.ThrowIfNull("Consumidor foi não encontrado.");
         
         var consumidorAlterado = Mapper.Map(request, consumidor);
@@ -45,6 +45,18 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
         await _servConsumidor.AtualizarAsync(consumidorAlterado);
         
         var response = Mapper.Map<ConsumidorResponse>(consumidorAlterado);
+        
+        return response;
+    }
+    #endregion
+    
+    #region RecuperarPorIdentificadorAsync
+    public async Task<ConsumidorResponse> RecuperarPorIdentificadorAsync(string identificador)
+    {
+        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(identificador);
+        consumidor.ThrowIfNull("Consumidor não foi encontrado.");
+        
+        var response = Mapper.Map<ConsumidorResponse>(consumidor);
         
         return response;
     }
