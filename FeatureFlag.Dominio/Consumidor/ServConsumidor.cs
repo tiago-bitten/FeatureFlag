@@ -25,4 +25,16 @@ public class ServConsumidor : ServBase<Consumidor, IRepConsumidor>, IServConsumi
         await base.AdicionarAsync(consumidor);
     }
     #endregion
+    
+    #region SincronizarEmbeddeds
+    #region SincronizarRecursoConsumidores
+    public void SincronizarRecursoConsumidores(Consumidor consumidorAtualizado, List<RecursoConsumidor> recursosConsumidores)
+    {
+        foreach (var recursoConsumidor in recursosConsumidores)
+        {
+            recursoConsumidor.Consumidor.Identificador = consumidorAtualizado.Identificador;
+        }
+    }
+    #endregion
+    #endregion
 }

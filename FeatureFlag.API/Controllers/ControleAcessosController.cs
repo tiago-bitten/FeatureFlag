@@ -26,11 +26,21 @@ public class ControleAcessosController : ControllerBaseFeatureFlag
     #endregion
     
     #region RecuperarPorConsumidor
-    [HttpGet("Consumidor/{codigoConsumidor:int}")]
-    public async Task<IActionResult> RecuperarPorConsumidor(int codigoConsumidor)
+    [HttpGet("Consumidor/{identificadorConsumidor}")]
+    public async Task<IActionResult> RecuperarPorConsumidor(string identificadorConsumidor)
     {
-        var resposta = await _aplicControleAcessoConsumidor.RecuperarPorConsumidorAsync(codigoConsumidor);
+        var resposta = await _aplicControleAcessoConsumidor.RecuperarPorConsumidorAsync(identificadorConsumidor);
         return Sucesso(resposta, resposta.Count, "Controles de acesso recuperados com sucesso.");
+    }
+    #endregion
+    
+    #region RemoverPorRecursoConsumidor
+    [HttpPut("Consumidor/{identificadorConsumidor}/Recurso/{identificadorRecurso}")]
+    public async Task<IActionResult> RemoverPorRecursoConsumidor(string identificadorConsumidor, string identificadorRecurso)
+    {
+        var param = new RemoverPorRecursoConsumidorParam(identificadorConsumidor, identificadorRecurso);
+        await _aplicControleAcessoConsumidor.RemoverPorRecursoConsumidorAsync(param);
+        return Sucesso("Controle de acesso removido com sucesso.");
     }
     #endregion
 }

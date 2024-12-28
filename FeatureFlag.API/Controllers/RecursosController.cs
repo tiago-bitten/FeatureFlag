@@ -45,4 +45,13 @@ public class RecursosController : ControllerBaseFeatureFlag
         return Sucesso(resposta, resposta.Count, "Recursos recuperados com sucesso.");
     }
     #endregion
+    
+    #region RecuperarPorIdentificador
+    [HttpGet("{identificador}")]
+    public async Task<IActionResult> RecuperarPorIdentificador(string identificador)
+    {
+        var resposta = await _aplicRecurso.RecuperarPorIdentificadorAsync(identificador);
+        return Sucesso(resposta, "Recurso recuperado com sucesso.");
+    }
+    #endregion
 }
