@@ -17,10 +17,9 @@ public class RecursosConsumidoresController : ControllerBaseFeatureFlag
     #endregion
     
     #region RecuperarPorRecursoConsumidor
-    [HttpGet("Consumidor/{identificadorConsumidor}/Recurso/{identificadorRecurso}")]
-    public async Task<IActionResult> RecuperarPorRecursoConsumidor(string identificadorConsumidor, string identificadorRecurso)
+    [HttpGet("[action]")]
+    public async Task<IActionResult> RecuperarPorRecursoConsumidor([FromQuery] RecuperarPorRecursoConsumidorParam param)
     {
-        var param = new RecuperarPorRecursoConsumidorParam(identificadorConsumidor, identificadorRecurso);
         var resposta = await _aplicRecursoConsumidor.RecuperarPorRecursoConsumidorAsync(param);
         
         return Sucesso(resposta, "Recursos e consumidores recuperados com sucesso.");
