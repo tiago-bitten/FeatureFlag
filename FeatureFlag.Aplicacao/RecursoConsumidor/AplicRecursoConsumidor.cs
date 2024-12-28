@@ -70,23 +70,4 @@ public class AplicRecursoConsumidor : AplicBase, IAplicRecursoConsumidor
     }
 
     #endregion
-
-    #region RecuperarPorConsumidorAsync
-
-    public async Task<List<RecursoConsumidorResponse>> RecuperarPorConsumidorAsync(RecuperarPorConsumidorParam param)
-    {
-        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(param.IdentificadorConsumidor);
-        consumidor.ThrowIfNull("Consumidor não foi encontrado.");
-
-        var response = consumidor.RecursoConsumidores
-            .Where(x => x.Status is EnumStatusRecursoConsumidor.Habilitado)
-            .Select(x => Mapper.Map<RecursoConsumidorResponse>(x, opt =>
-            {
-                opt.Items["Consumidor"] = consumidor.Identificador;
-            }))
-            .ToList();
-
-        return response;
-    }
-    #endregion
 }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FeatureFlag.Domain;
 using FeatureFlag.Domain.Dtos;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace FeatureFlag.Aplicacao;
 
@@ -19,7 +18,6 @@ public class RecursoProfile : Profile
             .ForCtorParam("Porcentagem", opt => opt.MapFrom(src => src.Porcentagem));
         
         CreateMap<AlterarRecursoRequest, Recurso>()
-            .ForMember(dest => dest.Identificador, opt => opt.MapFrom(src => src.NovoIdentificador))
             .ForAllMembers(opt => 
                 opt.Condition((_, _, srcMember) => srcMember != null));
     }

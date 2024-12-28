@@ -58,7 +58,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         recursoConsumidor.Habilitar();
         recursoConsumidor.Congelar();
         recurso.Consumidor.Adicionar();
-        consumidor.AdicionarRecursoHabilitado(recurso);
     }
     #endregion
     
@@ -72,7 +71,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
         
         recursoConsumidor.Desabilitar();
         recurso.Consumidor.Remover();
-        consumidor.AdicionarRecursoDesabilitado(recurso);
     }
     #endregion
     
@@ -84,7 +82,6 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
             return;
         }
         recursoConsumidor.Desabilitar();
-        consumidor.AdicionarRecursoDesabilitado(recurso);
     }
     #endregion
     #endregion

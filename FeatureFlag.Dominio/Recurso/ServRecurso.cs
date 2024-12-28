@@ -80,15 +80,6 @@ public class ServRecurso : ServBase<Recurso, IRepRecurso>, IServRecurso
     {
         foreach (var consumidor in consumidores)
         {
-            var consumidorRecursoConsumidores = consumidor.RecursoConsumidores
-                .Where(x => x.Recurso.Id == recursoAtualizado.Id)
-                .ToList();
-
-            foreach (var recursoConsumidor in consumidorRecursoConsumidores)
-            {
-                recursoConsumidor.Recurso.Identificador = recursoAtualizado.Identificador;
-            }
-            
             var consumidorControleAcesso = consumidor.ControleAcessos
                 .Where(x => x.Recurso.Id == recursoAtualizado.Id)
                 .ToList();

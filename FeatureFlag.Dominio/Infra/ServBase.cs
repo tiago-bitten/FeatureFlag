@@ -31,6 +31,10 @@ public abstract class ServBase<TEntidade, TRepositorio> : IServBase<TEntidade, T
     #region AtualizarVariosAsync
     public virtual async Task AtualizarVariosAsync(List<TEntidade> entidades)
     {
+        if (entidades.Count == 0)
+        {
+            return;
+        }        
         await Repositorio.AtualizarVariosAsync(entidades);
     }
     #endregion
