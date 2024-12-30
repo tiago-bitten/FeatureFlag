@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using FeatureFlag.Dominio.Infra;
+using FeatureFlag.Shared.Extensions;
 using MongoDB.Bson;
 
 namespace FeatureFlag.Repositorio.Infra;
@@ -26,7 +27,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region RecuperarPorId
     public async Task<T?> RecuperarPorIdAsync(ObjectId id)
     {
-        var filter = Builders<T>.Filter.Eq(e => e.Id, id);
+        var filter = Builders<T>.Filter.Eq(e => e.Id, id).GlobalFilter();
         return await Collection.Find(filter).FirstOrDefaultAsync();
     }
     #endregion
@@ -34,14 +35,15 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region RecuperarTodos
     public async Task<List<T>> RecuperarTodosAsync()
     {
-        return await Collection.Find(Builders<T>.Filter.Empty).ToListAsync();
+        var filter = Builders<T>.Filter.Empty.GlobalFilter();
+        return await Collection.Find(filter).ToListAsync();
     }
     #endregion
 
     #region Atualizar
     public async Task AtualizarAsync(T entidade)
     {
-        var filter = Builders<T>.Filter.Eq(e => e.Id, entidade.Id);
+        var filter = Builders<T>.Filter.Eq(e => e.Id, entidade.Id).GlobalFilter();
         await Collection.ReplaceOneAsync(filter, entidade);
     }
     #endregion
@@ -51,7 +53,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     {
         var updates = entidades.Select(e =>
             new ReplaceOneModel<T>(
-                Builders<T>.Filter.Eq(x => x.Id, e.Id),
+                Builders<T>.Filter.Eq(x => x.Id, e.Id).GlobalFilter(),
                 e
             )
         ).ToList();
@@ -62,7 +64,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region Remover
     public async Task RemoverAsync(ObjectId id)
     {
-        var filter = Builders<T>.Filter.Eq(e => e.Id, id);
+        var filter = Builders<T>.Filter.Eq(e => e.Id, id).GlobalFilter();
         await Collection.DeleteOneAsync(filter);
     }
     #endregion
@@ -70,7 +72,8 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region Contar
     public async Task<int> CountAsync()
     {
-        var count = await Collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
+        var filter = Builders<T>.Filter.Empty.GlobalFilter();
+        var count = await Collection.CountDocumentsAsync(filter);
         return (int)count;
     }
     #endregion

@@ -33,4 +33,22 @@ public class RepControleAcessoConsumidor : RepBase<ControleAcessoConsumidor>, IR
             .ToListAsync();
     }
     #endregion
+    
+    #region RecuperarPorConsumidorAsync
+    public Task<List<ControleAcessoConsumidor>> RecuperarPorConsumidorAsync(ObjectId codigoConsumidor)
+    {
+        return Collection
+            .Find(x => x.Consumidor.Id == codigoConsumidor)
+            .ToListAsync();
+    }
+    #endregion
+    
+    #region RecuperarPorRecursoConsumidorAsync
+    public Task<ControleAcessoConsumidor> RecuperarPorRecursoConsumidorAsync(ObjectId codigoRecurso, ObjectId codigoConsumidor)
+    {
+        return Collection
+            .Find(x => x.Recurso.Id == codigoRecurso && x.Consumidor.Id == codigoConsumidor)
+            .FirstOrDefaultAsync();
+    }
+    #endregion
 }

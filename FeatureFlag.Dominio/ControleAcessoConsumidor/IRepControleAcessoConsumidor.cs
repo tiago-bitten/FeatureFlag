@@ -7,4 +7,6 @@ public interface IRepControleAcessoConsumidor : IRepBase<ControleAcessoConsumido
 {
     Task<bool> PossuiPorTipoAsync(string identificadorRecurso, string identificadorConsumidor, EnumTipoControle tipoControle);
     Task<List<ControleAcessoConsumidor>> RecuperarPorRecursoAsync(ObjectId codigoRecurso);
+    Task<List<ControleAcessoConsumidor>> RecuperarPorConsumidorAsync(ObjectId codigoConsumidor);
+    Task<ControleAcessoConsumidor> RecuperarPorRecursoConsumidorAsync(ObjectId codigoRecurso, ObjectId codigoConsumidor);
 }

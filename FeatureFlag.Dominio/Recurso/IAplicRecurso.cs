@@ -8,4 +8,5 @@ public interface IAplicRecurso
     Task<RecursoResponse> AlterarAsync(string identificador, AlterarRecursoRequest request);
     Task<List<RecursoResponse>> RecuperarTodosAsync();
     Task SinconizarRecursosEmbeddedAsync(SincronizarRecursoRequest request);
+    Task<RecursoResponse> RecuperarPorIdentificadorAsync(string identificador);
 }

@@ -78,6 +78,18 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     }
     #endregion
     
+    #region RecuperarPorIdentificadorAsync
+    public async Task<RecursoResponse> RecuperarPorIdentificadorAsync(string identificador)
+    {
+        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(identificador);
+        recurso.ThrowIfNull("Recurso não foi encontrado.");
+
+        var response = Mapper.Map<RecursoResponse>(recurso);
+
+        return response;
+    }
+    #endregion
+    
     #region SinconizarRecursosEmbeddedAsync
     public async Task SinconizarRecursosEmbeddedAsync(SincronizarRecursoRequest request)
     {
