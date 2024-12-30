@@ -38,4 +38,12 @@ public abstract class ServBase<TEntidade, TRepositorio> : IServBase<TEntidade, T
         await Repositorio.AtualizarVariosAsync(entidades);
     }
     #endregion
+    
+    #region RemoverAsync
+    public virtual async Task RemoverAsync(TEntidade entidade)
+    {
+        entidade.Inativar();
+        await Repositorio.AtualizarAsync(entidade);
+    }
+    #endregion
 }

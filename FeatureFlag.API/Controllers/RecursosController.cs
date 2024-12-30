@@ -21,7 +21,6 @@ public class RecursosController : ControllerBaseFeatureFlag
     public async Task<IActionResult> Adicionar([FromBody] AdicionarRecursoRequest request)
     {
         var resposta = await _aplicRecurso.AdicionarAsync(request);
-        
         return Sucesso(resposta, "Recurso adicionado com sucesso.");
     }
     #endregion
@@ -31,8 +30,16 @@ public class RecursosController : ControllerBaseFeatureFlag
     public async Task<IActionResult> Alterar([FromBody] AlterarRecursoRequest request, string identificador)
     {
         var resposta = await _aplicRecurso.AlterarAsync(identificador, request);
-        
         return Sucesso(resposta, "Recurso alterado com sucesso.");
+    }
+    #endregion
+
+    #region Remover
+    [HttpDelete("{identificador}")]
+    public async Task<IActionResult> Remover(string identificador)
+    {
+        await _aplicRecurso.RemoverAsync(identificador);
+        return Sucesso("Recurso removido com sucesso.");
     }
     #endregion
     
@@ -41,7 +48,6 @@ public class RecursosController : ControllerBaseFeatureFlag
     public async Task<IActionResult> RecuperarTodos()
     {
         var resposta = await _aplicRecurso.RecuperarTodosAsync();
-        
         return Sucesso(resposta, resposta.Count, "Recursos recuperados com sucesso.");
     }
     #endregion

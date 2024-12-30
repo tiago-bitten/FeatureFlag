@@ -11,4 +11,5 @@ public interface IServRecursoConsumidor : IServBase<RecursoConsumidor, IRepRecur
     RecursoConsumidorResponse RetornarComControleAcesso(Consumidor consumidor, Recurso recurso);
     RecursoConsumidorResponse RetornarCemPorcentoAtivo(Consumidor consumidor, Recurso recurso);
     RecursoConsumidorResponse RetornarZeroPorcentoAtivo(Consumidor consumidor, Recurso recurso);
+    Task RemoverPorRecursoAsync(Recurso recurso);
 }

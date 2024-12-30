@@ -36,5 +36,15 @@ public class ServConsumidor : ServBase<Consumidor, IRepConsumidor>, IServConsumi
         }
     }
     #endregion
+    
+    #region SincronizarControleAcessoConsumidores
+    public void SincronizarControleAcessoConsumidores(Consumidor consumidorAtualizado, List<ControleAcessoConsumidor> controleAcessoConsumidores)
+    {
+        foreach (var controleAcessoConsumidor in controleAcessoConsumidores)
+        {
+            controleAcessoConsumidor.Consumidor.Identificador = consumidorAtualizado.Identificador;
+        }
+    }
+    #endregion
     #endregion
 }
