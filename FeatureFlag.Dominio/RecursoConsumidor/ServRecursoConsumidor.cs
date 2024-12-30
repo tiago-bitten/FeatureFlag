@@ -98,6 +98,17 @@ public class ServRecursoConsumidor : ServBase<RecursoConsumidor, IRepRecursoCons
     }
     #endregion
     
+    #region RemoverPorConsumidorAsync
+    public async Task RemoverPorConsumidorAsync(Consumidor consumidor)
+    {
+        var recursosConsumidores = await Repositorio.RecuperarPorConsumidorAsync(consumidor.Id);
+        foreach (var recursoConsumidor in recursosConsumidores)
+        {
+            await RemoverAsync(recursoConsumidor);
+        }
+    }
+    #endregion
+    
     #region DescongelarTodosAsync
     public async Task DescongelarTodosPorRecursoAsync(Recurso recurso)
     {

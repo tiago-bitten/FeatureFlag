@@ -6,4 +6,5 @@ namespace FeatureFlag.Dominio;
 public interface IServControleAcessoConsumidor : IServBase<ControleAcessoConsumidor, IRepControleAcessoConsumidor>
 {
     Task RemoverPorRecursoAsync(Recurso recurso);
+    Task RemoverPorConsumidorAsync(Consumidor consumidor);
 }

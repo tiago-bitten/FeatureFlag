@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FeatureFlag.Aplicacao.Infra;
 using FeatureFlag.Domain;
-using FeatureFlag.Domain.Dtos;
 using FeatureFlag.Dominio;
 using FeatureFlag.Dominio.Dtos;
 using FeatureFlag.Dominio.Infra;
@@ -84,6 +83,18 @@ public class AplicConsumidor : AplicBase, IAplicConsumidor
         var controleAcessosConsumidores = await _servControleAcessoConsumidor.Repositorio.RecuperarPorConsumidorAsync(consumidor.Id);
         _servConsumidor.SincronizarControleAcessoConsumidores(consumidor, controleAcessosConsumidores);
         await _servControleAcessoConsumidor.AtualizarVariosAsync(controleAcessosConsumidores);
+    }
+    #endregion
+    
+    #region RemoverAsync
+    public async Task RemoverAsync(string identificador)
+    {
+        var consumidor = await _servConsumidor.Repositorio.RecuperarPorIdentificadorAsync(identificador);
+        consumidor.ThrowIfNull("Consumidor não foi encontrado.");
+        
+        await _servRecursoConsumidor.RemoverPorConsumidorAsync(consumidor);
+        await _servControleAcessoConsumidor.RemoverPorConsumidorAsync(consumidor);
+        await _servConsumidor.RemoverAsync(consumidor);
     }
     #endregion
 }
