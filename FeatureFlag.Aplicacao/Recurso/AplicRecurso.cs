@@ -106,7 +106,6 @@ public class AplicRecurso : AplicBase, IAplicRecurso
 
         await _servRecursoConsumidor.RemoverPorRecursoAsync(recurso);
         await _servControleAcessoConsumidor.RemoverPorRecursoAsync(recurso);
-
         await _servRecurso.RemoverAsync(recurso);
     }
     #endregion

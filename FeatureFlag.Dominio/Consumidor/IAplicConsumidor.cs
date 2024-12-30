@@ -10,4 +10,5 @@ public interface IAplicConsumidor
     Task<ConsumidorResponse> AlterarAsync(string identificador, AlterarConsumidorRequest request);
     Task<ConsumidorResponse> RecuperarPorIdentificadorAsync(string identificador);
     Task SincronizarEmbeddedsAsync(SincronizarEmbeddeds<Consumidor> consumidorAtualizado);
+    Task RemoverAsync(string identificador);
 }

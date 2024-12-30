@@ -33,4 +33,13 @@ public class ConsumidoresController : ControllerBaseFeatureFlag
         return Sucesso(resposta, "Consumidor alterado com sucesso.");
     }
     #endregion
+    
+    #region Remover
+    [HttpDelete("{identificador}")]
+    public async Task<IActionResult> Remover(string identificador)
+    {
+        await _aplicConsumidor.RemoverAsync(identificador);
+        return Sucesso("Consumidor removido com sucesso.");
+    }
+    #endregion
 }

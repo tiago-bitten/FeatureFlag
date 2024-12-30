@@ -21,4 +21,15 @@ public class ServControleAcessoConsumidor : ServBase<ControleAcessoConsumidor, I
         }
     }
     #endregion
+    
+    #region RemoverPorConsumidorAsync
+    public async Task RemoverPorConsumidorAsync(Consumidor consumidor)
+    {
+        var controleAcessoConsumidores = await Repositorio.RecuperarPorConsumidorAsync(consumidor.Id);
+        foreach (var controleAcessoConsumidor in controleAcessoConsumidores)
+        {
+            await RemoverAsync(controleAcessoConsumidor);
+        }
+    }
+    #endregion
 }
