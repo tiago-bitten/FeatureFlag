@@ -9,4 +9,5 @@ public interface IServBase<TEntidade, TRepositorio>
     Task AdicionarAsync(TEntidade entidade);
     Task AtualizarAsync(TEntidade entidade);
     Task AtualizarVariosAsync(List<TEntidade> entidades);
+    Task RemoverAsync(TEntidade entidade);
 }

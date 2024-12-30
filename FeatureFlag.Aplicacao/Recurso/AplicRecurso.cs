@@ -3,6 +3,7 @@ using FeatureFlag.Aplicacao.Infra;
 using FeatureFlag.Domain;
 using FeatureFlag.Domain.Dtos;
 using FeatureFlag.Dominio;
+using FeatureFlag.Dominio.Infra;
 using FeatureFlag.Shared.Extensions;
 
 namespace FeatureFlag.Aplicacao;
@@ -53,7 +54,7 @@ public class AplicRecurso : AplicBase, IAplicRecurso
         Mapper.Map(request, recurso);
 
         await _servRecurso.AtualizarAsync(recurso);
-        await SinconizarRecursosEmbeddedAsync(new SincronizarRecursoRequest(recurso));
+        await SinconizarEmbeddedsAsync(new SincronizarEmbeddeds<Recurso>(recurso));
         
         var porcentagemAlteradaEstaMenor = recurso.Porcentagem < porcentagemAntiga;
         if (porcentagemAlteradaEstaMenor)
@@ -90,15 +91,34 @@ public class AplicRecurso : AplicBase, IAplicRecurso
     }
     #endregion
     
-    #region SinconizarRecursosEmbeddedAsync
-    public async Task SinconizarRecursosEmbeddedAsync(SincronizarRecursoRequest request)
+    #region RemoverAsync
+    public async Task RemoverAsync(string identificador)
     {
-        var recursoAtualizado = request.RecursoAtualizado;
+        var recurso = await _servRecurso.Repositorio.RecuperarPorIdentificadorAsync(identificador);
+        recurso.ThrowIfNull("Recurso não foi encontrado.");
+
+        var consumidores = await _servConsumidor.Repositorio.RecuperarTodosAsync();
+        foreach (var consumidor in consumidores)
+        {
+            consumidor.RemoverControleAcesso(identificador);
+        }
+        await _servConsumidor.AtualizarVariosAsync(consumidores);
+
+        await _servRecursoConsumidor.RemoverPorRecursoAsync(recurso);
+        await _servControleAcessoConsumidor.RemoverPorRecursoAsync(recurso);
+
+        await _servRecurso.RemoverAsync(recurso);
+    }
+    #endregion
+    
+    #region SinconizarEmbeddedAsync
+    public async Task SinconizarEmbeddedsAsync(SincronizarEmbeddeds<Recurso> recurso)
+    {
+        var recursoAtualizado = recurso.Entidade;
 
         var consumidores = await _servConsumidor.Repositorio.RecuperarTodosAsync();
         _servRecurso.SincronizarConsumidores(recursoAtualizado, consumidores);
         await _servConsumidor.AtualizarVariosAsync(consumidores);
-        
         
         var recursoConsumidores = await _servRecursoConsumidor.Repositorio.RecuperarPorRecursoAsync(recursoAtualizado.Id);
         _servRecurso.SincronizarRecursoConsumidores(recursoAtualizado, recursoConsumidores);
