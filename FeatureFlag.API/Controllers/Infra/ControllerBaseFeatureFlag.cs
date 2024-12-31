@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FeatureFlag.Shared.Middlewares;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureFlag.API.Controllers.Infra;
 
@@ -34,7 +35,7 @@ public class ControllerBaseFeatureFlag : ControllerBase
     #region Erro
     protected IActionResult Erro(string mensagem)
     {
-        var resposta = RespostaBase.Erro(mensagem);
+        var resposta = RespostaBase.Erro(mensagem, 4);
 
         return BadRequest(resposta);
     }

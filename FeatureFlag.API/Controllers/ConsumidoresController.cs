@@ -42,7 +42,6 @@ public class ConsumidoresController : ControllerBaseFeatureFlag
         return Sucesso(resposta, "Consumidor recuperado com sucesso.");
     }
     #endregion
-
     
     #region Remover
     [HttpDelete("{identificador}")]
