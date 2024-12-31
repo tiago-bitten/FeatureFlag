@@ -34,6 +34,16 @@ public class ConsumidoresController : ControllerBaseFeatureFlag
     }
     #endregion
     
+    #region RecuperarPorIdentificador
+    [HttpGet("{identificador}")]
+    public async Task<IActionResult> RecuperarPorIdentificador(string identificador)
+    {
+        var resposta = await _aplicConsumidor.RecuperarPorIdentificadorAsync(identificador);
+        return Sucesso(resposta, "Consumidor recuperado com sucesso.");
+    }
+    #endregion
+
+    
     #region Remover
     [HttpDelete("{identificador}")]
     public async Task<IActionResult> Remover(string identificador)

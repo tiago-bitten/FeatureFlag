@@ -4,7 +4,7 @@ namespace FeatureFlag.Shared.Extensions;
 
 public static class MongoExtensions
 {
-    public static FilterDefinition<T> GlobalFilter<T>(this FilterDefinition<T> filter)
+    public static FilterDefinition<T> FilterBase<T>(this FilterDefinition<T> filter)
     {
         var properties = typeof(T).GetProperties();
         var fieldInativo = properties.FirstOrDefault(x => x.Name == "Inativo");
