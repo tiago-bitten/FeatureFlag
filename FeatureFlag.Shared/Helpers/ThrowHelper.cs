@@ -21,7 +21,7 @@ public static class ThrowHelper
 #region FeatureFlagAppExeception
 public class FeatureFlagAppExeception(EnumTipoExcecao codigoErro, string mensagem) : Exception(mensagem)
 {
-    private EnumTipoExcecao CodigoErro { get; } = codigoErro;
+    public EnumTipoExcecao CodigoErro { get; } = codigoErro;
 }
 #endregion
 

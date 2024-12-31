@@ -1,5 +1,7 @@
+using FeatureFlag.API.Controllers.Infra.Attributes;
 using FeatureFlag.API.Infra;
 using FeatureFlag.Repositorio.Infra;
+using FeatureFlag.Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    var configuration = builder.Configuration;
+    options.Filters.Add(new FeatureFlagAuthorizeAttribute(configuration));
+});
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("MongoConnection") ?? "mongodb://localhost:27017";
 var mongoDatabaseName = builder.Configuration["MongoDatabaseName"] ?? "feature-flag";
@@ -30,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();  
 
 app.MapControllers();
 
