@@ -27,7 +27,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region RecuperarPorId
     public async Task<T?> RecuperarPorIdAsync(ObjectId id)
     {
-        var filter = Builders<T>.Filter.Eq(e => e.Id, id).GlobalFilter();
+        var filter = Builders<T>.Filter.Eq(e => e.Id, id).FilterBase();
         return await Collection.Find(filter).FirstOrDefaultAsync();
     }
     #endregion
@@ -35,7 +35,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region RecuperarTodos
     public async Task<List<T>> RecuperarTodosAsync()
     {
-        var filter = Builders<T>.Filter.Empty.GlobalFilter();
+        var filter = Builders<T>.Filter.Empty.FilterBase();
         return await Collection.Find(filter).ToListAsync();
     }
     #endregion
@@ -43,7 +43,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region Atualizar
     public async Task AtualizarAsync(T entidade)
     {
-        var filter = Builders<T>.Filter.Eq(e => e.Id, entidade.Id).GlobalFilter();
+        var filter = Builders<T>.Filter.Eq(e => e.Id, entidade.Id).FilterBase();
         await Collection.ReplaceOneAsync(filter, entidade);
     }
     #endregion
@@ -53,7 +53,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     {
         var updates = entidades.Select(e =>
             new ReplaceOneModel<T>(
-                Builders<T>.Filter.Eq(x => x.Id, e.Id).GlobalFilter(),
+                Builders<T>.Filter.Eq(x => x.Id, e.Id).FilterBase(),
                 e
             )
         ).ToList();
@@ -64,7 +64,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region Remover
     public async Task RemoverAsync(ObjectId id)
     {
-        var filter = Builders<T>.Filter.Eq(e => e.Id, id).GlobalFilter();
+        var filter = Builders<T>.Filter.Eq(e => e.Id, id).FilterBase();
         await Collection.DeleteOneAsync(filter);
     }
     #endregion
@@ -72,7 +72,7 @@ public class RepBase<T> : IRepBase<T> where T : EntidadeBase
     #region Contar
     public async Task<int> CountAsync()
     {
-        var filter = Builders<T>.Filter.Empty.GlobalFilter();
+        var filter = Builders<T>.Filter.Empty.FilterBase();
         var count = await Collection.CountDocumentsAsync(filter);
         return (int)count;
     }
